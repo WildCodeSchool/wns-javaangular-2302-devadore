@@ -2,9 +2,6 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
--- -----------------------------------------------------
--- Schema quizz4all
--- -----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Schema quizz4all
@@ -16,8 +13,8 @@ USE `quizz4all` ;
 -- Table `quizz4all`.`role`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `quizz4all`.`role` (
-                                                  `id` INT NOT NULL AUTO_INCREMENT,
-                                                  `role` VARCHAR(45) NULL,
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `role` VARCHAR(45) NULL,
     PRIMARY KEY (`id`))
     ENGINE = InnoDB;
 
