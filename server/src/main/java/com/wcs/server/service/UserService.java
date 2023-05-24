@@ -1,9 +1,12 @@
 package com.wcs.server.service;
 
 import com.wcs.server.dto.RoleDTO;
+import com.wcs.server.entity.Quiz;
 import com.wcs.server.entity.Role;
 import com.wcs.server.entity.UserRegistrationRequest;
+import com.wcs.server.repository.QuizRepository;
 import com.wcs.server.repository.RoleRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +19,7 @@ import com.wcs.server.repository.UserRepository;
 
 import java.util.List;
 
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 @Service
 public class UserService {
@@ -28,6 +32,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private QuizRepository quizRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -85,9 +92,18 @@ public UserDTO updateUser(Long id, UserDTO userDTO) {
     System.out.println("Updated user with roles: " + updatedUser.getRoles());
     return modelMapper.map(updatedUser, UserDTO.class);
 }
-    public void deleteUser(Long id) {
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
 
-        userRepository.deleteById(id);
+        // Deleting quizzes associated with user, which will cascade to questions and answers.
+        List<Quiz> quizzes = quizRepository.findByCreatedBy(user);
+        for (Quiz quiz : quizzes) {
+            quizRepository.delete(quiz);
+        }
+
+        // Delete user after quizzes, questions and answers have been deleted.
+        userRepository.delete(user);
     }
 
     public User registerUser(UserRegistrationRequest registrationRequest) {
