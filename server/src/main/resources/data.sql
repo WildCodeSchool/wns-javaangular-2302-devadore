@@ -1,5 +1,3 @@
-
-
 INSERT INTO quizzforall.role (id, name) VALUES (1, 'ADMIN');
 INSERT INTO quizzforall.role (id, name) VALUES (2, 'USER');
 
