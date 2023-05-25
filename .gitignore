@@ -23,3 +23,5 @@
 /.idea/vcs.xml
 /client/package-lock.json
 .env
+.vscode/
+.idea/
