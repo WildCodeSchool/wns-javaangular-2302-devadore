@@ -127,7 +127,6 @@ public class User {
                 ", password='" + password + '\'' +
                 ", avatar='" + avatar + '\'' +
                 ", score=" + score +
-                ", roles=" + roles +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
