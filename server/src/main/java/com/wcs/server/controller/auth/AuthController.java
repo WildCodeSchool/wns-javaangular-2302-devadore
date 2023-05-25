@@ -11,9 +11,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -43,7 +46,10 @@ public class AuthController {
 
         String accessToken  = jwtTokenProvider.generateToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(loginRequest.getUsername());
-        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken,roles));
     }
 
     @PostMapping("/refresh")
@@ -54,9 +60,11 @@ public class AuthController {
         String username = claims.getSubject();
         Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
         String accessToken = jwtTokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtResponse(accessToken , requestRefreshToken));
+        return ResponseEntity.ok(new JwtResponse(accessToken , requestRefreshToken, roles));
     }
 
     @PostMapping("/logout")

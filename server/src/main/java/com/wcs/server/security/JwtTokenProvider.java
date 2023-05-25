@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtTokenProvider {
@@ -46,7 +48,7 @@ public class JwtTokenProvider {
      * @param authentication représente l'authentification d'un utilisateur, et retourne une chaîne de caractères qui est le token JWT.
      * @return le token JWT.
      */
-    public String generateToken(Authentication authentication) {
+/*    public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
@@ -56,7 +58,25 @@ public class JwtTokenProvider {
                 .setExpiration(expiryDate)
                 .signWith(secretKey)
                 .compact();
+    }*/
+    public String generateToken(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        String roles = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .claim("roles", roles)
+                .signWith(secretKey)
+                .compact();
     }
+
+
 
     /***
      * extraire le nom d'utilisateur à partir d'un token JWT.

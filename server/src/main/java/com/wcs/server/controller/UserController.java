@@ -6,6 +6,7 @@ import com.wcs.server.service.RoleService;
 import com.wcs.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+/*    @PreAuthorize("hasAuthority('ADMIN')")*/
     @GetMapping("/list")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();

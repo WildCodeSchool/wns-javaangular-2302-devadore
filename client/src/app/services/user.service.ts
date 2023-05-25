@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, Observable, of} from 'rxjs';
+
 import { User } from '../models/user.model';
 import {AuthService} from "./auth.service";
 import {Role} from "../models/role.model";
@@ -13,7 +14,7 @@ export class UserService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getUsers(): Observable<User[]> {
-    const jwtToken = localStorage.getItem('jwt');
+    const jwtToken = localStorage.getItem('jwtToken');
     console.log('Enregistrer le JWT récupéré',jwtToken);
     if (jwtToken) {
       console.log(`Bearer ${jwtToken}`);
@@ -63,5 +64,6 @@ export class UserService {
   getAllRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.baseUrl}/roles`);
   }
+
 }
 

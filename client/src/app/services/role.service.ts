@@ -13,7 +13,7 @@ export class RoleService {
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getRoles(): Observable<Role[]> {
-    const jwtToken = localStorage.getItem('jwt');
+    const jwtToken = localStorage.getItem('jwtToken');
     console.log('Enregistrer le JWT récupéré',jwtToken);
     if (jwtToken) {
       console.log(`Bearer ${jwtToken}`);
