@@ -12,6 +12,7 @@ import {AuthService} from "../../services/auth.service";
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   hide = true;
+
   constructor(private formBuilder: FormBuilder,private authService: AuthService, private http: HttpClient, private router: Router) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -24,6 +25,7 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
   }
 
 
@@ -36,9 +38,11 @@ export class LoginComponent implements OnInit {
     this.authService.authenticateUser(username, password).subscribe({
       next: (response) => {
         console.log('Response:', response);
-        localStorage.setItem('jwt', response.token);
-        console.log('JWT stocké :', localStorage.getItem('jwt'));
+        localStorage.setItem('jwtToken', response.token);
+        console.log('JWT stocké :', localStorage.getItem('jwtToken'));
         localStorage.setItem('refreshToken', response.refreshToken);
+        this.authService.setAuthenticationState(true);
+        this.authService.setAdminState(true);
         this.router.navigate(['/home']).then(() => {
           console.log('La navigation vers /home s\'est terminée avec succès');
         }).catch((error) => {

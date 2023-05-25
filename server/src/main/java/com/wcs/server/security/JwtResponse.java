@@ -1,12 +1,21 @@
 package com.wcs.server.security;
 
+import java.util.List;
+
 public class JwtResponse {
     private String token;
     private String type = "Bearer";
     private String refreshToken;
-    public JwtResponse(String token, String refreshToken) {
+    private List<String> roles;
+/*    public JwtResponse(String token, String refreshToken) {
         this.token = token;
         this.refreshToken = refreshToken;
+    }*/
+
+    public JwtResponse(String token, String refreshToken, List<String> roles) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+        this.roles = roles;
     }
 
     public String getToken() {
@@ -31,5 +40,13 @@ public class JwtResponse {
 
     public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
