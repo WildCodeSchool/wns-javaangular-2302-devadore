@@ -14,9 +14,9 @@ INSERT INTO quizzforall.user_roles (user_id, role_id) VALUES (3, 2);
 INSERT INTO quizzforall.user_roles (user_id, role_id) VALUES (4, 2);
 
 
-INSERT INTO quizzforall.categorie (id, name, description, created_at, updated_at) VALUES (1, 'Science', 'Questions related to science and scientific concepts', '2022-01-01', '2022-01-01');
-INSERT INTO quizzforall.categorie (id, name, description, created_at, updated_at) VALUES (2, 'Geography', 'Questions related to geography and world regions', '2022-01-02', '2022-01-02');
-INSERT INTO quizzforall.categorie (id, name, description, created_at, updated_at) VALUES (3, 'History', 'Questions related to historical events and figures', '2022-01-03', '2022-01-03');
+INSERT INTO quizzforall.category (id, name, description, created_at, updated_at) VALUES (2, 'Geography', 'Questions related to geography and world regions', '2022-01-02', '2022-01-02');
+INSERT INTO quizzforall.category (id, name, description, created_at, updated_at) VALUES (3, 'History', 'Questions related to historical events and figures', '2022-01-03', '2022-01-03');
+INSERT INTO quizzforall.category (id, name, description, created_at, updated_at) VALUES (1, 'Science', 'Questions related to science and scientific concepts', '2022-01-01', '2022-01-01');
 
 
 INSERT INTO quizzforall.quiz (id, title, description, category_id, created_by, created_at, updated_at) VALUES (1, 'Science Quiz 1', 'A quiz about general science concepts', 1, 1, '2022-01-01', '2022-01-01');
