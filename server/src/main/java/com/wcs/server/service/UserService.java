@@ -58,6 +58,10 @@ public class UserService {
         userDTO.setRoles(roleDTOs);
         return modelMapper.map(user, UserDTO.class);
     }
+
+    public User getUserImage(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User with id " + id + " not found"));
+    }
     public UserDTO createUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
         List<Role> roles = userDTO.getRoles().stream()

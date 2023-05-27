@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from "./services/auth.service";
 import {Router} from "@angular/router";
 import {UserService} from "./services/user.service";
+import { ImageService } from './services/image.service';
+
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,9 @@ import {UserService} from "./services/user.service";
 })
 export class AppComponent implements OnInit {
   title = 'client';
-  constructor(public authService: AuthService, private userService: UserService,private router: Router) { }
+  imageId: number | undefined;
+  imageToShow: any;
+  constructor(public authService: AuthService, private userService: UserService,private router: Router, private imageService: ImageService) { }
   isAdmin: boolean = false;
 
 
@@ -45,4 +49,42 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/auth/login']);
     }
   }
+
+  onFileChanged(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const file = target.files ? target.files[0] : null;
+    if (file) {
+      this.imageService.uploadImage(file).subscribe(response => {
+        console.log(`Response from upload endpoint:`, response);
+
+        const id = response.id;
+        if (id !== undefined && !isNaN(id)) {
+          this.imageId = id;
+        } else {
+          console.error('Received invalid ID from the upload endpoint');
+        }
+      });
+    }
+  }
+
+  showImage(id?: number) {
+    if (id === undefined || isNaN(id)) {
+      console.error('No valid image ID provided');
+      return;
+    }
+    this.imageService.getImage(id).subscribe(
+      data => {
+        let reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imageToShow = e.target.result;
+        }
+        reader.readAsDataURL(data);
+      },
+      error => {
+        console.error('Image retrieval failed:', error);
+      }
+    );
+  }
+
+
 }

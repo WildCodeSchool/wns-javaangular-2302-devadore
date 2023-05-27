@@ -126,7 +126,7 @@ public class SecurityConfig {
                 .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/api/images/**").permitAll()
                         .requestMatchers("/api/users/**").hasAuthority("ADMIN")
                         /*.requestMatchers("/api/users/**").authenticated()*/
                         .anyRequest().authenticated())

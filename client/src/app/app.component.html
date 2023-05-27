@@ -7,3 +7,8 @@
 <button *ngIf="isAdmin" mat-raised-button color="primary" routerLink="/user-list">User List</button>
 
 <router-outlet></router-outlet>
+
+
+<input type="file" (change)="onFileChanged($event)">
+<button (click)="showImage(imageId)">Show Image</button>
+<img [src]="imageToShow">
