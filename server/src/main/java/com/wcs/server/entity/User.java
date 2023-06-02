@@ -27,10 +27,8 @@ public class User {
     @NotBlank
     @Size(max = 120)
     private String password;
-
-    private String avatar;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Image image;
     private int score;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -79,13 +77,6 @@ public class User {
         this.password = password;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     public int getScore() {
         return score;
@@ -119,12 +110,12 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public List<Image> getImages() {
-        return images;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImages(List<Image> images) {
-        this.images = images;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     @Override
@@ -134,7 +125,6 @@ public class User {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", avatar='" + avatar + '\'' +
                 ", score=" + score +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

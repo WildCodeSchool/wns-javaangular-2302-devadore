@@ -5,10 +5,11 @@ import com.wcs.server.dto.UserDTO;
 import com.wcs.server.service.RoleService;
 import com.wcs.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -19,7 +20,7 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
-/*    @PreAuthorize("hasAuthority('ADMIN')")*/
+
     @GetMapping("/list")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         List<UserDTO> users = userService.getAllUsers();
@@ -65,4 +66,17 @@ public class UserController {
     public RoleDTO getRoleById(Long id) {
         return roleService.getRoleById(id);
     }
+
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable Long id) {
+        UserDTO user = userService.getUserById(id);
+        if (user == null || user.getImage() == null || user.getMimeType() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        String base64Image = Base64.getEncoder().encodeToString(user.getImage());
+        byte[] decodedImage = Base64.getDecoder().decode(base64Image);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(user.getMimeType())).body(decodedImage);
+    }
+
 }

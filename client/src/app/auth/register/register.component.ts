@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {catchError} from "rxjs";
-import {Router} from "@angular/router";
+import {HttpClient} from "@angular/common/http";
+import {UserService} from "../../services/user.service";
 
 @Component({
   selector: 'app-register',
@@ -10,58 +9,50 @@ import {Router} from "@angular/router";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  registerForm!: FormGroup;
-  username!: string;
-  password!: string;
-  email!: string;
-  hide = true;
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private router: Router) {
-  }
+  registerForm: FormGroup = this.formBuilder.group({
+    username: ['', Validators.required],
+    password: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    image: [null]
+  });
+  image: File | null = null;
+  previewUrl: any = null;
+  constructor(private formBuilder: FormBuilder, private http: HttpClient, private userService: UserService) { }
 
-  ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validator: this.passwordMatchValidator
-    });
-  }
+  ngOnInit() { }
 
-
-  passwordMatchValidator(formGroup: FormGroup): void {
-    const password = formGroup.get('password');
-    const confirmPassword = formGroup.get('confirmPassword');
-    if (password!.value !== confirmPassword!.value) {
-      confirmPassword!.setErrors({mustMatch: true});
-    } else {
-      confirmPassword!.setErrors(null);
+  onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files;
+    if (file && file.length) {
+      this.image = file[0];
+      this.previewImage(this.image);
     }
   }
-
-  onSubmit(): void {
-    if (this.registerForm.invalid) {
-      console.log('Username:', this.username);
-      console.log('Email:', this.email);
-      console.log('Password:', this.password);
-
-      const url = 'http://localhost:8080/auth/register';
-      const headers = new HttpHeaders({'Content-Type': 'application/json'});
-      const body = {username: this.username, password: this.password, email: this.email};
-
-      this.http.post(url, body, {headers})
-        .pipe(
-          catchError((error) => {
-            console.error('Error:', error);
-            console.log('Error response:', error);
-            throw error;
-          })
-        )
-        .subscribe(() => {
-          this.router.navigate(['/home']);
-        });
+  previewImage(file: File) {
+    // show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+  registerUser() {
+    const formData = new FormData();
+    formData.append('username', this.registerForm.get('username')?.value);
+    formData.append('password', this.registerForm.get('password')?.value);
+    formData.append('email', this.registerForm.get('email')?.value);
+    if (this.image) {
+      formData.append('image', this.image);
+      formData.append('mimeType', this.image.type);
     }
 
+    this.userService.register(formData).subscribe(
+      response => {
+        console.log(response);
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 }

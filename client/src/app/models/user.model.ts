@@ -6,7 +6,8 @@ export interface User {
   username: string;
   email: string;
   password : string;
-  avatar: string;
+  image?: string;
+  mimeType?: string;
   score:number;
   roles : Role[];
   createdAt: Date;

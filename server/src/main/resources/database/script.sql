@@ -26,7 +26,6 @@ create table user
     username   varchar(255)  not null,
     email      varchar(255)  not null,
     password   varchar(255)  not null,
-    avatar     varchar(255)  null,
     score      int default 0 null,
     created_at date          null,
     updated_at date          null,

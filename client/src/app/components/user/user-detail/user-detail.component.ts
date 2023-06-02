@@ -4,6 +4,7 @@ import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Role} from "../../../models/role.model";
 import {forkJoin} from "rxjs";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-user-detail',
@@ -20,14 +21,13 @@ export class UserDetailComponent implements OnInit {
     username: '',
     email: '',
     password: '',
-    avatar: '',
     score: 0,
     roles: [],
     createdAt: new Date(),
     updatedAt: new Date(),
   };
 
-  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private userService: UserService, private route: ActivatedRoute, private router: Router, private domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id') || '0', 10);
@@ -37,16 +37,10 @@ export class UserDetailComponent implements OnInit {
         this.allRoles = roles;
         this.user = user;
         this.userRoles = user.roles;
+        console.log(user);
       });
   }
 
-  loadUser(): void {
-    const userId = parseInt(this.route.snapshot.paramMap.get('id') || '0', 10);
-    this.userService.getUserById(userId).subscribe(user => {
-      this.user = user;
-      console.log(user)
-    });
-  }
   isRoleSelected(role: Role): boolean {
     return this.userRoles?.some(userRole => userRole.id === role.id);
   }
@@ -82,4 +76,5 @@ export class UserDetailComponent implements OnInit {
       }
     });
   }
+
 }

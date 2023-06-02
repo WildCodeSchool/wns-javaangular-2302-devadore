@@ -10,7 +10,7 @@ import {Role} from "../models/role.model";
 })
 export class UserService {
   private baseUrl= 'http://localhost:8080/api/users';
-
+  private regUrl= 'http://localhost:8080/auth';
   constructor(private http: HttpClient, private authService: AuthService) { }
 
   getUsers(): Observable<User[]> {
@@ -64,6 +64,14 @@ export class UserService {
   getAllRoles(): Observable<Role[]> {
     return this.http.get<Role[]>(`${this.baseUrl}/roles`);
   }
+
+  register(formData: FormData): Observable<any> {
+    return this.http.post(`${this.regUrl}/register`, formData);
+  }
+
+/*  getUserImage(userId: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${userId}/image`, { responseType: 'blob' });
+  }*/
 
 }
 

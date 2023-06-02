@@ -19,6 +19,7 @@
         {{ role.name }}
       </label>
     </div>
+    <img *ngIf="user.image" [src]="'data:'+user.mimeType+';base64,'+user.image" alt="Avatar" width="200">
     <br>
     <button type="submit">Mettre à jour le profil</button>
   </form>

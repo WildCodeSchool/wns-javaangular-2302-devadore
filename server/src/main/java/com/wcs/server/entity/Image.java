@@ -11,12 +11,12 @@ public class Image {
 
     private String name;
 
-    @Column(columnDefinition="MEDIUMBLOB")
+    @Column(columnDefinition="BLOB")
     private byte[] image;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
+    private String mimeType;
     public Image() {
     }
 
@@ -36,6 +36,7 @@ public class Image {
         this.name = name;
     }
 
+
     public byte[] getImage() {
         return image;
     }
@@ -50,5 +51,13 @@ public class Image {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 }
