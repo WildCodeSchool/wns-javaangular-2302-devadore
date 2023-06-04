@@ -34,88 +34,43 @@
     </div>
   </div>
 
-  <div class="outer-container">
-    <div
-      class="container absolute left-0 top-5 flex h-32 translate-x-[-1480px] transform items-center border-y border-r border-white bg-green-slide text-white transition-all duration-700 ease-in-out"
-    >
-      <div
-        class="mx-10 flex flex-grow justify-around text-2xl font-bold uppercase"
-      >
-        <div>France</div>
-        <div>Europe</div>
-        <div>Monde</div>
-        <div>Capitales</div>
-        <div>Drapeaux</div>
-      </div>
-      <div class="-mx-5 -rotate-90 font-bold uppercase">Géographie</div>
-    </div>
-  </div>
+  <app-animated-slide
+    title="Géographie"
+    position="top-[calc(0vh+2rem)]"
+    color="bg-green-slide"
+    borderMarginTitle="-mx-5"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
 
-  <div class="outer-container">
-    <div
-      class="container absolute left-0 top-168 flex h-32 translate-x-[-1480px] transform items-center border-y border-r border-white bg-purple-slide text-white transition-all duration-700 ease-in-out"
-    >
-      <div
-        class="mx-10 flex flex-grow justify-around text-2xl font-bold uppercase"
-      >
-        <div>France</div>
-        <div>Europe</div>
-        <div>Monde</div>
-        <div>Capitales</div>
-        <div>Drapeaux</div>
-      </div>
-      <div class="-mx-2 -rotate-90 font-bold uppercase">Histoire</div>
-    </div>
-  </div>
+  <app-animated-slide
+    title="Histoire"
+    position="top-[calc(25vh-1rem)]"
+    color="bg-purple-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
 
-  <div class="outer-container">
-    <div
-      class="container absolute left-0 top-316 flex h-32 translate-x-[-1480px] transform items-center border-y border-r border-white bg-red-slide text-white transition-all duration-700 ease-in-out"
-    >
-      <div
-        class="mx-10 flex flex-grow justify-around text-2xl font-bold uppercase"
-      >
-        <div>France</div>
-        <div>Europe</div>
-        <div>Monde</div>
-        <div>Capitales</div>
-        <div>Drapeaux</div>
-      </div>
-      <div class="-mx-2 -rotate-90 font-bold uppercase">Culture</div>
-    </div>
-  </div>
+  <app-animated-slide
+    title="Culture"
+    position="top-[calc(50vh-4rem)]"
+    color="bg-red-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
 
-  <div class="outer-container">
-    <div
-      class="container absolute left-0 top-464 flex h-32 translate-x-[-1480px] transform items-center border-y border-r border-white bg-orange-slide text-white transition-all duration-700 ease-in-out"
-    >
-      <div
-        class="mx-10 flex flex-grow justify-around text-2xl font-bold uppercase"
-      >
-        <div>France</div>
-        <div>Europe</div>
-        <div>Monde</div>
-        <div>Capitales</div>
-        <div>Drapeaux</div>
-      </div>
-      <div class="-mx-2 -rotate-90 font-bold uppercase">Sciences</div>
-    </div>
-  </div>
+  <app-animated-slide
+    title="Sciences"
+    position="top-[calc(75vh-7rem)]"
+    color="bg-orange-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
 
-  <div class="outer-container">
-    <div
-      class="container absolute left-0 top-612 flex h-32 translate-x-[-1480px] transform items-center border-y border-r border-white bg-blue-slide text-white transition-all duration-700 ease-in-out"
-    >
-      <div
-        class="mx-10 flex flex-grow justify-around text-2xl font-bold uppercase"
-      >
-        <div>France</div>
-        <div>Europe</div>
-        <div>Monde</div>
-        <div>Capitales</div>
-        <div>Drapeaux</div>
-      </div>
-      <div class="-mx-2 -rotate-90 font-bold uppercase">Animaux</div>
-    </div>
-  </div>
+  <app-animated-slide
+    title="Animaux"
+    position="bottom-[calc(0vh+2rem)]"
+    color="bg-blue-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
 </div>
