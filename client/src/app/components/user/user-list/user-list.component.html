@@ -12,7 +12,14 @@
         <img *ngIf="user.image" [src]="'data:'+user.mimeType+';base64,'+user.image" alt="Avatar" >
       </td>
     </ng-container>
-
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef> Créer le </th>
+      <td mat-cell *matCellDef="let user"> {{user.createdAt | date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="updatedAt">
+      <th mat-header-cell *matHeaderCellDef> Mis à jour le </th>
+      <td mat-cell *matCellDef="let user"> {{user.updatedAt | date}} </td>
+    </ng-container>
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>

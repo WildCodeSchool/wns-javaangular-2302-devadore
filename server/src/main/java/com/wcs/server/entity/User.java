@@ -38,7 +38,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
+
     private LocalDate createdAt;
+
     private LocalDate updatedAt;
 
 
@@ -118,6 +120,16 @@ public class User {
         this.image = image;
     }
 
+    @PrePersist
+    protected void onCreate(){
+        createdAt = LocalDate.now();
+        updatedAt = LocalDate.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        updatedAt = LocalDate.now();
+    }
     @Override
     public String toString() {
         return "User{" +

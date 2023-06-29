@@ -11,7 +11,7 @@ public class Image {
 
     private String name;
 
-    @Column(columnDefinition="BLOB")
+    @Column(columnDefinition="MEDIUMBLOB")
     private byte[] image;
     @OneToOne
     @JoinColumn(name = "user_id")

@@ -69,9 +69,14 @@ export class UserService {
     return this.http.post(`${this.regUrl}/register`, formData);
   }
 
-/*  getUserImage(userId: number): Observable<Blob> {
-    return this.http.get(`${this.baseUrl}/${userId}/image`, { responseType: 'blob' });
-  }*/
+  updateUserImage(userId: number, imageFile:File): Observable<User> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    const formdata = new FormData();
+    formdata.append('image', imageFile);
+    formdata.append('mimeType', imageFile.type);
+    return this.http.put<User>(`${this.baseUrl}/${userId}/image`, formdata,  { headers });
+  }
 
 }
 
