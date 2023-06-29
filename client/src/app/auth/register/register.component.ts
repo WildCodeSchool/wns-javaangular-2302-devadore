@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../../services/user.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -17,7 +18,7 @@ export class RegisterComponent implements OnInit {
   });
   image: File | null = null;
   previewUrl: any = null;
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private userService: UserService) { }
+  constructor(private formBuilder: FormBuilder, private http: HttpClient, private userService: UserService, private router: Router) { }
 
   ngOnInit() { }
 
@@ -49,6 +50,7 @@ export class RegisterComponent implements OnInit {
     this.userService.register(formData).subscribe(
       response => {
         console.log(response);
+        this.router.navigate(['/home'])
       },
       error => {
         console.log(error);
