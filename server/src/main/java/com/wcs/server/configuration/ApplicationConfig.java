@@ -5,6 +5,10 @@ import com.wcs.server.entity.Role;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 @Configuration
 public class ApplicationConfig {
@@ -21,5 +25,10 @@ public class ApplicationConfig {
         modelMapper.createTypeMap(RoleDTO.class, Role.class);
 
         return modelMapper;
+    }
+
+    @Bean
+    public AuditorAware<LocalDate> auditorAware() {
+        return () -> Optional.of(LocalDate.now());
     }
 }

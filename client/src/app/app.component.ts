@@ -3,30 +3,26 @@ import {AuthService} from "./services/auth.service";
 import {Router} from "@angular/router";
 import {UserService} from "./services/user.service";
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit { // en attendant un navbar ?
   title = 'client';
+  imageId: number | undefined;
+  imageToShow: any;
   constructor(public authService: AuthService, private userService: UserService,private router: Router) { }
   isAdmin: boolean = false;
 
 
 
   ngOnInit() {
-    const jwtToken = localStorage.getItem('jwtToken');
-    if (jwtToken) {
-      const decodedToken = this.authService.decodeToken(jwtToken);
-      const isAdmin = decodedToken && decodedToken.roles && decodedToken.roles.includes('ADMIN');
-      this.authService.setAdminState(isAdmin);
-        console.log(this.isAdmin);
-      }
-      this.authService.isAdmin$.subscribe((isAdminValue) => {
-        this.isAdmin = isAdminValue;
-        console.log(this.isAdmin);
-      });
+    this.authService.isAdmin$.subscribe((isAdminValue) => {
+      this.isAdmin = isAdminValue;
+    });
   }
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
@@ -45,4 +41,6 @@ export class AppComponent implements OnInit {
       this.router.navigate(['/auth/login']);
     }
   }
+
+
 }

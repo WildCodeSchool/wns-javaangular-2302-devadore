@@ -1,9 +1,7 @@
 package com.wcs.server.service;
 
 import com.wcs.server.dto.RoleDTO;
-import com.wcs.server.entity.Quiz;
-import com.wcs.server.entity.Role;
-import com.wcs.server.entity.UserRegistrationRequest;
+import com.wcs.server.entity.*;
 import com.wcs.server.repository.QuizRepository;
 import com.wcs.server.repository.RoleRepository;
 import jakarta.transaction.Transactional;
@@ -13,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.wcs.server.dto.UserDTO;
-import com.wcs.server.entity.User;
 import com.wcs.server.repository.UserRepository;
 
 
@@ -56,8 +53,15 @@ public class UserService {
                 .collect(Collectors.toList());
 
         userDTO.setRoles(roleDTOs);
+
+        if (user.getImage() != null) {
+            Image image = user.getImage();
+            userDTO.setImage(image.getImage());
+            userDTO.setMimeType(image.getMimeType());
+        }
         return modelMapper.map(user, UserDTO.class);
     }
+
     public UserDTO createUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
         List<Role> roles = userDTO.getRoles().stream()
@@ -89,7 +93,6 @@ public UserDTO updateUser(Long id, UserDTO userDTO) {
     }
 
     User updatedUser = userRepository.save(user);
-    System.out.println("Updated user with roles: " + updatedUser.getRoles());
     return modelMapper.map(updatedUser, UserDTO.class);
 }
     @Transactional
@@ -119,6 +122,16 @@ public UserDTO updateUser(Long id, UserDTO userDTO) {
 
         Role userRole = roleRepository.findByName("USER");
         user.getRoles().add(userRole);
+
+        // Ajouter une image à l'utilisateur
+        if (registrationRequest.getImage() != null) {
+            Image image = new Image();
+            image.setName(registrationRequest.getUsername() + "_image");
+            image.setImage(registrationRequest.getImage());
+            image.setMimeType(registrationRequest.getMimeType());
+            image.setUser(user);
+            user.setImage(image);
+        }
 
         return userRepository.save(user);
     }

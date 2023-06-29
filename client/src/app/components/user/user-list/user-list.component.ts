@@ -13,32 +13,16 @@ import {catchError, of} from "rxjs";
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
- /* users: User[] = [];*/
+
   users!: MatTableDataSource<User>;
-  displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'actions'];
+  displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'actions','createdAt','updatedAt'];
 
 
-  constructor(private userService: UserService, private router: Router,private authService: AuthService,) { }
+  constructor(private userService: UserService, private router: Router,private authService: AuthService) { }
 
   ngOnInit(): void {
     this.loadUsers();
   }
-/*  loadUsers(): void {
-    const jwtToken = this.authService.getToken();
-
-    if (jwtToken) {
-      this.userService.getUsers().subscribe(users => {
-          this.users = new MatTableDataSource(users);;
-          console.log('userlist: ', users)
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    } else {
-      console.error('Pas de jeton JWT trouvé.');
-    }
-  }*/
   loadUsers(): void {
     const jwtToken = this.authService.getToken();
 

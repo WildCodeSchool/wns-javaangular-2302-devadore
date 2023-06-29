@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Role} from "../../../models/role.model";
 import {forkJoin} from "rxjs";
 
+
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
@@ -14,13 +15,15 @@ export class UserDetailComponent implements OnInit {
 
   allRoles!: Role[];
   userRoles!: Role[];
+  imageFile?: File;
+  previewUrl: any = null;
 
   user: User = {
     id: 0,
     username: '',
     email: '',
     password: '',
-    avatar: '',
+    image: '',
     score: 0,
     roles: [],
     createdAt: new Date(),
@@ -37,16 +40,10 @@ export class UserDetailComponent implements OnInit {
         this.allRoles = roles;
         this.user = user;
         this.userRoles = user.roles;
+        console.log(user);
       });
   }
 
-  loadUser(): void {
-    const userId = parseInt(this.route.snapshot.paramMap.get('id') || '0', 10);
-    this.userService.getUserById(userId).subscribe(user => {
-      this.user = user;
-      console.log(user)
-    });
-  }
   isRoleSelected(role: Role): boolean {
     return this.userRoles?.some(userRole => userRole.id === role.id);
   }
@@ -60,8 +57,44 @@ export class UserDetailComponent implements OnInit {
       this.userRoles.push(role);
     }
   }
-  updateUser(user: User): void {
-    this.userService.updateUser(user).subscribe({
+
+  onImageSelected(event: Event) {
+    const file = (event.target as HTMLInputElement).files;
+    if (file && file.length) {
+      this.imageFile = file[0];
+      this.previewImage(this.imageFile);
+    }
+  }
+  previewImage(file: File) {
+    // show preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  updateUser(): void {
+    if(this.user) {
+      if(this.imageFile){
+        this.userService.updateUserImage(this.user.id, this.imageFile).subscribe({
+          next: () => {
+            this.updateUserDetails();
+            alert('Profil mis à jour avec succès');
+            this.router.navigate(['/user-list']);
+          },
+          error: (error) => {
+            console.error('Erreur lors de la mise à jour du profil:', error);
+          }
+        });
+      } else {
+        this.updateUserDetails();
+      }
+    }
+
+  }
+  private updateUserDetails(): void {
+    this.userService.updateUser(this.user).subscribe({
       next: () => {
         alert('Profil mis à jour avec succès');
         this.router.navigate(['/user-list']);
@@ -82,4 +115,5 @@ export class UserDetailComponent implements OnInit {
       }
     });
   }
+
 }

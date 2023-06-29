@@ -1,16 +1,24 @@
 
 <div class="user-list">
-  <h2>Liste des utilisateurs</h2>
   <mat-form-field>
   <input matInput (keyup)="applyFilter($event)" placeholder="Filter">
   </mat-form-field>
 
   <table mat-table [dataSource]="users" class="mat-elevation-z8">
+    <caption>Liste des utilisateurs</caption>
     <ng-container matColumnDef="avatar">
       <th mat-header-cell *matHeaderCellDef> Avatar </th>
       <td mat-cell *matCellDef="let user">
-        <img [src]="user.avatar" alt="Avatar" >
+        <img *ngIf="user.image" [src]="'data:'+user.mimeType+';base64,'+user.image" alt="Avatar" >
       </td>
+    </ng-container>
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef> Créer le </th>
+      <td mat-cell *matCellDef="let user"> {{user.createdAt | date}} </td>
+    </ng-container>
+    <ng-container matColumnDef="updatedAt">
+      <th mat-header-cell *matHeaderCellDef> Mis à jour le </th>
+      <td mat-cell *matCellDef="let user"> {{user.updatedAt | date}} </td>
     </ng-container>
 
     <ng-container matColumnDef="id">

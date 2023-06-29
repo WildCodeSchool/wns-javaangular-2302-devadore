@@ -1,6 +1,10 @@
 package com.wcs.server.dto;
 
+
+
+import java.time.LocalDate;
 import java.util.List;
+
 
 public class UserDTO {
 
@@ -9,8 +13,11 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
-    private String avatar;
+    private byte[] image;
+    private String mimeType;
 
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
     private Integer score;
     private List<RoleDTO> roles;
 
@@ -52,14 +59,13 @@ public class UserDTO {
         this.password = password;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
-
 
     public Integer getScore() {
         return score;
@@ -75,5 +81,28 @@ public class UserDTO {
 
     public void setRoles(List<RoleDTO> roles) {
         this.roles = roles;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDate updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

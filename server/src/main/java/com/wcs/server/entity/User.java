@@ -27,9 +27,8 @@ public class User {
     @NotBlank
     @Size(max = 120)
     private String password;
-
-    private String avatar;
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Image image;
     private int score;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -39,7 +38,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
 
+
     private LocalDate createdAt;
+
     private LocalDate updatedAt;
 
 
@@ -78,13 +79,6 @@ public class User {
         this.password = password;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
 
     public int getScore() {
         return score;
@@ -118,6 +112,24 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    @PrePersist
+    protected void onCreate(){
+        createdAt = LocalDate.now();
+        updatedAt = LocalDate.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        updatedAt = LocalDate.now();
+    }
     @Override
     public String toString() {
         return "User{" +
@@ -125,7 +137,6 @@ public class User {
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", avatar='" + avatar + '\'' +
                 ", score=" + score +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +

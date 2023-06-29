@@ -1,6 +1,6 @@
 <div class="user-detail">
   <h2>Mise à jour du profil</h2>
-  <form (ngSubmit)="updateUser(user)">
+  <form (ngSubmit)="updateUser()">
     <label for="username">Nom d'utilisateur :</label>
     <input [(ngModel)]="user.username" id="username" name="username" required>
     <br>
@@ -19,7 +19,13 @@
         {{ role.name }}
       </label>
     </div>
+    <img *ngIf="user.image" [src]="'data:'+user.mimeType+';base64,'+user.image" alt="Avatar" width="200">
     <br>
+    <img *ngIf="previewUrl" [src]="previewUrl" alt="Image preview" width="200">
+    <div>
+      <label>Image</label>
+      <input type="file" (change)="onImageSelected($event)">
+    </div>
     <button type="submit">Mettre à jour le profil</button>
   </form>
   <button (click)="deleteUser(user.id)">Supprimer le profil</button>
