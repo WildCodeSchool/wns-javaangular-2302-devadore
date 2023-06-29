@@ -1,3 +1,76 @@
-<div class="home-container">
-  <h1 class="home-title">QUIZZ4ALL</h1>
+<div
+  class="relative flex h-screen items-center justify-center bg-cover bg-center text-white"
+  style="
+    background-image: url(../../../assets/images/defaultAvatars/MidJourney-wizard-hall.jpg);
+  "
+>
+  <div class="flex flex-col items-center">
+    <h1 class="text-center text-8xl font-extrabold uppercase">
+      <span>Testez vos</span><br />
+      <span>connaissances !</span>
+    </h1>
+    <div class="flex gap-4">
+      <button
+        class="mt-4 rounded-full border-2 border-white px-11 py-2 text-lg"
+      >
+        aléatoire
+      </button>
+      <button
+        class="mt-4 rounded-full border-2 border-white px-11 py-2 text-lg"
+      >
+        voir tout
+      </button>
+    </div>
+
+    <div class="absolute right-0 top-0 m-5 flex flex-col items-center">
+      <img
+        class="w-52 object-contain"
+        src="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png"
+        alt="Logo"
+      />
+      <a routerLink="/auth/login">
+        <fa-icon class="fa-4x" [icon]="faCircleUser"></fa-icon>
+      </a>
+    </div>
+  </div>
+
+  <app-animated-slide
+    title="Géographie"
+    position="top-[calc(0vh+2rem)]"
+    color="bg-green-slide"
+    borderMarginTitle="-mx-5"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
+
+  <app-animated-slide
+    title="Histoire"
+    position="top-[calc(25vh-1rem)]"
+    color="bg-purple-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
+
+  <app-animated-slide
+    title="Culture"
+    position="top-[calc(50vh-4rem)]"
+    color="bg-red-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
+
+  <app-animated-slide
+    title="Sciences"
+    position="top-[calc(75vh-7rem)]"
+    color="bg-orange-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
+
+  <app-animated-slide
+    title="Animaux"
+    position="bottom-[calc(0vh+2rem)]"
+    color="bg-blue-slide"
+    borderMarginTitle="-mx-2"
+    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+  ></app-animated-slide>
 </div>

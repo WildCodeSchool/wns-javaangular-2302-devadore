@@ -1,0 +1,18 @@
+<div class="outer-container">
+  <div
+    class="container absolute left-0 {{
+      position
+    }} flex h-32 translate-x-[-80vw] transform items-center border-y border-r border-white {{
+      color
+    }} text-white transition-all duration-700 ease-in-out"
+  >
+    <div
+      class="mx-10 flex flex-grow justify-around text-2xl font-bold uppercase"
+    >
+      <div *ngFor="let quiz of quizs">{{ quiz }}</div>
+    </div>
+    <div class="{{ borderMarginTitle }} -rotate-90 font-bold uppercase">
+      {{ title }}
+    </div>
+  </div>
+</div>

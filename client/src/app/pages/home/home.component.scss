@@ -1,12 +1,3 @@
-.home-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-}
-
-.home-title {
-  font-size: 48px;
-  font-weight: bold;
-  text-align: center;
+.outer-container:hover .container {
+  transform: translateX(0);
 }

@@ -1,16 +1,40 @@
+<button mat-raised-button color="primary" routerLink="/auth/login">
+  Login
+</button>
+<button mat-raised-button color="primary" routerLink="/auth/register">
+  Register
+</button>
+<button mat-raised-button color="primary" routerLink="/auth/forgot-password">
+  Forgot Password
+</button>
+<button mat-raised-button color="primary" routerLink="/user-list">
+  User List
+</button>
+
 <form class="form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div class="form-group">
     <mat-form-field appearance="fill">
       <mat-label for="username">Username</mat-label>
-    <input matInput type="text" formControlName="username" id="username">
+      <input matInput type="text" formControlName="username" id="username" />
     </mat-form-field>
   </div>
   <div class="form-group">
     <mat-form-field appearance="fill">
       <mat-label for="password">Password</mat-label>
-    <input matInput [type]="hide ? 'password' : 'text'" formControlName="password" id="password">
-      <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        formControlName="password"
+        id="password"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
     </mat-form-field>
   </div>
@@ -19,4 +43,3 @@
     {{ isAuthenticated() ? 'Logout' : 'Login' }}
   </button>-->
 </form>
-

@@ -9,11 +9,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTableModule} from "@angular/material/table";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { AnimatedSlideComponent } from './pages/home/components/animated-slide/animated-slide.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
+    AnimatedSlideComponent,
   ],
   imports: [
 
@@ -23,7 +26,8 @@ import {MatTableModule} from "@angular/material/table";
     BrowserAnimationsModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatTableModule
+    MatTableModule,
+    FontAwesomeModule
   ],
   exports: [MatButtonModule, MatCheckboxModule],
   providers: [
