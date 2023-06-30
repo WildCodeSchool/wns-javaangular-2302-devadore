@@ -1,4 +1,4 @@
-create table categorie
+create table category
 (
     id          int auto_increment primary key,
     name        varchar(255) not null,
@@ -58,10 +58,18 @@ create table user_roles
     role_id int not null,
     primary key (user_id, role_id)
 );
-alter table quiz add constraint quiz_ibfk_1 foreign key (category_id) references categorie (id) on update cascade on delete cascade;
+create table images (
+    id        int auto_increment primary key,
+    image     mediumblob   null,
+    mime_type varchar(255) null,
+    name      varchar(255) null,
+    user_id   int       null
+);
+alter table quiz add constraint quiz_ibfk_1 foreign key (category_id) references category (id) on update cascade on delete cascade;
 alter table quiz add constraint quiz_ibfk_2 foreign key (created_by) references user (id) on update cascade on delete cascade;
 alter table question add constraint question_ibfk_1 foreign key (quiz_id) references quiz (id) on update cascade on delete cascade;
 alter table answer add constraint answer_ibfk_1 foreign key (question_id) references question (id);
 alter table user_roles add constraint user_roles_ibfk_1 foreign key (user_id) references user (id) on update cascade;
 alter table user_roles add constraint user_roles_ibfk_2 foreign key (role_id) references role (id) on update cascade;
-    
+alter table images add constraint FK_fccua10sh2240kfshte8bkbpt
+    foreign key (user_id) references user (id);   
