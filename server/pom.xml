@@ -69,15 +69,10 @@
             <artifactId>modelmapper</artifactId>
             <version>3.1.1</version>
         </dependency>
-<!--        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
-        </dependency>-->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
-            <version>5.6.1</version>
+            <version>6.1.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
         <dependency>
@@ -104,9 +99,16 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+<<<<<<< HEAD
    <groupId>org.flywaydb</groupId>
    <artifactId>flyway-mysql</artifactId>
 </dependency>
+=======
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+>>>>>>> 95739de1e02e822ab70541346edc598374ed57d8
     </dependencies>
     <build>
         <plugins>

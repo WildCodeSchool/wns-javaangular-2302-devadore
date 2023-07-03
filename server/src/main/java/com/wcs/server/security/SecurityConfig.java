@@ -36,7 +36,6 @@ public class SecurityConfig {
      * @param jwtTokenProvider
      * @param userDetailsService
      */
-    @Autowired
     public SecurityConfig(CustomAuthenticationProvider customAuthenticationProvider,
                           JwtTokenProvider jwtTokenProvider,
                           UserDetailsService userDetailsService) {
@@ -116,20 +115,20 @@ public class SecurityConfig {
      * @return la chaîne de filtres de sécurité configurée.
      * @throws Exception
      */
-
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-                .cors().and()
-                .csrf().disable()
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**", "/api/images/**", "/api/users/register").permitAll()
-                        .requestMatchers("/api/users/**").hasAuthority("ADMIN")
-                        /*.requestMatchers("/api/users/**").authenticated()*/
-                        .anyRequest().authenticated())
-                .addFilterBefore(new JwtAuthenticationFilter(userDetailsService,jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+            .cors(cors -> cors.configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()))
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                .requestMatchers("/auth/**", "/api/images/**", "/api/users/register").permitAll()
+                .requestMatchers("/api/users/**").hasAuthority("ADMIN")
+                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                .anyRequest().authenticated())
+            .addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();

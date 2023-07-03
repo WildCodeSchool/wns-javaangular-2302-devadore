@@ -25,3 +25,4 @@
 .env
 .vscode/
 .idea/
+.vscode/settings.json
