@@ -9,13 +9,11 @@ import java.util.List;
 public class UserDTO {
 
     private Long id;
-
     private String username;
     private String email;
     private String password;
     private byte[] image;
     private String mimeType;
-
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private Integer score;
@@ -105,12 +103,5 @@ public class UserDTO {
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
-/*
-    public ImageDTO getImage() {
-        return image;
-    }
 
-    public void setImage(ImageDTO image) {
-        this.image = image;
-    }*/
 }
