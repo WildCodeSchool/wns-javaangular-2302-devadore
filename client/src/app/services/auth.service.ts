@@ -70,7 +70,6 @@ export class AuthService {
             console.log('Removing tokens...');
             localStorage.removeItem('jwtToken');
             localStorage.removeItem('refreshToken');
-           /* localStorage.removeItem('jwt');*/
             this.router.navigate(['/home']);
           })
         );

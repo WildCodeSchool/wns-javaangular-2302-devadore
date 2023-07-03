@@ -22,15 +22,26 @@
       </button>
     </div>
 
-    <div class="absolute right-0 top-0 m-5 flex flex-col items-center">
-      <img
-        class="w-52 object-contain"
-        src="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png"
-        alt="Logo"
-      />
-      <a routerLink="/auth/login">
-        <fa-icon class="fa-4x" [icon]="faCircleUser"></fa-icon>
-      </a>
+  <div class="absolute right-0 top-0 m-5 flex flex-col items-center dropdown-container">
+    <img
+      class="w-52 object-contain"
+      src="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png"
+      alt="Logo"
+
+    />
+    <fa-icon class="fa-4x" [icon]="faCircleUser"
+             (mouseenter)="showDropdown()"
+             (mouseleave)="hideDropdown()"></fa-icon>
+    <div #dropdownMenu class="dropdown-menu" [class.show]="isDropdownVisible" (mouseenter)="showDropdown()" (mouseleave)="hideDropdown()">
+      <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" (click)="handleButtonClick()">
+        {{ isAuthenticated() ? 'Logout' : 'Login' }}
+      </button>
+      <br>
+      <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/auth/register">Register</button>
+      <br>
+      <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/auth/forgot-password">Forgot Password</button>
+      <br>
+      <button *ngIf="isAdmin" class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/user-list">User List</button>
     </div>
   </div>
 
@@ -73,4 +84,5 @@
     borderMarginTitle="-mx-2"
     [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
   ></app-animated-slide>
+</div>
 </div>

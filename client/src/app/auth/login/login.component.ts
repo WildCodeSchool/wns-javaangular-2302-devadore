@@ -12,7 +12,7 @@ import { AuthService } from "../../services/auth.service";
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   hide = true;
-  isAdmin: boolean = false;
+/*  isAdmin: boolean = false;*/
 
   constructor(private formBuilder: FormBuilder, private authService: AuthService, private http: HttpClient, private router: Router) {
     this.loginForm = this.formBuilder.group({
@@ -54,5 +54,7 @@ export class LoginComponent implements OnInit {
       }
     })
   }
-
+  goToRegisterPage() {
+    this.router.navigateByUrl('/auth/register');
+  }
 }

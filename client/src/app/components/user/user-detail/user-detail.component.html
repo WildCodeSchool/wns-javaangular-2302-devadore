@@ -1,33 +1,44 @@
-<div class="user-detail">
-  <h2>Mise à jour du profil</h2>
-  <form (ngSubmit)="updateUser()">
-    <label for="username">Nom d'utilisateur :</label>
-    <input [(ngModel)]="user.username" id="username" name="username" required>
-    <br>
-    <label for="email">Email :</label>
-    <input [(ngModel)]="user.email" id="email" name="email" type="email" required>
-    <br>
-    <label for="password">Password :</label>
-    <input [(ngModel)]="user.password" id="password" name="password" type="password" required>
-    <br>
-    <div *ngFor="let role of allRoles; let i = index">
-      <label>
-        <input type="checkbox"
-               [checked]="isRoleSelected(role)"
-               (change)="toggleRoleSelection(role)"
-               [id]="'role-' + i">
-        {{ role.name }}
-      </label>
-    </div>
-    <img *ngIf="user.image" [src]="'data:'+user.mimeType+';base64,'+user.image" alt="Avatar" width="200">
-    <br>
-    <img *ngIf="previewUrl" [src]="previewUrl" alt="Image preview" width="200">
-    <div>
-      <label>Image</label>
-      <input type="file" (change)="onImageSelected($event)">
-    </div>
-    <button type="submit">Mettre à jour le profil</button>
-  </form>
-  <button (click)="deleteUser(user.id)">Supprimer le profil</button>
-</div>
 
+<div class="flex items-center justify-center min-h-screen">
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-black">
+      <img class="w-8 h-8 mr-2" src="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png" alt="logo">
+      Quizz4all
+    </a>
+  <div class="w-full max-w-md bg-white rounded-lg shadow p-6">
+    <h2 class="text-2xl font-bold mb-4">Mise à jour du profil</h2>
+    <form (ngSubmit)="updateUser()" class="space-y-4" enctype="multipart/form-data">
+      <label for="username" class="block mb-2">Nom d'utilisateur :</label>
+      <input [(ngModel)]="user.username" id="username" name="username" required class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+
+      <label for="email" class="block mb-2">Email :</label>
+      <input [(ngModel)]="user.email" id="email" name="email" type="email" required class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+
+      <label for="password" class="block mb-2">Password :</label>
+      <input [(ngModel)]="user.password" id="password" name="password" type="password" required class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5">
+
+      <div *ngFor="let role of allRoles; let i = index">
+        <label>
+          <input type="checkbox" [checked]="isRoleSelected(role)" (change)="toggleRoleSelection(role)" [id]="'role-' + i" class="mr-2">
+          {{ role.name }}
+        </label>
+      </div>
+
+      <img *ngIf="user.image" [src]="'data:'+user.mimeType+';base64,'+user.image" alt="Avatar" width="200">
+
+      <img *ngIf="previewUrl" [src]="previewUrl" alt="Image preview" width="200">
+
+      <div>
+        <label for="image" class="block mb-2">Image</label>
+        <input type="file" id="image" name="image" (change)="onImageSelected($event)" class="bg-gray-50 text-gray-900">
+      </div>
+
+      <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 text-black font-medium rounded-lg text-sm px-5 py-2.5 mt-4">Mettre à jour le profil</button>
+      // TODO <button></button> créer un quiz
+      // TODO <button></button> modifier un quiz
+
+    </form>
+    <button (click)="deleteUser(user.id)" class="mt-4">Supprimer le profil</button>
+  </div>
+</div>
+</div>
