@@ -117,6 +117,9 @@ public class User {
     }
 
     public void setImage(Image image) {
+        if (image != null) {
+            image.setUser(this);
+        }
         this.image = image;
     }
 

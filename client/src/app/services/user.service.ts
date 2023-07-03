@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, Observable, of} from 'rxjs';
 
 import { User } from '../models/user.model';
@@ -69,14 +69,45 @@ export class UserService {
     return this.http.post(`${this.regUrl}/register`, formData);
   }
 
-  updateUserImage(userId: number, imageFile:File): Observable<User> {
+  /*updateUserImage(userId: number, imageFile: File, mimeType: string): Observable<User> {
+    console.log('Image File:', imageFile);
+    console.log('MIME Type:', mimeType);
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const params = new HttpParams().set('mimeType', mimeType);
+
+    const headers = new HttpHeaders();
     const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-    const formdata = new FormData();
-    formdata.append('image', imageFile);
-    formdata.append('mimeType', imageFile.type);
-    return this.http.put<User>(`${this.baseUrl}/${userId}/image`, formdata,  { headers });
+    if (jwtToken) {
+      headers.set('Authorization', `Bearer ${jwtToken}`);
+    }
+
+    return this.http.put<User>(`${this.baseUrl}/${userId}/image`, formData, {
+      headers,
+      params
+    });
+  }*/
+  updateUserImage(userId: number, imageFile: File, mimeType: string): Observable<User> {
+    console.log('Image File:', imageFile);
+    console.log('MIME Type:', mimeType);
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    const params = new HttpParams().set('mimeType', mimeType);
+
+    const headers = new HttpHeaders();
+    const jwtToken = this.authService.getToken();
+    if (jwtToken) {
+      headers.set('Authorization', `Bearer ${jwtToken}`);
+    }
+
+    return this.http.put<User>(`${this.baseUrl}/${userId}/image`, formData, {
+      headers,
+      params
+    });
   }
+
 
 }
 
