@@ -8,8 +8,6 @@ import java.util.*;
 @Table(name = "role")
 public class Role {
 
-    public Role () {
-    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
