@@ -33,7 +33,7 @@ export class UserDetailComponent implements OnInit {
   constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    const id = parseInt(this.route.snapshot.paramMap.get('id') || '0', 10);
+    const id = parseInt(this.route.snapshot.paramMap.get('id') ?? '0', 10);
 
     forkJoin([this.userService.getAllRoles(), this.userService.getUserById(id)])
       .subscribe(([roles, user]) => {
@@ -110,12 +110,14 @@ export class UserDetailComponent implements OnInit {
         this.userService.updateUserImage(userId, imageFile, mimeType).subscribe({
           next: () => {
             // Mettre à jour uniquement les détails de l'utilisateur après la mise à jour de l'image
-            this.updateUserDetails();
+            alert('Image de profil image mis à jour avec succès');
+            this.router.navigate(['/user-list']);
           },
           error: (error) => {
             console.error('Erreur lors de la mise à jour de l\'image:', error);
           }
         });
+
       } else {
         // Si aucune image n'est spécifiée, mettre à jour uniquement les détails de l'utilisateur
         this.updateUserDetails();
@@ -126,7 +128,7 @@ export class UserDetailComponent implements OnInit {
   private updateUserDetails(): void {
     this.userService.updateUser(this.user).subscribe({
       next: () => {
-        /*alert('Profil mis à jour avec succès');*/
+        alert('Profil mis à jour avec succès');
         this.router.navigate(['/user-list']);
       },
       error: (error) => {
