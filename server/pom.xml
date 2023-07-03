@@ -99,16 +99,14 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-<<<<<<< HEAD
    <groupId>org.flywaydb</groupId>
    <artifactId>flyway-mysql</artifactId>
 </dependency>
-=======
+  <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.1.0</version>
         </dependency>
->>>>>>> 95739de1e02e822ab70541346edc598374ed57d8
     </dependencies>
     <build>
         <plugins>
