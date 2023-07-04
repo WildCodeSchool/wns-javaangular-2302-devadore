@@ -1,4 +1,5 @@
-package com.wcs.server;
+package com.wcs.server.DataTest;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -12,32 +13,35 @@ import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguratio
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
+import com.wcs.server.ServerApplication;
 import com.wcs.server.configuration.ApplicationConfig;
 import com.wcs.server.configuration.ApplicationTestConfig;
-import com.wcs.server.entity.Role;
-import com.wcs.server.repository.RoleRepository;
+import com.wcs.server.entity.Category;
+import com.wcs.server.repository.CategoryRepository;
 import com.wcs.server.security.SecurityConfig;
 
 @DataJpaTest
 @Import(ApplicationTestConfig.class)
 @EnableAutoConfiguration(exclude= {WebMvcAutoConfiguration.class, ApplicationConfig.class, SecurityConfig.class, ServerApplication.class})
-public class DataTests {
-    
+public class Category_test {
+
     @Autowired
-    RoleRepository RoleRepository;
+    CategoryRepository CategoryRepository;
 
     @Test
-    public void testCreateRole() {
-        String name = "ROLE_ADMIN";
-        var role = new Role(name);
+    public void testCreateCategory() {
+        String name = "Culture";
+        var category = new Category(name);
 
-        RoleRepository.saveAndFlush(role);
+        CategoryRepository.saveAndFlush(category);
 
-        Optional<Role> fromDB = RoleRepository.findById(role.getId());
+        Optional<Category> fromDB = CategoryRepository.findById(category.getId());
 
         assertTrue(fromDB.isPresent());
-        assertEquals(role.getId(), fromDB.get().getId());
-        assertEquals(role.getName(), fromDB.get().getName()); 
+        assertEquals(category.getId(), fromDB.get().getId());
+        assertEquals(category.getName(), fromDB.get().getName()); 
     }
-    
+
+
+
 }

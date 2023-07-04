@@ -20,12 +20,13 @@ public class Category {
 
     private LocalDate createdAt;
     private LocalDate updatedAt;
-    public static Long getId() {
-        return null;
+    public Long getId() {
+        return id;
     }
-    public static Short getName() {
-        return null;
+    public String getName() {
+        return name;
     }
-
+    
+    
 
 }

@@ -1,12 +1,15 @@
 package com.wcs.server.repository;
 
-import java.util.Optional;
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.wcs.server.entity.Category;
 
-public interface CategoryRepository {
+@Repository
+public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> getCategoryByName(String name);
 
-    static Optional<Category> findById(Long id) {
-        return null;
-    }
+    Category findByName(String user);
 }
