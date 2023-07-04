@@ -3,6 +3,7 @@ package com.wcs.server.service;
 import com.wcs.server.dto.RoleDTO;
 import com.wcs.server.entity.*;
 
+import com.wcs.server.repository.ImageRepository;
 import com.wcs.server.repository.QuizRepository;
 import com.wcs.server.repository.RoleRepository;
 import jakarta.transaction.Transactional;
@@ -26,6 +27,9 @@ public class UserService {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -175,6 +179,20 @@ public UserDTO updateUser(Long id, UserDTO userDTO) {
             // Gérer l'exception en conséquence
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void deleteImage(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            // Supprimer l'objet Image associé à l'utilisateur s'il existe
+            Image userImage = user.getImage();
+            if (userImage != null) {
+                user.setImage(null); // Dissocier l'objet Image de l'utilisateur
+                userImage.setUser(null); // Dissocier l'utilisateur de l'objet Image
+                userRepository.save(user); // Enregistrer les modifications dans la base de données
+                imageRepository.delete(userImage); // Supprimer l'objet Image de la base de données
+            }
         }
     }
 

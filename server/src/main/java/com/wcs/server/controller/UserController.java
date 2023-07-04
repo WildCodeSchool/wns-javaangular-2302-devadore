@@ -124,5 +124,10 @@ public class UserController {
         byte[] decodedImage = Base64.getDecoder().decode(base64Image);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(user.getMimeType())).body(decodedImage);
     }
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
+        userService.deleteImage(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

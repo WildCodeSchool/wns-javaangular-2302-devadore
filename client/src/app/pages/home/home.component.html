@@ -31,15 +31,13 @@
     />
     <fa-icon class="fa-4x" [icon]="faCircleUser"
              (mouseenter)="showDropdown()"
-             (mouseleave)="hideDropdown()"></fa-icon>
+             (mouseleave)="hideDropdown()"
+             [ngClass]="{'color-lawngreen': isAuthenticated(), 'color-default': !isAuthenticated()}">
+    </fa-icon>
     <div #dropdownMenu class="dropdown-menu" [class.show]="isDropdownVisible" (mouseenter)="showDropdown()" (mouseleave)="hideDropdown()">
       <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" (click)="handleButtonClick()">
         {{ isAuthenticated() ? 'Logout' : 'Login' }}
       </button>
-      <br>
-      <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/auth/register">Register</button>
-      <br>
-      <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/auth/forgot-password">Forgot Password</button>
       <br>
       <button *ngIf="isAdmin" class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/user-list">User List</button>
     </div>

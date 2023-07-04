@@ -74,32 +74,6 @@ export class UserDetailComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-/*  updateUser(): void {
-    if (this.user) {
-      if (this.imageFile) {
-        const mimeType = this.imageFile.type;
-
-        const formData = new FormData();
-        formData.append('image', this.imageFile, this.imageFile.name);
-        formData.append('mimeType', mimeType);
-
-        this.userService.updateUserImage(this.user.id, this.imageFile, this.imageFile.type).subscribe({
-          next: () => {
-            this.updateUserDetails();
-          },
-          complete: () => {
-            alert('Profil mis à jour avec succès');
-            this.router.navigate(['/user-list']);
-          },
-          error: (error) => {
-            console.error('Erreur lors de la mise à jour du profil:', error);
-          }
-        });
-      } else {
-        this.updateUserDetails();
-      }
-    }
-  }*/
   updateUser(): void {
     if (this.user) {
       if (this.imageFile) {
@@ -137,7 +111,6 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-
   deleteUser(userId: number): void {
     this.userService.deleteUser(userId).subscribe({
       next: () => {
@@ -148,5 +121,6 @@ export class UserDetailComponent implements OnInit {
       }
     });
   }
+
 
 }

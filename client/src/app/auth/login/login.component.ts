@@ -57,4 +57,7 @@ export class LoginComponent implements OnInit {
   goToRegisterPage() {
     this.router.navigateByUrl('/auth/register');
   }
+  goToForgotPasswordPage() {
+    this.router.navigateByUrl('/auth/forgot-password');
+  }
 }
