@@ -7,6 +7,7 @@ import com.wcs.server.dto.UserDTO;
 import com.wcs.server.entity.User;
 import com.wcs.server.service.RoleService;
 import com.wcs.server.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,8 @@ public class UserController {
     private UserService userService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping("/list")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -60,7 +63,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/image")
-    public ResponseEntity<User> updateUserImage(@PathVariable Long id, MultipartHttpServletRequest request) {
+    public ResponseEntity<UserDTO> updateUserImage(@PathVariable Long id, MultipartHttpServletRequest request) {
         UserDTO user = userService.getUserById(id);
         if (user == null) {
             return ResponseEntity.notFound().build();
@@ -84,7 +87,8 @@ public class UserController {
                     return ResponseEntity.notFound().build();
                 }
 
-                return ResponseEntity.ok(updatedUser );
+                UserDTO userDTO = modelMapper.map(updatedUser, UserDTO.class);
+                return ResponseEntity.ok(userDTO);
             } else {
                 return ResponseEntity.badRequest().build();
             }
@@ -93,42 +97,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    //TODO effectuer le mapping entre les objets d'entité et les objets DTO.
-/*    @PutMapping("/{id}/image")
-    public ResponseEntity<UserDTO> updateUserImage(@PathVariable Long id, MultipartHttpServletRequest request) {
-        UserDTO user = userService.getUserById(id);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        try {
-            MultipartFile imageDTO = request.getFile("image");
-            // Vérifier si un fichier a été téléchargé
-            if (imageDTO != null && !imageDTO.isEmpty()) {
-                // Ajouter des logs pour vérifier le fichier
-                System.out.println("Fichier récupéré : " + imageDTO.getOriginalFilename());
-                System.out.println("Type MIME : " + imageDTO.getContentType());
-
-                // Mettre à jour l'image de l'utilisateur avec la nouvelle image
-                byte[] imageData = imageDTO.getBytes();
-                String mimeType = imageDTO.getContentType();
-
-                // Appeler votre logique de mise à jour de l'image de l'utilisateur avec les données du fichier
-                UserDTO updatedUserDTO  = userService.updateUserImage(id, imageData, mimeType);
-                if (updatedUserDTO  == null) {
-                    return ResponseEntity.notFound().build();
-                }
-
-                return ResponseEntity.ok(updatedUserDTO );
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }*/
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -155,6 +123,11 @@ public class UserController {
         String base64Image = Base64.getEncoder().encodeToString(user.getImage());
         byte[] decodedImage = Base64.getDecoder().decode(base64Image);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(user.getMimeType())).body(decodedImage);
+    }
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
+        userService.deleteImage(id);
+        return ResponseEntity.noContent().build();
     }
 
 }
