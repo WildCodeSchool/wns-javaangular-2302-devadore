@@ -7,6 +7,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "category")
 public class Category {
+    public Category(String name2) {
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,6 +20,12 @@ public class Category {
 
     private LocalDate createdAt;
     private LocalDate updatedAt;
+    public static Long getId() {
+        return null;
+    }
+    public static Short getName() {
+        return null;
+    }
 
 
 }
