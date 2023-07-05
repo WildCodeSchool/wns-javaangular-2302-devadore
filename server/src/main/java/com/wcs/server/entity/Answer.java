@@ -2,7 +2,7 @@ package com.wcs.server.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "answer")
@@ -19,8 +19,8 @@ public class Answer {
 
     private Boolean isCorrect;
 
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
     public Answer() {
     }
@@ -57,19 +57,19 @@ public class Answer {
         isCorrect = correct;
     }
 
-    public LocalDate getCreatedAt() {
+      public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDate updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 

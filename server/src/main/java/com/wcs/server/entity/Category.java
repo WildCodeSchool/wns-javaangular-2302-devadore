@@ -2,7 +2,7 @@ package com.wcs.server.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "category")
@@ -18,6 +18,7 @@ public class Category {
 
     private String description;
 
+<<<<<<< HEAD
     private LocalDate createdAt;
     private LocalDate updatedAt;
     public Long getId() {
@@ -28,5 +29,10 @@ public class Category {
     }
     
     
+=======
+    private Date createdAt;
+    private Date updatedAt;
+
+>>>>>>> 49c77608ca810b8363797583148ce9b161a1c2ff
 
 }
