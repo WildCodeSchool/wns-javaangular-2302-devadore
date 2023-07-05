@@ -2,7 +2,7 @@ package com.wcs.server.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "category")
@@ -16,8 +16,8 @@ public class Category {
 
     private String description;
 
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
 
 }
