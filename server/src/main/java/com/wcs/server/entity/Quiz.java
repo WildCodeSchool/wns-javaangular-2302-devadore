@@ -32,6 +32,9 @@ public class Quiz {
     public Quiz() {
     }
 
+    public Quiz(String title) {
+    }
+
     public Long getId() {
         return id;
     }
