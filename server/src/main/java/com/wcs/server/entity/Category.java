@@ -18,9 +18,6 @@ public class Category {
 
     private String description;
 
-<<<<<<< HEAD
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
     public Long getId() {
         return id;
     }
@@ -29,10 +26,8 @@ public class Category {
     }
     
     
-=======
     private Date createdAt;
     private Date updatedAt;
 
->>>>>>> 49c77608ca810b8363797583148ce9b161a1c2ff
 
 }
