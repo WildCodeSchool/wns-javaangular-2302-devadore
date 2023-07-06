@@ -1,6 +1,5 @@
 package com.wcs.server.controller;
 
-
 import com.wcs.server.dto.RoleDTO;
 import com.wcs.server.dto.UserDTO;
 
@@ -9,6 +8,7 @@ import com.wcs.server.service.RoleService;
 import com.wcs.server.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -45,6 +44,16 @@ public class UserController {
         }
 
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/name/id")
+    public ResponseEntity<Long> getUserIdByUsername(@RequestParam String username) {
+        Long userId = userService.getUserIdByUsername(username);
+        if (userId != null) {
+            return ResponseEntity.ok(userId);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping
@@ -81,9 +90,9 @@ public class UserController {
                 byte[] imageData = imageDTO.getBytes();
                 String mimeType = imageDTO.getContentType();
 
-                // Appeler votre logique de mise à jour de l'image de l'utilisateur avec les données du fichier
-                User updatedUser  = userService.updateUserImage(id, imageData, mimeType);
-                if (updatedUser  == null) {
+                // Logique de mise à jour de l'image de l'utilisateur avec les données du fichier
+                User updatedUser = userService.updateUserImage(id, imageData, mimeType);
+                if (updatedUser == null) {
                     return ResponseEntity.notFound().build();
                 }
 
@@ -103,11 +112,13 @@ public class UserController {
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/roles")
     public ResponseEntity<List<RoleDTO>> getAllRoles() {
         List<RoleDTO> roles = roleService.getAllRoles();
         return ResponseEntity.ok(roles);
     }
+
     @GetMapping("/roles/{id}")
     public RoleDTO getRoleById(Long id) {
         return roleService.getRoleById(id);
@@ -116,14 +127,20 @@ public class UserController {
     @GetMapping("/{id}/image")
     public ResponseEntity<byte[]> getUserImage(@PathVariable Long id) {
         UserDTO user = userService.getUserById(id);
-        if (user == null || user.getImage() == null || user.getMimeType() == null) {
+        if (user == null || user.getImage() == null) {
             return ResponseEntity.notFound().build();
         }
 
-        String base64Image = Base64.getEncoder().encodeToString(user.getImage());
-        byte[] decodedImage = Base64.getDecoder().decode(base64Image);
-        return ResponseEntity.ok().contentType(MediaType.parseMediaType(user.getMimeType())).body(decodedImage);
+        byte[] imageBytes = user.getImage();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setContentType(MediaType.parseMediaType(user.getMimeType())); // For example, JPEG image
+        headers.setContentLength(imageBytes.length);
+
+        return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
     }
+
     @DeleteMapping("/{id}/image")
     public ResponseEntity<Void> deleteImage(@PathVariable Long id) {
         userService.deleteImage(id);

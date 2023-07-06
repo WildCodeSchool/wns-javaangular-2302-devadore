@@ -4,7 +4,6 @@ public class ImageDTO {
     private Long id;
     private String name;
     private byte[] image;
-  /*  private Long userId;*/
     private String mimeType;
 
 
@@ -34,14 +33,6 @@ public class ImageDTO {
     public void setImage(byte[] image) {
         this.image = image;
     }
-
-/*    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }*/
 
     public String getMimeType() {
         return mimeType;

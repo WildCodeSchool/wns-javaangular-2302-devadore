@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, Observable, of} from 'rxjs';
 
-import { User } from '../models/user.model';
+import {User} from '../models/user.model';
 import {AuthService} from "./auth.service";
 import {Role} from "../models/role.model";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -34,12 +35,19 @@ export class UserService {
     }
   }
 
-  getUserById(userId: number): Observable<User> {
+  getUserById(userId: number | null): Observable<User> {
     const jwtToken = this.authService.getToken();
     const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     const url = `${this.baseUrl}/${userId}`;
-
+    console.log('userId =', userId)
     return this.http.get<User>(url, {headers});
+  }
+
+  getUserIdByUsername(username: string): Observable<number> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    const url = `${this.baseUrl}/name/id?username=${encodeURIComponent(username)}`;
+    return this.http.get<number>(url, {headers});
   }
 
   createUser(user: User): Observable<User> {
@@ -73,25 +81,6 @@ export class UserService {
     return this.http.post(`${this.regUrl}/register`, formData);
   }
 
-  /*updateUserImage(userId: number, imageFile: File, mimeType: string): Observable<User> {
-    console.log('Image File:', imageFile);
-    console.log('MIME Type:', mimeType);
-    const formData = new FormData();
-    formData.append('image', imageFile);
-
-    const params = new HttpParams().set('mimeType', mimeType);
-
-    const headers = new HttpHeaders();
-    const jwtToken = this.authService.getToken();
-    if (jwtToken) {
-      headers.set('Authorization', `Bearer ${jwtToken}`);
-    }
-
-    return this.http.put<User>(`${this.baseUrl}/${userId}/image`, formData, {
-      headers,
-      params
-    });
-  }*/
   updateUserImage(userId: number, imageFile: File, mimeType: string): Observable<User> {
     console.log('Image File:', imageFile);
     console.log('MIME Type:', mimeType);
@@ -110,6 +99,14 @@ export class UserService {
       headers,
       params
     });
+  }
+
+  getUserImage(userId: number): Observable<any> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`).set('Content-Type', 'application/json') : new HttpHeaders().set('Content-Type', 'application/json');
+    console.log('Request URL:', `${this.baseUrl}/${userId}/image`);
+    console.log('Request Headers:', headers);
+    return this.http.get<any>(`${this.baseUrl}/${userId}/image`, {headers, responseType: 'blob' as 'json'});
   }
 
 

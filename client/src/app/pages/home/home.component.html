@@ -6,7 +6,7 @@
 >
   <div class="flex flex-col items-center">
     <h1 class="text-center text-8xl font-extrabold uppercase">
-      <span>Testez vos</span><br />
+      <span>Testez vos</span><br/>
       <span>connaissances !</span>
     </h1>
     <div class="flex gap-4">
@@ -22,65 +22,77 @@
       </button>
     </div>
 
-  <div class="absolute right-0 top-0 m-5 flex flex-col items-center dropdown-container">
-    <img
-      class="w-52 object-contain"
-      src="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png"
-      alt="Logo"
+    <div class="absolute right-0 top-0 m-5 flex flex-col items-center dropdown-container">
+      <img
+        class="w-52 object-contain"
+        src="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png"
+        alt="Logo"
 
-    />
-    <fa-icon class="fa-4x" [icon]="faCircleUser"
+      />
+      <!-- Afficher l'image de l'utilisateur connecté -->
+      <div *ngIf="isLoggedIn && userImage" class="w-16 h-16 rounded-full overflow-hidden">
+        <img [src]="userImage" alt="User Image" class="w-full h-full"
              (mouseenter)="showDropdown()"
-             (mouseleave)="hideDropdown()"
-             [ngClass]="{'color-lawngreen': isAuthenticated(), 'color-default': !isAuthenticated()}">
-    </fa-icon>
-    <div #dropdownMenu class="dropdown-menu" [class.show]="isDropdownVisible" (mouseenter)="showDropdown()" (mouseleave)="hideDropdown()">
-      <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" (click)="handleButtonClick()">
-        {{ isAuthenticated() ? 'Logout' : 'Login' }}
-      </button>
-      <br>
-      <button *ngIf="isAdmin" class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" routerLink="/user-list">User List</button>
+             (mouseleave)="hideDropdown()">
+      </div>
+
+      <!-- Afficher l'icône si l'utilisateur n'est pas connecté -->
+      <fa-icon *ngIf="!isLoggedIn" class="fa-4x" [icon]="faCircleUser"
+               (mouseenter)="showDropdown()"
+               (mouseleave)="hideDropdown()"
+               [ngClass]="{'color-lawngreen': isLoggedIn, 'color-default': !isLoggedIn}">
+      </fa-icon>
+
+      <div #dropdownMenu class="dropdown-menu" [class.show]="isDropdownVisible" (mouseenter)="showDropdown()"
+           (mouseleave)="hideDropdown()">
+        <button class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current" (click)="handleButtonClick()">
+          {{ isAuthenticated() ? 'Logout' : 'Login' }}
+        </button>
+        <br>
+        <button *ngIf="isAdmin" class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current"
+                routerLink="/user-list">User List
+        </button>
+      </div>
     </div>
+
+    <app-animated-slide
+      title="Géographie"
+      position="top-[calc(0vh+2rem)]"
+      color="bg-green-slide"
+      borderMarginTitle="-mx-5"
+      [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+    ></app-animated-slide>
+
+    <app-animated-slide
+      title="Histoire"
+      position="top-[calc(25vh-1rem)]"
+      color="bg-purple-slide"
+      borderMarginTitle="-mx-2"
+      [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+    ></app-animated-slide>
+
+    <app-animated-slide
+      title="Culture"
+      position="top-[calc(50vh-4rem)]"
+      color="bg-red-slide"
+      borderMarginTitle="-mx-2"
+      [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+    ></app-animated-slide>
+
+    <app-animated-slide
+      title="Sciences"
+      position="top-[calc(75vh-7rem)]"
+      color="bg-orange-slide"
+      borderMarginTitle="-mx-2"
+      [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+    ></app-animated-slide>
+
+    <app-animated-slide
+      title="Animaux"
+      position="bottom-[calc(0vh+2rem)]"
+      color="bg-blue-slide"
+      borderMarginTitle="-mx-2"
+      [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
+    ></app-animated-slide>
   </div>
-
-  <app-animated-slide
-    title="Géographie"
-    position="top-[calc(0vh+2rem)]"
-    color="bg-green-slide"
-    borderMarginTitle="-mx-5"
-    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
-  ></app-animated-slide>
-
-  <app-animated-slide
-    title="Histoire"
-    position="top-[calc(25vh-1rem)]"
-    color="bg-purple-slide"
-    borderMarginTitle="-mx-2"
-    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
-  ></app-animated-slide>
-
-  <app-animated-slide
-    title="Culture"
-    position="top-[calc(50vh-4rem)]"
-    color="bg-red-slide"
-    borderMarginTitle="-mx-2"
-    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
-  ></app-animated-slide>
-
-  <app-animated-slide
-    title="Sciences"
-    position="top-[calc(75vh-7rem)]"
-    color="bg-orange-slide"
-    borderMarginTitle="-mx-2"
-    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
-  ></app-animated-slide>
-
-  <app-animated-slide
-    title="Animaux"
-    position="bottom-[calc(0vh+2rem)]"
-    color="bg-blue-slide"
-    borderMarginTitle="-mx-2"
-    [quizs]="['France', 'Europe', 'Monde', 'Capitales', 'Drapeaux']"
-  ></app-animated-slide>
-</div>
 </div>

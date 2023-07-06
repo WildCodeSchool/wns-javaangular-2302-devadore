@@ -19,6 +19,7 @@ import java.util.List;
 
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -46,6 +47,7 @@ public class UserService {
                 .map(user -> modelMapper.map(user, UserDTO.class))
                 .collect(Collectors.toList());
     }
+
     public UserDTO getUserById(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
@@ -66,6 +68,15 @@ public class UserService {
         return userDTO;
     }
 
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getId();
+        } else {
+            return null;
+        }
+    }
+
     public UserDTO createUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
         List<Role> roles = userDTO.getRoles().stream()
@@ -76,36 +87,37 @@ public class UserService {
         return modelMapper.map(savedUser, UserDTO.class);
     }
 
-public UserDTO updateUser(Long id, UserDTO userDTO) {
-    User user = userRepository.findById(id).orElse(null);
-    if (user == null) {
-        return null;
+    public UserDTO updateUser(Long id, UserDTO userDTO) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return null;
+        }
+
+
+        modelMapper.typeMap(UserDTO.class, User.class)
+                .addMappings(mapper -> mapper.skip(User::setRoles))
+                .map(userDTO, user);
+
+
+        if (userDTO.getRoles() != null) {
+            List<Role> roles = userDTO.getRoles().stream()
+                    .map(roleDto -> roleRepository.findById(roleDto.getId())
+                            .orElseThrow(() -> new IllegalArgumentException("Role with id " + roleDto.getId() + " not found")))
+                    .collect(Collectors.toList());
+            user.setRoles(roles);
+        }
+        if (userDTO.getImage() != null && userDTO.getMimeType() != null) {
+            Image image = new Image();
+            image.setName(userDTO.getUsername() + "_image");
+            image.setImage(userDTO.getImage());
+            image.setMimeType(userDTO.getMimeType());
+            image.setUser(user);
+            user.setImage(image);
+        }
+        User updatedUser = userRepository.save(user);
+        return modelMapper.map(updatedUser, UserDTO.class);
     }
 
-
-    modelMapper.typeMap(UserDTO.class, User.class)
-            .addMappings(mapper -> mapper.skip(User::setRoles))
-            .map(userDTO, user);
-
-
-    if(userDTO.getRoles() != null) {
-        List<Role> roles = userDTO.getRoles().stream()
-                .map(roleDto -> roleRepository.findById(roleDto.getId())
-                        .orElseThrow(() -> new IllegalArgumentException("Role with id " + roleDto.getId() + " not found")))
-                .collect(Collectors.toList());
-        user.setRoles(roles);
-    }
-    if (userDTO.getImage() != null && userDTO.getMimeType() != null) {
-        Image image = new Image();
-        image.setName(userDTO.getUsername() + "_image");
-        image.setImage(userDTO.getImage());
-        image.setMimeType(userDTO.getMimeType());
-        image.setUser(user);
-        user.setImage(image);
-    }
-    User updatedUser = userRepository.save(user);
-    return modelMapper.map(updatedUser, UserDTO.class);
-}
     @Transactional
     public void deleteUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));

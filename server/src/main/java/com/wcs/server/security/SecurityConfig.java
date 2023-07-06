@@ -119,13 +119,14 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/auth/**", "/api/images/**").permitAll()
-                .requestMatchers("/api/users/**").hasAuthority("ADMIN")
-                .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .anyRequest().authenticated())
-            .addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/users/{id}/image", "/api/users/name/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/api/users/**").hasAuthority("ADMIN")
+                        .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -137,5 +138,5 @@ public class SecurityConfig {
     @Bean(name = "mvcHandlerMappingIntrospector")
     public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
         return new HandlerMappingIntrospector();
-    } 
+    }
 }

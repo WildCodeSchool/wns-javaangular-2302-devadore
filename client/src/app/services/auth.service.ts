@@ -60,6 +60,7 @@ export class AuthService {
       return null;
     }
   }
+
   logout(): Observable<any> {
     const token = this.getToken();
     if (token) {
