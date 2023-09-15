@@ -14,6 +14,10 @@ export class QuizPlayComponent implements OnInit {
   question?: QuestionModel;
   excludeIds: number[] = [];
   answers: AnswerModel[];
+  selectedAnswer?: AnswerModel;
+  isAnswered = false;
+  score: number = 0;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -34,5 +38,29 @@ export class QuizPlayComponent implements OnInit {
       console.log(this.question, this.excludeIds, this.answers);
     })
   }
+
+  onAnswerSelected(answer: AnswerModel): void {
+    this.selectedAnswer = answer;
+    this.isAnswered = true;
+    console.log(this.excludeIds.length);
+
+    if (answer.isCorrect) {
+      this.score += 1;
+    }
+  }
+
+  getNextQuestion(): void {
+    this.isAnswered = false;
+    this.selectedAnswer = undefined;
+    this.getPageInfos(); 
+  }
+
+  resetQuiz(): void {
+    this.score = 0;
+    this.isAnswered = false;
+    this.excludeIds = [];
+    this.getPageInfos();
+  }
+  
 
 }

@@ -1,21 +1,30 @@
-<!-- quiz-play.component.html -->
-
 <div class="quiz-section">
 
     <div class="question">
       <h2>{{ question?.text }}</h2>
-      <img *ngIf="question?.image" [src]="question?.image" alt="Question Image">
     </div>
   
     <ul class="answers">
-      <li *ngFor="let answer of question?.answers">
-        {{ answer.text }}
-        <span *ngIf="answer.isCorrect" class="correct-indicator">✓</span>
-      </li>
+      <li *ngFor="let answer of question?.answers"
+          [class.correct-answer]="isAnswered && answer.isCorrect"
+          [class.wrong-answer]="isAnswered && !answer.isCorrect && answer === selectedAnswer"
+          (click)="!isAnswered && onAnswerSelected(answer)">
+        {{ answer.text }}   
+      </li>  
+
     </ul>
-  
-    <button (click)="getPageInfos()">Charger une nouvelle question</button>
-    
+    <button *ngIf="isAnswered && excludeIds.length != 10" (click)="getNextQuestion()">Question suivante</button>
+
+    <div *ngIf="isAnswered && excludeIds.length == 10" >
+      <div>
+        <button (click)="resetQuiz()">Recommencer</button>
+      </div>
+      <div>
+        <button [routerLink]="'/'">Retour au menu</button>
+      </div>
+      <p>Score : {{ score }}/10</p>
+    </div>
   </div>
+
   
   

@@ -28,15 +28,19 @@
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s;
-  
-      &:hover {
-        background-color: #f5f5f5;
-      }
     }
   
     .correct-indicator {
       float: right;
       color: green;
     }
+  }
+  
+  .correct-answer {
+    background-color: lightgreen;
+  }
+  
+  .wrong-answer {
+    background-color: #ffcccc; 
   }
   
