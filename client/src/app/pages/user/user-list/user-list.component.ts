@@ -17,8 +17,7 @@ export class UserListComponent implements OnInit {
 
   users!: MatTableDataSource<User>;
   displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'actions', 'createdAt', 'updatedAt'];
-
-
+  
   constructor(private userService: UserService, private router: Router, private authService: AuthService, public toastService: ToastService) {
   }
 

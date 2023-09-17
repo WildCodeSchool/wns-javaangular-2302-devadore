@@ -25,7 +25,7 @@ export class UserDetailComponent implements OnInit {
     id: 0,
     username: '',
     email: '',
-    password: '',
+    /*    password: '',*/
     image: '',
     score: 0,
     roles: [],

@@ -2,11 +2,12 @@ package com.wcs.server.controller;
 
 import java.util.List;
 
+import com.wcs.server.dto.CreateQuizDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import com.wcs.server.dto.QuizDTO;
 import com.wcs.server.entity.Quiz;
@@ -35,5 +36,13 @@ public class QuizController {
     public ResponseEntity<QuizDTO> getRandomQuiz() {
         QuizDTO randomQuiz = quizService.getQuizByRandomId();
         return ResponseEntity.ok(randomQuiz);
+    }
+
+    @Operation(summary = "Crée un nouveau quiz")
+    @PostMapping("/quiz")
+    public ResponseEntity<QuizDTO> createQuiz(@RequestBody CreateQuizDTO createQuizDTO, Authentication authentication) {
+        System.out.println(createQuizDTO);
+        QuizDTO savedQuiz = quizService.createCompleteQuiz(createQuizDTO, authentication);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedQuiz);
     }
 }

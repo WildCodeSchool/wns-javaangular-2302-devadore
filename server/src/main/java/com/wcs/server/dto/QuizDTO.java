@@ -1,16 +1,17 @@
 package com.wcs.server.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class QuizDTO {
-    
+
     private Long id;
     private String title;
     private String description;
     private Integer categoryId;
     private UserDTO createdBy;
-    private Date createdAt;
-    private Date updatedAt;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
 
     public Long getId() {
         return id;
@@ -52,19 +53,19 @@ public class QuizDTO {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDate getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
