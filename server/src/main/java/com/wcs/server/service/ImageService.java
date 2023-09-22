@@ -20,6 +20,7 @@ public class ImageService {
 
     @Autowired
     private UserRepository userRepository;
+
     public Image saveImage(Image image) {
         return imageRepository.save(image);
     }
@@ -31,8 +32,9 @@ public class ImageService {
     public List<Image> getImagesForUser(Long userId) {
         return imageRepository.findByUserId(userId);
     }
+
     public Image uploadImageForUser(MultipartFile file, Long userId) throws IOException {
-        User user = userRepository.getOne(userId); // Or however you retrieve users
+        User user = userRepository.getOne(userId);
 
         Image image = new Image();
         image.setName(file.getOriginalFilename());

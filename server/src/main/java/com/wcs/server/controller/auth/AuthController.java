@@ -5,6 +5,7 @@ import com.wcs.server.security.JwtResponse;
 import com.wcs.server.security.JwtTokenProvider;
 import com.wcs.server.security.TokenRefreshRequest;
 import io.jsonwebtoken.Claims;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +34,7 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Operation(summary = "permet d'authentifier un utilisateur par son username et mdp")
     @PostMapping("/authenticate")
     public ResponseEntity<?> authenticateUser(@RequestBody UserLoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -44,14 +46,15 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken  = jwtTokenProvider.generateToken(authentication);
+        String accessToken = jwtTokenProvider.generateToken(authentication);
         String refreshToken = jwtTokenProvider.createRefreshToken(loginRequest.getUsername());
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken,roles));
+        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken, roles));
     }
 
+    @Operation(summary = "permet de rafraichir l'authentification - erreur 500????")
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshAndGetAuthenticationToken(@RequestBody TokenRefreshRequest request) {
         String requestRefreshToken = request.getRefreshToken();
@@ -64,12 +67,12 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         String accessToken = jwtTokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtResponse(accessToken , requestRefreshToken, roles));
+        return ResponseEntity.ok(new JwtResponse(accessToken, requestRefreshToken, roles));
     }
 
+    @Operation(summary = "permet de se logout")
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String accessToken) {
-        // Remove "Bearer " prefix from token
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring(7);
         }

@@ -5,6 +5,7 @@ import com.wcs.server.entity.UserRegistrationRequest;
 import com.wcs.server.errormessage.EmailAlreadyTakenException;
 import com.wcs.server.errormessage.UsernameAlreadyTakenException;
 import com.wcs.server.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,18 +20,21 @@ public class RegistrationController {
     @Autowired
     private UserService userService;
 
+    @Operation(summary = "permet de vérifier que username est unique")
     @GetMapping("/checkUsername")
     public ResponseEntity<Boolean> checkUsernameExistence(@RequestParam String username) {
         boolean exists = userService.checkUsernameExistence(username);
         return ResponseEntity.ok(exists);
     }
 
+    @Operation(summary = "permet de vérifier que email est unique")
     @GetMapping("/checkMailExist")
     public ResponseEntity<Boolean> checkMailExistence(@RequestParam String email) {
         boolean exists = userService.checkMailExistence(email);
         return ResponseEntity.ok(exists);
     }
 
+    @Operation(summary = "permet de créer un compte")
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(MultipartHttpServletRequest request) {
         try {

@@ -5,6 +5,8 @@ export interface QuizModel {
   title: string;
   description: string;
   question: QuestionModel[];
+  image?: string;
+  mimeType?: string;
   createdAt: Date;
   updatedAt: Date;
 

@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,11 +25,14 @@ public class User {
     @NotBlank
     @Size(max = 50)
     private String email;
+
     @NotBlank
     @Size(max = 120)
     private String password;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Image image;
+
     private int score;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -37,7 +41,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles = new ArrayList<>();
-
 
     private LocalDate createdAt;
 
@@ -124,15 +127,16 @@ public class User {
     }
 
     @PrePersist
-    protected void onCreate(){
+    protected void onCreate() {
         createdAt = LocalDate.now();
         updatedAt = LocalDate.now();
     }
 
     @PreUpdate
-    protected void onUpdate(){
+    protected void onUpdate() {
         updatedAt = LocalDate.now();
     }
+
     @Override
     public String toString() {
         return "User{" +

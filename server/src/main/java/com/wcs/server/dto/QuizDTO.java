@@ -1,7 +1,6 @@
 package com.wcs.server.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class QuizDTO {
 
@@ -9,7 +8,9 @@ public class QuizDTO {
     private String title;
     private String description;
     private Integer categoryId;
-    private UserDTO createdBy;
+    private SimpleUserDTO createdBy;
+
+    private byte[] image;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
@@ -45,12 +46,20 @@ public class QuizDTO {
         this.categoryId = categoryId;
     }
 
-    public UserDTO getCreatedBy() {
+    public SimpleUserDTO getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(UserDTO createdBy) {
+    public void setCreatedBy(SimpleUserDTO createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public LocalDate getCreatedAt() {

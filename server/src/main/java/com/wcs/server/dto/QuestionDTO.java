@@ -1,7 +1,6 @@
 package com.wcs.server.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 public class QuestionDTO {
@@ -9,6 +8,7 @@ public class QuestionDTO {
     private Long id;
     private String text;
     private QuizDTO quiz;
+    private byte[] image;
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private List<AnswerDTO> answers;
@@ -35,6 +35,14 @@ public class QuestionDTO {
 
     public void setQuiz(QuizDTO quiz) {
         this.quiz = quiz;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 
     public LocalDate getCreatedAt() {

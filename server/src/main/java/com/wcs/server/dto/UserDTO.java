@@ -1,7 +1,6 @@
 package com.wcs.server.dto;
 
 
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,7 +10,6 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
-    private String password;
     private byte[] image;
     private String mimeType;
     private LocalDate createdAt;
@@ -49,13 +47,13 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getPassword() {
+/*    public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 
     public byte[] getImage() {
         return image;
@@ -84,6 +82,7 @@ public class UserDTO {
     public String getMimeType() {
         return mimeType;
     }
+
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }

@@ -18,6 +18,8 @@ export class QuizCreateComponent implements OnInit {
   userImage: any;
   user: User | null;
   username: string | null = null;
+  image: File | null = null;
+  previewUrl: any = null;
 
   constructor(private fb: FormBuilder, private quizService: QuizService, private categoryService: CategoryService, private userProfileService: UserProfileService) {
     this.quizForm = this.createQuizForm();
@@ -53,6 +55,7 @@ export class QuizCreateComponent implements OnInit {
       questions: this.fb.array([
         this.createQuestion()
       ]),
+      image: [null, Validators.required],
       createdByUserId: ['']
     });
   }

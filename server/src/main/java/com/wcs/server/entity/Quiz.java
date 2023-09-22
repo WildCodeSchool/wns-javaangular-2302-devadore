@@ -3,7 +3,6 @@ package com.wcs.server.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -14,6 +13,7 @@ public class Quiz {
     private Long id;
 
     private String title;
+
     private String description;
 
     @ManyToOne
@@ -27,7 +27,11 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
+    @OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Image image;
+
     private LocalDate createdAt;
+
     private LocalDate updatedAt;
 
     public Quiz() {
@@ -84,6 +88,17 @@ public class Quiz {
         this.questions = questions;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        if (image != null) {
+            image.setQuiz(this);
+        }
+        this.image = image;
+    }
+
     public LocalDate getCreatedAt() {
         return createdAt;
     }
@@ -119,4 +134,5 @@ public class Quiz {
                 ", updatedAt=" + updatedAt +
                 '}';
     }
+
 }

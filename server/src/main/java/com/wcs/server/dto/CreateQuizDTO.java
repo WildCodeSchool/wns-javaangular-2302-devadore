@@ -1,6 +1,8 @@
 package com.wcs.server.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ public class CreateQuizDTO {
     private List<QuestionDTO> questions;
     private Long createdByUserId; // ID de l'utilisateur qui crée le quiz.
 
+    private byte[] image;
+    private String mimeType;
 
     public String getTitle() {
         return title;
@@ -52,6 +56,22 @@ public class CreateQuizDTO {
 
     public void setCreatedByUserId(Long createdByUserId) {
         this.createdByUserId = createdByUserId;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
 
