@@ -5,6 +5,8 @@ import {CategoryModel} from "../../../../models/category.model";
 import {CategoryService} from "../../../../services/category.service";
 import {UserProfileService} from "../../../../services/user-profile-service";
 import {User} from "../../../../models/user.model";
+import {Router} from "@angular/router";
+import {ToastService} from "../../../../services/toastService";
 
 
 @Component({
@@ -21,7 +23,7 @@ export class QuizCreateComponent implements OnInit {
   image: File | null = null;
   previewUrl: any = null;
 
-  constructor(private fb: FormBuilder, private quizService: QuizService, private categoryService: CategoryService, private userProfileService: UserProfileService) {
+  constructor(private fb: FormBuilder, private quizService: QuizService, private categoryService: CategoryService, private userProfileService: UserProfileService, private router: Router, public toastService: ToastService) {
     this.quizForm = this.createQuizForm();
   }
 
@@ -95,19 +97,71 @@ export class QuizCreateComponent implements OnInit {
     answersArray.removeAt(answerIndex);
   }
 
+
+  onImageSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const filenameDisplay = document.getElementById('selectedFilename');
+
+    if (filenameDisplay) {
+      if (input.files && input.files[0]) {
+        filenameDisplay.textContent = input.files[0].name;
+      } else {
+        filenameDisplay.textContent = 'Aucun fichier sélectionné';
+      }
+    }
+    const file = (event.target as HTMLInputElement).files;
+    if (file && file.length) {
+      this.image = file[0];
+      this.previewImage(this.image);
+      // Mettre à jour le statut de validation pour le champ 'image'.
+      this.quizForm.get('image')?.setValue(this.image);
+      this.quizForm.get('image')?.updateValueAndValidity();
+    }
+  }
+
+  previewImage(file: File) {
+    // voir la preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   onSubmit(): void {
     this.quizForm.value.categoryId = +this.quizForm.value.categoryId;
-    this.quizForm.value.createdByUserId = +this.quizForm.value.createdByUserId;
-    /*    console.log(typeof this.quizForm.value.categoryId);
-        console.log(typeof this.quizForm.value.createdByUserId);
-        console.log('Submitting the following data:', this.quizForm.value);*/
+    const formData = new FormData();
+    formData.append('title', this.quizForm.value.title);
+    formData.append('description', this.quizForm.value.description);
+    formData.append('categoryId', this.quizForm.value.categoryId);
+    formData.append('createdByUserId', this.quizForm.value.createdByUserId);
+    if (this.image) {
+      formData.append('image', this.image);
+      formData.append('mimeType', this.image.type);
+    }
+    if (this.quizForm.get('questions')) {
+      const questions = this.quizForm.get('questions')?.value;
+      formData.append('questions', JSON.stringify(questions));
+    }
+    for (let [key, value] of (formData as any).entries()) {
+      console.log(key, value);
+    }
 
-    this.quizService.createQuiz(this.quizForm.value).subscribe(
+
+    this.quizService.createQuiz(formData).subscribe(
       data => {
-        console.log('Quiz created successfully!', data);
+        setTimeout(() => {
+          this.toastService.showToast('L\'enrgistrement de ton quiz est réalisé avec succès', 'success');
+          if (this.user) this.router.navigate(['/user-detail', this.user.id]);
+        }, 2000);
+        console.log(data);
       },
       error => {
-        console.error('There was an error!', error);
+        if (error) {
+          this.toastService.showToast('Une erreur s\'est produite. Veuillez réessayer plus tard.', 'error');
+        } else {
+          alert('Une erreur s\'est produite. Veuillez réessayer plus tard.');
+        }
       }
     );
   }

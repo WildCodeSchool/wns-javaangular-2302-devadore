@@ -1,5 +1,6 @@
 package com.wcs.server.service;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -8,18 +9,16 @@ import java.util.stream.Collectors;
 
 import com.wcs.server.dto.CreateQuizDTO;
 import com.wcs.server.entity.*;
-import com.wcs.server.repository.CategoryRepository;
-import com.wcs.server.repository.QuestionRepository;
-import com.wcs.server.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import com.wcs.server.errormessage.ResourceNotFoundException;
+import com.wcs.server.errormessage.UnauthorizedException;
+import com.wcs.server.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-
 import com.wcs.server.dto.QuizDTO;
-import com.wcs.server.repository.QuizRepository;
+
 
 @Service
 public class QuizService {
@@ -56,16 +55,15 @@ public class QuizService {
         return convertQuizToDTO(quiz);
     }
 
-    @Transactional
-    public QuizDTO createCompleteQuiz(CreateQuizDTO createQuizDTO, Authentication authentication) {
-        System.out.println("CategoryId: " + createQuizDTO.getCategoryId());
-        if (createQuizDTO.getCategoryId() == null) {
-            throw new IllegalArgumentException("L'ID de la catégorie ne peut pas être null");
-        }
+    public List<QuizDTO> getQuizzesByUser(User userId) {
+        List<Quiz> quizzes = quizRepository.findQuizzesByCreatedBy(userId);
+        return quizzes.stream()
+                .map(quiz -> modelMapper.map(quiz, QuizDTO.class))
+                .collect(Collectors.toList());
+    }
 
-        if (createQuizDTO.getCreatedByUserId() == null) {
-            throw new IllegalArgumentException("L'ID de l'utilisateur ne peut pas être null");
-        }
+    public QuizDTO createCompleteQuiz(CreateQuizDTO createQuizDTO, Authentication authentication) {
+
         // Récupération de la catégorie existante en utilisant l'ID
         Category category = categoryRepository.findById(createQuizDTO.getCategoryId())
                 .orElseThrow(() -> new NoSuchElementException("Catégorie avec l'id " + createQuizDTO.getCategoryId() + " n'est pas trouvée"));
@@ -81,13 +79,24 @@ public class QuizService {
         String username = userDetails.getUsername();
         User user = userRepository.findByUsername(username);
         quiz.setCreatedBy(user);
-
+        // Ajouter une image à l'utilisateur
+        if (createQuizDTO.getImage() != null) {
+            Image image = new Image();
+            image.setName(createQuizDTO.getTitle() + "_image");
+            image.setImage(createQuizDTO.getImage());
+            image.setMimeType(createQuizDTO.getMimeType());
+            image.setQuiz(quiz);
+            quiz.setImage(image);
+        }
         // Sauvegarde de l'entité Quiz
         quiz = quizRepository.save(quiz);
 
         // Traitement des questions
         List<Question> quizQuestions = new ArrayList<>();
-        for (CreateQuizDTO.QuestionDTO questionDTO : createQuizDTO.getQuestions()) {
+        List<CreateQuizDTO.QuestionDTO> questions = createQuizDTO.getQuestions();
+
+        for (CreateQuizDTO.QuestionDTO questionDTO : questions) {
+
             Question question = new Question();
             question.setText(questionDTO.getText());
             question.setQuiz(quiz);
@@ -113,5 +122,13 @@ public class QuizService {
 
     private QuizDTO convertQuizToDTO(Quiz quiz) {
         return modelMapper.map(quiz, QuizDTO.class);
+    }
+
+    public void deleteQuiz(Long quizId, String username) {
+        Quiz quiz = quizRepository.findById(Math.toIntExact(quizId)).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
+        if (!quiz.getCreatedBy().getUsername().equals(username)) {
+            throw new UnauthorizedException("Only the creator can delete this quiz");
+        }
+        quizRepository.delete(quiz);
     }
 }

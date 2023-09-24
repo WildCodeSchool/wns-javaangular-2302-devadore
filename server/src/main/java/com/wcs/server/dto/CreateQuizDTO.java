@@ -1,9 +1,8 @@
 package com.wcs.server.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateQuizDTO {
@@ -43,7 +42,11 @@ public class CreateQuizDTO {
     }
 
     public List<QuestionDTO> getQuestions() {
-        return questions;
+        if (this.questions == null) {
+            return new ArrayList<>();
+        }
+        return this.questions;
+
     }
 
     public void setQuestions(List<QuestionDTO> questions) {

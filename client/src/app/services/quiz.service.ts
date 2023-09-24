@@ -30,15 +30,17 @@ export class QuizService {
       ));
   }
 
-  createQuiz(quiz: CreateQuizModel): Observable<CreateQuizModel[]> {
+  getAllQuizzesCreatedByUser(userId: number): Observable<QuizModel[]> {
     const jwtToken = this.authService.getToken();
-    const headers = jwtToken
-      ? new HttpHeaders()
-        .set('Authorization', `Bearer ${jwtToken}`)
-        .set('Content-Type', 'application/json')
-      : new HttpHeaders().set('Content-Type', 'application/json');
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    return this.http.get<QuizModel[]>(`${this.apiUrl}/${userId}`, {headers});
+  }
 
-    return this.http.post<CreateQuizModel[]>(`${this.apiUrl}`, quiz, {headers: headers});
+  createQuiz(formData: FormData): Observable<CreateQuizModel[]> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+
+    return this.http.post<CreateQuizModel[]>(`${this.apiUrl}`, formData, {headers: headers});
   }
 
 
@@ -47,6 +49,8 @@ export class QuizService {
   }
 
   deleteQuiz(id: number): Observable<QuizModel[]> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`);
   }
 }

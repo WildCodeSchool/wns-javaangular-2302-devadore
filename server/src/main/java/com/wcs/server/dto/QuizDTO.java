@@ -9,8 +9,8 @@ public class QuizDTO {
     private String description;
     private Integer categoryId;
     private SimpleUserDTO createdBy;
-
     private byte[] image;
+    private String mimeType;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
@@ -60,6 +60,14 @@ public class QuizDTO {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
     }
 
     public LocalDate getCreatedAt() {

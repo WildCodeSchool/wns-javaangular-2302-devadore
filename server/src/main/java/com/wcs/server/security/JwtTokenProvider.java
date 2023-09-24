@@ -32,6 +32,7 @@ public class JwtTokenProvider {
     private static long jwtRefresh;
     private static SecretKey secretKey;
     private ConcurrentHashMap<String, Boolean> invalidatedTokens = new ConcurrentHashMap<>();
+
     @PostConstruct
     public void initSecretKey() {
         secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -48,17 +49,7 @@ public class JwtTokenProvider {
      * @param authentication représente l'authentification d'un utilisateur, et retourne une chaîne de caractères qui est le token JWT.
      * @return le token JWT.
      */
-/*    public String generateToken(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwtExpiration);
-        return Jwts.builder()
-                .setSubject(user.getUsername())
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(secretKey)
-                .compact();
-    }*/
+
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         Date now = new Date();
@@ -75,7 +66,6 @@ public class JwtTokenProvider {
                 .signWith(secretKey)
                 .compact();
     }
-
 
 
     /***
@@ -119,7 +109,10 @@ public class JwtTokenProvider {
                 return false;
             }
             return true;
-        } catch (io.jsonwebtoken.security.SignatureException | io.jsonwebtoken.security.WeakKeyException | io.jsonwebtoken.io.DecodingException | io.jsonwebtoken.MalformedJwtException | io.jsonwebtoken.ExpiredJwtException | io.jsonwebtoken.UnsupportedJwtException | io.jsonwebtoken.MissingClaimException | io.jsonwebtoken.IncorrectClaimException ex) {
+        } catch (io.jsonwebtoken.security.SignatureException | io.jsonwebtoken.security.WeakKeyException |
+                 io.jsonwebtoken.io.DecodingException | io.jsonwebtoken.MalformedJwtException |
+                 io.jsonwebtoken.ExpiredJwtException | io.jsonwebtoken.UnsupportedJwtException |
+                 io.jsonwebtoken.MissingClaimException | io.jsonwebtoken.IncorrectClaimException ex) {
 
             System.err.println("Token validation failed: " + ex.getMessage());
         }

@@ -10,6 +10,8 @@ import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {MatSortModule} from "@angular/material/sort";
+import {MatPaginatorModule} from "@angular/material/paginator";
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import {FormsModule} from "@angular/forms";
     MatTableModule,
     MatButtonModule,
     MatInputModule,
-    NgOptimizedImage
+    MatSortModule,
+    NgOptimizedImage,
+    MatPaginatorModule
   ]
 })
 export class UserModule {

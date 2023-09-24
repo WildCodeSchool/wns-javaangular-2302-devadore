@@ -75,16 +75,14 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let user">
           <button
-            class="m-2 bg-red-500 hover:bg-red-600 text-white rounded-full px-4 py-2 shadow-md transform transition-transform duration-200 hover:scale-105"
-            (click)="deleteUser(user.id)"
-          >
-            Supprimer
+            class="bg-transparent text-gray-200 px-2 py-1 mr-2 rounded border-2 border-gray-900"
+            (click)="editUser(user.id)"
+            title="Editer le profile">✏️
           </button>
           <button
-            class="m-2 bg-green-500 hover:bg-green-600 text-white rounded-full px-4 py-2 shadow-md transform transition-transform duration-200 hover:scale-105"
-            (click)="editUser(user.id)"
-          >
-            Edit
+            class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
+            (click)="deleteUser(user.id)"
+            title="Supprimer le profile">❌
           </button>
         </td>
       </ng-container>

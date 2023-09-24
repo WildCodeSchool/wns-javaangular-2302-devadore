@@ -5,4 +5,6 @@ export interface CreateQuizModel {
   description: string;
   questions: QuestionModel[];
   createdByUserId: number;
+  image?: string;
+  mimeType?: string;
 }
