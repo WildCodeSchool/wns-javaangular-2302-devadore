@@ -18,15 +18,14 @@ import {MatPaginator} from "@angular/material/paginator";
 })
 export class UserListComponent implements AfterViewInit {
 
-    displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'actions', 'createdAt', 'updatedAt'];
+
+    displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'createdAt', 'updatedAt', 'actions'];
     dataSource = new MatTableDataSource<User>;
 
     constructor(private userService: UserService, private router: Router, private authService: AuthService, public toastService: ToastService, private _liveAnnouncer: LiveAnnouncer) {
     }
 
-    /*    ngOnInit(): void {
-            /!*  this.loadUsers();*!/
-        }*/
+
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 

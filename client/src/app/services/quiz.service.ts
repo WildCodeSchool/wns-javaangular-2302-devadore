@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable, map} from 'rxjs';
 import {QuizModel} from "../models/quiz.model";
+import {CreateQuizModel} from "../models/create-quiz.model";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,8 @@ import {QuizModel} from "../models/quiz.model";
 export class QuizService {
   private apiUrl = 'http://localhost:8080/api/quiz';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) {
+  }
 
   getQuizs(): Observable<QuizModel[]> {
     const headers = new HttpHeaders().set('Authorization', 'Basic QWRtaW46YWRtaW4=');
@@ -27,15 +30,27 @@ export class QuizService {
       ));
   }
 
-  createQuiz(quiz: QuizModel): Observable<QuizModel[]> {
-    return this.http.post<QuizModel[]>(this.apiUrl, quiz);
+  getAllQuizzesCreatedByUser(userId: number): Observable<QuizModel[]> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    return this.http.get<QuizModel[]>(`${this.apiUrl}/${userId}`, {headers});
   }
+
+  createQuiz(formData: FormData): Observable<CreateQuizModel[]> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+
+    return this.http.post<CreateQuizModel[]>(`${this.apiUrl}`, formData, {headers: headers});
+  }
+
 
   updateQuiz(id: number, quiz: QuizModel): Observable<QuizModel[]> {
     return this.http.put<QuizModel[]>(`${this.apiUrl}/${id}`, quiz);
   }
 
   deleteQuiz(id: number): Observable<QuizModel[]> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`);
   }
 }

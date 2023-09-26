@@ -11,5 +11,7 @@ import com.wcs.server.entity.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> getCategoryByName(String name);
 
-    Category findByName(String user);
+
+    /*   Category findByName(String user);*/
+
 }

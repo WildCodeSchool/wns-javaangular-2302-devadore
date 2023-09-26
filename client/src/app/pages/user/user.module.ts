@@ -34,6 +34,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         NgOptimizedImage,
         MatPaginatorModule
     ]
+
 })
 export class UserModule {
 }

@@ -1,13 +1,10 @@
 import {QuestionModel} from "./question.model";
 
-export interface QuizModel {
-  id: number;
+export interface CreateQuizModel {
   title: string;
   description: string;
-  question: QuestionModel[];
+  questions: QuestionModel[];
+  createdByUserId: number;
   image?: string;
   mimeType?: string;
-  createdAt: Date;
-  updatedAt: Date;
-
 }

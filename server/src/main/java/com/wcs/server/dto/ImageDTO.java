@@ -1,10 +1,12 @@
 package com.wcs.server.dto;
 
 public class ImageDTO {
-    private Long id;
+   /* private Long id;
     private String name;
     private byte[] image;
     private String mimeType;
+
+    private SimpleUserDTO simpleUserDTO;
 
 
     public ImageDTO() {
@@ -41,4 +43,12 @@ public class ImageDTO {
     public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
     }
+
+    public SimpleUserDTO getSimpleUserDTO() {
+        return simpleUserDTO;
+    }
+
+    public void setSimpleUserDTO(SimpleUserDTO simpleUserDTO) {
+        this.simpleUserDTO = simpleUserDTO;
+    }*/
 }

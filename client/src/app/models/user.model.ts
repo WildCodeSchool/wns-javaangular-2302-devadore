@@ -5,11 +5,10 @@ export interface User {
   id: number;
   username: string;
   email: string;
-  password : string;
   image?: string;
   mimeType?: string;
-  score:number;
-  roles : Role[];
+  score: number;
+  roles: Role[];
   createdAt: Date;
   updatedAt: Date;
 }

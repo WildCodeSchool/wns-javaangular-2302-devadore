@@ -53,20 +53,6 @@
                 class="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm"
               />
             </div>
-            <div class="mb-4">
-              <label for="password" class="mb-2 block" style="display: none"
-              >Password :</label
-              >
-              <input
-                [(ngModel)]="user.password"
-                id="password"
-                name="password"
-                type="password"
-                required
-                class="focus:ring-primary-600 focus:border-primary-600 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 sm:text-sm"
-                style="display: none"
-              />
-            </div>
             <div *ngIf="isAdmin">
               <div *ngFor="let role of allRoles; let i = index" class="mb-2">
                 <label class="flex items-center">
@@ -166,6 +152,67 @@
       Liste des utilisateurs
     </button>
   </div>
+  <div *ngIf="isUser && !isAdmin">
 
+    <button
+      class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current uppercase transform transition-transform duration-200 hover:scale-105"
+      [routerLink]="'/quiz/create-quiz'"
+    >
+      Créer son QUIZ
+    </button>
+  </div>
 </div>
 
+<div class="flex justify-center">
+
+  <div class="flex flex-col w-1/2">
+
+    <table mat-table [dataSource]="dataSource" matSort class="mx-auto w-1/2">
+      <caption class="text-lg font-bold bg-yellow-300 p-2 rounded-t">
+        Liste des : {{ countQuizzes() }} quizzes de {{ user.username}}
+      </caption>
+      <ng-container matColumnDef="title">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+        <td mat-cell *matCellDef="let quizzes">{{ quizzes.title }}</td>
+      </ng-container>
+      <ng-container matColumnDef="image">
+        <th mat-header-cell *matHeaderCellDef>Image
+        </th>
+        <td mat-cell *matCellDef="let quizzes">
+          <img class="rounded-full shadow h-12 w-12 m-auto"
+               *ngIf="quizzes.image"
+               [src]="'data:' + quizzes.mimeType + ';base64,' + quizzes.image"
+               alt="Image quiz"
+          />
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+        <td mat-cell *matCellDef="let quizzes">{{ quizzes.description }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Créer le</th>
+        <td mat-cell *matCellDef="let quizzes">{{ quizzes.createdAt | date }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="updatedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Mis à jour le</th>
+        <td mat-cell *matCellDef="let quizzes">{{ quizzes.updatedAt | date }}</td>
+      </ng-container>
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+        <td mat-cell *matCellDef="let quizzes">
+          <button (click)="onDeleteQuiz(quizzes.id)"
+                  class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
+                  title="Supprimer la question">❌
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+    </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of quizzes"></mat-paginator>
+  </div>
+</div>

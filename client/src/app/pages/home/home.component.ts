@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {UserService} from "../../services/user.service";
 import {User} from "../../models/user.model";
+import {UserProfileService} from "../../services/user-profile-service";
 
 @Component({
   selector: 'app-home',
@@ -19,9 +20,9 @@ export class HomeComponent implements OnInit {
   isUser: boolean = false;
   isLoggedIn = false;
   @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
-  user: User
+  user: User | null;
 
-  constructor(private authService: AuthService, private userService: UserService, private router: Router) {
+  constructor(private authService: AuthService, private userService: UserService, private router: Router, private userProfileService: UserProfileService) {
 
   }
 
@@ -44,46 +45,14 @@ export class HomeComponent implements OnInit {
       this.isUser = isUserValue;
       console.log('isUserValue', isUserValue)
     });
-
-    this.loadImage()
+    this.userProfileService.getUserImage().subscribe(image => {
+      this.userImage = image;
+    });
+    this.userProfileService.getUser().subscribe(user => {
+      this.user = user;
+    });
+    /*   this.loadImage()*/
     this.isLoggedIn = this.authService.isAuthenticated();
-  }
-
-  loadImage(): void {
-    // Vérifier l'authentification et récupérer le jeton
-    if (this.authService.isAuthenticated()) {
-      const token = this.authService.getToken();
-      if (token) {
-        // Décoder le jeton et récupérer le nom d'utilisateur
-        const decodedToken = this.authService.decodeToken(token);
-        if (typeof decodedToken === 'object' && 'sub' in decodedToken) {
-          const username = decodedToken.sub;
-
-          // Récupérer l'identifiant de l'utilisateur par son nom d'utilisateur
-          this.userService.getUserIdByUsername(username).subscribe({
-            next: (userId: number) => {
-              this.userService.getUserById(userId).subscribe(user => {
-                this.user = user;
-              });
-              // Utiliser l'ID de l'utilisateur récupéré pour obtenir l'image de l'utilisateur
-              this.userService.getUserImage(userId).subscribe({
-                next: (imageData: any) => {
-                  // Convertir les données de l'image (Blob) en URL utilisable
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    this.userImage = reader.result;
-                  };
-                  reader.readAsDataURL(imageData);
-                },
-                error: error => {
-                  console.log('Erreur lors de la récupération de l\'image :', error);
-                }
-              });
-            }
-          });
-        }
-      }
-    }
   }
 
 
@@ -100,14 +69,30 @@ export class HomeComponent implements OnInit {
     });
   }
 
+
   editUser(userId: number): void {
-    console.log("User object before calling editUser:", this.user);
-    this.userService.getUserById(userId).subscribe(user => {
-      console.log("Received userId in editUser:", userId);
-      this.user = user;
-      this.router.navigate(['/user-detail', userId]);
-    });
+
+    if (!this.user) {
+      console.error("User data is missing.");
+      // TODO Gérer l'erreur en affichant un message à l'utilisateur
+      return;
+    }
+
+    if (this.user.id !== userId) {
+      console.error(`User ID mismatch. Expected ${this.user.id}, but got ${userId}.`);
+      // TODO Gérer l'erreur en affichant un message à l'utilisateur
+      return;
+    }
+
+    this.router.navigate(['/user-detail', userId])
+      .then(success => {
+        if (!success) {
+          console.error("Failed to navigate to user detail page.");
+          // TODO Gérer l'erreur en affichant un message à l'utilisateur
+        }
+      });
   }
+
 
   handleButtonClick(): void {
     if (this.isAuthenticated()) {

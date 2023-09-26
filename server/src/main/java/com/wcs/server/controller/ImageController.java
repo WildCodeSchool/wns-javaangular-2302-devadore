@@ -18,7 +18,7 @@ import java.util.zip.DataFormatException;
 @RequestMapping("/api/images")
 public class ImageController {
 
-    @Autowired
+/*    @Autowired
     private ImageService imageService;
     @Autowired
     private UserService userService;
@@ -37,5 +37,5 @@ public class ImageController {
     public byte[] getImage(@PathVariable Long id) throws DataFormatException, IOException {
         byte[] compressedImage = imageService.getImage(id).get().getImage();
         return ImageCompressionUtils.decompress(compressedImage);
-    }
+    }*/
 }

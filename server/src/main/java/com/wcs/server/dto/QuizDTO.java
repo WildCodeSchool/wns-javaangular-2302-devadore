@@ -1,16 +1,18 @@
 package com.wcs.server.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class QuizDTO {
-    
+
     private Long id;
     private String title;
     private String description;
     private Integer categoryId;
-    private UserDTO createdBy;
-    private Date createdAt;
-    private Date updatedAt;
+    private SimpleUserDTO createdBy;
+    private byte[] image;
+    private String mimeType;
+    private LocalDate createdAt;
+    private LocalDate updatedAt;
 
     public Long getId() {
         return id;
@@ -44,27 +46,43 @@ public class QuizDTO {
         this.categoryId = categoryId;
     }
 
-    public UserDTO getCreatedBy() {
+    public SimpleUserDTO getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(UserDTO createdBy) {
+    public void setCreatedBy(SimpleUserDTO createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Date getCreatedAt() {
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdatedAt() {
+    public LocalDate getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
+    public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
     }
 }
