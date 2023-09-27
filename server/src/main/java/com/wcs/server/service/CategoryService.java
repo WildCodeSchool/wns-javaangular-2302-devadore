@@ -1,10 +1,7 @@
 package com.wcs.server.service;
 
 import com.wcs.server.entity.Category;
-import com.wcs.server.entity.Quiz;
-import com.wcs.server.entity.User;
 import com.wcs.server.repository.CategoryRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

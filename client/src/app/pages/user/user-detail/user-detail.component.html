@@ -13,14 +13,7 @@
   <div
     class="mx-auto flex h-full flex-col items-center justify-center px-6 py-8 "
   >
-    <a
-      href="#"
-      class="mb-6 flex items-center text-2xl font-semibold text-gray-900 dark:text-black"
-    >
-      <img class="w-8 h-8 mr-2" ngSrc="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png" alt="logo"
-           width="24" height="24">
-      Quizz4all
-    </a>
+    <app-logo></app-logo>
     <div class="flex w-full max-w-3xl rounded-lg bg-white p-6 shadow">
       <div class="w-1/2 border-r pr-4">
         <form
@@ -139,12 +132,6 @@
         </form>
       </div>
     </div>
-    <button
-      (click)="deleteUser(user.id)"
-      class="mt-4 rounded-full border-2 border-b-red-700 px-4 py-2 text-current transform transition-transform duration-200 hover:scale-105"
-    >
-      Supprimer le profil
-    </button>
     <button *ngIf="isAdmin"
             (click)="goToUserlist()"
             class="mt-4 rounded-full border-2 border-b-amber-400 px-4 py-2 text-current transform transition-transform duration-200 hover:scale-105"
@@ -155,64 +142,22 @@
   <div *ngIf="isUser && !isAdmin">
 
     <button
-      class="mt-4 rounded-full border-2 border-white px-4 py-2 text-current uppercase transform transition-transform duration-200 hover:scale-105"
+      class="mt-4 w-full rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-current transform transition-transform duration-200 hover:scale-105"
       [routerLink]="'/quiz/create-quiz'"
     >
       Créer son QUIZ
     </button>
-  </div>
-</div>
-
-<div class="flex justify-center">
-
-  <div class="flex flex-col w-1/2">
-
-    <table mat-table [dataSource]="dataSource" matSort class="mx-auto w-1/2">
-      <caption class="text-lg font-bold bg-yellow-300 p-2 rounded-t">
-        Liste des : {{ countQuizzes() }} quizzes de {{ user.username}}
-      </caption>
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
-        <td mat-cell *matCellDef="let quizzes">{{ quizzes.title }}</td>
-      </ng-container>
-      <ng-container matColumnDef="image">
-        <th mat-header-cell *matHeaderCellDef>Image
-        </th>
-        <td mat-cell *matCellDef="let quizzes">
-          <img class="rounded-full shadow h-12 w-12 m-auto"
-               *ngIf="quizzes.image"
-               [src]="'data:' + quizzes.mimeType + ';base64,' + quizzes.image"
-               alt="Image quiz"
-          />
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
-        <td mat-cell *matCellDef="let quizzes">{{ quizzes.description }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Créer le</th>
-        <td mat-cell *matCellDef="let quizzes">{{ quizzes.createdAt | date }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="updatedAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Mis à jour le</th>
-        <td mat-cell *matCellDef="let quizzes">{{ quizzes.updatedAt | date }}</td>
-      </ng-container>
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-        <td mat-cell *matCellDef="let quizzes">
-          <button (click)="onDeleteQuiz(quizzes.id)"
-                  class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
-                  title="Supprimer la question">❌
-          </button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-
-    </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of quizzes"></mat-paginator>
+    <button
+      class="mt-4 w-full rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-current transform transition-transform duration-200 hover:scale-105"
+      (click)="goToQuizlistUser()"
+    >
+      Liste de tes QUIZZES
+    </button>
+    <button
+      (click)="deleteUser(user.id)"
+      class="mt-4 rounded-full border-2 border-b-red-700 px-4 py-2 text-current transform transition-transform duration-200 hover:scale-105"
+    >
+      Supprimer le profil
+    </button>
   </div>
 </div>

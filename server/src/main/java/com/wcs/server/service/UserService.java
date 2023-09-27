@@ -20,7 +20,7 @@ import com.wcs.server.repository.UserRepository;
 import java.util.List;
 
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+
 
 @Service
 public class UserService {
@@ -42,12 +42,13 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+    private static final String IMAGE_SUFFIX = "_image";
 
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public UserDTO getUserById(Long id) {
@@ -58,7 +59,7 @@ public class UserService {
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         List<RoleDTO> roleDTOs = user.getRoles().stream()
                 .map(role -> modelMapper.map(role, RoleDTO.class))
-                .collect(Collectors.toList());
+                .toList();
 
         userDTO.setRoles(roleDTOs);
 
@@ -83,7 +84,7 @@ public class UserService {
         User user = modelMapper.map(userDTO, User.class);
         List<Role> roles = userDTO.getRoles().stream()
                 .map(roleDTO -> modelMapper.map(roleDTO, Role.class))
-                .collect(Collectors.toList());
+                .toList();
         user.setRoles(roles);
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);
@@ -105,12 +106,12 @@ public class UserService {
             List<Role> roles = userDTO.getRoles().stream()
                     .map(roleDto -> roleRepository.findById(roleDto.getId())
                             .orElseThrow(() -> new IllegalArgumentException("Role with id " + roleDto.getId() + " not found")))
-                    .collect(Collectors.toList());
+                    .toList();
             user.setRoles(roles);
         }
         if (userDTO.getImage() != null && userDTO.getMimeType() != null) {
             Image image = new Image();
-            image.setName(userDTO.getUsername() + "_image");
+            image.setName(userDTO.getUsername() + IMAGE_SUFFIX);
             image.setImage(userDTO.getImage());
             image.setMimeType(userDTO.getMimeType());
             image.setUser(user);
@@ -164,7 +165,7 @@ public class UserService {
         // Ajouter une image à l'utilisateur
         if (registrationRequest.getImage() != null) {
             Image image = new Image();
-            image.setName(registrationRequest.getUsername() + "_image");
+            image.setName(registrationRequest.getUsername() + IMAGE_SUFFIX);
             image.setImage(registrationRequest.getImage());
             image.setMimeType(registrationRequest.getMimeType());
             image.setUser(user);
@@ -191,17 +192,15 @@ public class UserService {
             // Mettre à jour les données de l'image
             userImage.setImage(imageData);
             userImage.setMimeType(mimeType);
-            userImage.setName(user.getUsername() + "_image");
+            userImage.setName(user.getUsername() + IMAGE_SUFFIX);
 
             // Mettre à jour la relation entre User et Image
             user.setImage(userImage);
             userImage.setUser(user);
 
             // Enregistrer les modifications dans la base de données
-            User updatedUser = userRepository.save(user);
+            return userRepository.save(user);
 
-
-            return updatedUser;
         } catch (Exception e) {
             // Gérer l'exception en conséquence
             e.printStackTrace();

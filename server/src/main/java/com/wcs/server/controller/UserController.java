@@ -89,9 +89,6 @@ public class UserController {
             MultipartFile imageDTO = request.getFile("image");
             // Vérifier si un fichier a été téléchargé
             if (imageDTO != null && !imageDTO.isEmpty()) {
-                // Ajouter des logs pour vérifier le fichier
-                System.out.println("Fichier récupéré : " + imageDTO.getOriginalFilename());
-                System.out.println("Type MIME : " + imageDTO.getContentType());
 
                 // Mettre à jour l'image de l'utilisateur avec la nouvelle image
                 byte[] imageData = imageDTO.getBytes();

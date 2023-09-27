@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import com.wcs.server.dto.CreateQuizDTO;
 import com.wcs.server.entity.*;
@@ -38,14 +37,14 @@ public class QuizService {
         List<Quiz> quizs = quizRepository.findAll();
         return quizs.stream()
                 .map(this::convertQuizToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public QuizDTO getQuizByRandomId() {
         List<Integer> ids = quizRepository.findAllIds();
 
-        // nextInt(n) genère un nombre aléatoire entre 0 inclus et n exclus 
-        // Ce qui permet de récupérer un index aléatoire de la liste et retourner son id 
+        // nextInt(n) genère un nombre aléatoire entre 0 inclus et n exclus
+        // Ce qui permet de récupérer un index aléatoire de la liste et retourner son id
         Random random = new Random();
         int randomId = ids.get(random.nextInt(ids.size()));
 
@@ -59,7 +58,7 @@ public class QuizService {
         List<Quiz> quizzes = quizRepository.findQuizzesByCreatedBy(userId);
         return quizzes.stream()
                 .map(quiz -> modelMapper.map(quiz, QuizDTO.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public QuizDTO createCompleteQuiz(CreateQuizDTO createQuizDTO, Authentication authentication) {
@@ -79,7 +78,7 @@ public class QuizService {
         String username = userDetails.getUsername();
         User user = userRepository.findByUsername(username);
         quiz.setCreatedBy(user);
-        // Ajouter une image à l'utilisateur
+        // Ajouter une image au quiz
         if (createQuizDTO.getImage() != null) {
             Image image = new Image();
             image.setName(createQuizDTO.getTitle() + "_image");
@@ -108,7 +107,7 @@ public class QuizService {
                 answer.setIsCorrect(answerDTO.isCorrect());
                 answer.setQuestion(question);
                 return answer;
-            }).collect(Collectors.toList());
+            }).toList();
 
             question.setAnswers(questionAnswers);
             quizQuestions.add(question);

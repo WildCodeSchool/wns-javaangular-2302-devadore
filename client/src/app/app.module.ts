@@ -9,27 +9,29 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {AnimatedSlideComponent} from './pages/home/components/animated-slide/animated-slide.component';
 import {ToastService} from "./services/toastService";
+import {SharedModule} from "./shared/shared.module";
 
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        HomeComponent,
-        AnimatedSlideComponent,
-    ],
-    imports: [
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    AnimatedSlideComponent,
 
-        BrowserModule,
-        HttpClientModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        FontAwesomeModule
-    ],
-    exports: [],
-    providers: [
-        {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, ToastService
-    ],
-    bootstrap: [AppComponent]
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    FontAwesomeModule,
+    SharedModule,
+  ],
+  exports: [],
+  providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}, ToastService
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

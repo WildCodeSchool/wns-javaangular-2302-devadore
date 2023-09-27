@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Service
 public class RoleService {
 
@@ -19,15 +19,15 @@ public class RoleService {
     private ModelMapper modelMapper;
 
 
-
     public List<RoleDTO> getAllRoles() {
         List<Role> roles = roleRepository.findAll();
         List<RoleDTO> roleDTOs = roles.stream()
                 .map(role -> modelMapper.map(role, RoleDTO.class))
-                .collect(Collectors.toList());
+                .toList();
 
         return roleDTOs;
     }
+
     public RoleDTO getRoleById(Long id) {
         Role role = roleRepository.findById(id).orElse(null);
         if (role == null) {
@@ -35,6 +35,7 @@ public class RoleService {
         }
         return modelMapper.map(role, RoleDTO.class);
     }
+
     public RoleDTO createRole(RoleDTO roleDTO) {
         Role role = modelMapper.map(roleDTO, Role.class);
         Role savedRole = roleRepository.save(role);

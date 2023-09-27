@@ -14,26 +14,29 @@ import {MatInputModule} from "@angular/material/input";
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {SharedModule} from "../../shared/shared.module";
 
 
 @NgModule({
-    declarations: [
-        UserComponent,
-        UserListComponent,
-        UserDetailComponent
-    ],
-    imports: [
-        CommonModule,
-        UserRoutingModule,
-        FormsModule,
-        MatTableModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatSortModule,
-        NgOptimizedImage,
-        MatPaginatorModule
-    ]
+  declarations: [
+    UserComponent,
+    UserListComponent,
+    UserDetailComponent,
+
+  ],
+  imports: [
+    CommonModule,
+    SharedModule,
+    UserRoutingModule,
+    FormsModule,
+    MatTableModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatSortModule,
+    NgOptimizedImage,
+    MatPaginatorModule
+  ]
 
 })
 export class UserModule {

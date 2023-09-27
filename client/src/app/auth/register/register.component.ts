@@ -3,8 +3,8 @@ import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators} f
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "../../services/user.service";
 import {Router} from "@angular/router";
-import {emailValidator} from "../validators/email-validator";
-import {passwordValidator} from "../validators/password-validator";
+import {emailValidator} from "../../validators/email.validator";
+import {passwordValidator} from "../../validators/password.validator";
 import {debounceTime, map, Observable} from "rxjs";
 import {ToastService} from "../../services/toastService";
 
