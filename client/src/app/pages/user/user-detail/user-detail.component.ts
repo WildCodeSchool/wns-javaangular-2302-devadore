@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../../../models/user.model";
 import {UserService} from "../../../services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -8,9 +8,6 @@ import {ToastService} from "../../../services/toastService";
 import {AuthService} from "../../../services/auth.service";
 import {QuizModel} from "../../../models/quiz.model";
 import {QuizService} from "../../../services/quiz.service";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
 
 
 @Component({
@@ -18,7 +15,7 @@ import {MatSort} from "@angular/material/sort";
   templateUrl: './user-detail.component.html',
   styleUrls: ['./user-detail.component.scss']
 })
-export class UserDetailComponent implements OnInit, AfterViewInit {
+export class UserDetailComponent implements OnInit {
 
   allRoles!: Role[];
   userRoles!: Role[];
@@ -29,16 +26,6 @@ export class UserDetailComponent implements OnInit, AfterViewInit {
   user = {} as User;
   quizzes: QuizModel[] = [];
 
-  dataSource = new MatTableDataSource<QuizModel>;
-  displayedColumns: string[] = ['title', 'image', 'description', 'createdAt', 'updatedAt', 'action'];
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-
-  ngAfterViewInit() {
-    console.log(this.dataSource instanceof MatTableDataSource);
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
-  }
 
   constructor(
     private authService: AuthService,
@@ -70,13 +57,7 @@ export class UserDetailComponent implements OnInit, AfterViewInit {
       this.isUser = isUserValue;
       console.log('isUserValue', isUserValue)
     });
-    this.quizService.getAllQuizzesCreatedByUser(id).subscribe(data => {
-      this.quizzes = data;
-      this.dataSource.data = this.quizzes;
-      console.log('quizzes', data)
-    });
   }
-
 
   isRoleSelected(role: Role): boolean {
     return this.userRoles?.some(userRole => userRole.id === role.id);
@@ -129,7 +110,7 @@ export class UserDetailComponent implements OnInit, AfterViewInit {
 
         this.userService.updateUserImage(userId, imageFile, mimeType).subscribe({
           next: () => {
-            // Mettre à jour uniquement les détails de l'utilisateur après la mise à jour de l'image
+            // Met à jour uniquement les détails de l'utilisateur après la mise à jour de l'image
             if (this.isAdmin) {
               this.toastService.showToast('Image du profil mise à jour avec succès', 'success');
               setTimeout(() => {
@@ -212,27 +193,13 @@ export class UserDetailComponent implements OnInit, AfterViewInit {
 
   goToUserlist() {
     this.router.navigateByUrl('user-list').then(() => {
-      // TODO Après avoir navigué vers la page d'accueil, ?????
     });
   }
 
-  // fonction quui renvoie le nombre de quiz dans la liste
-  countQuizzes(): number {
-    return this.quizzes.length;
+  goToQuizlistUser() {
+    if (this.user) this.router.navigateByUrl(`quiz/quiz-list-user/${this.user.id}`).then(() => {
+    });
   }
 
-  onDeleteQuiz(id: number) {
-    this.quizService.deleteQuiz(id).subscribe(
-      response => {
-        this.quizzes = this.quizzes.filter(quiz => quiz.id !== id);
-        this.dataSource = new MatTableDataSource(this.quizzes);
-        this.paginator._changePageSize(this.paginator.pageSize);
-        console.log('Quiz deleted successfully!');
-      },
-      error => {
-        console.error('There was an error during the deletion:', error);
-      }
-    );
-  }
 
 }

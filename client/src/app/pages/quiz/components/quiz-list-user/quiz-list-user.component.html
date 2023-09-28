@@ -1,0 +1,60 @@
+<!--Liste des quizz du user-->
+<div
+  class="h-full bg-cover bg-center text-white"
+  style="
+    background-image: url(/assets/images/defaultAvatars/MidJourney-wizard-hall.jpg);
+  "
+>
+  <div class="mx-auto flex flex-col items-center justify-center px-6 py-10 ">
+    <app-logo [textColor]="'orange'"></app-logo>
+  </div>
+  <div *ngIf="isUser && !isAdmin" class="flex justify-center opacity-75 hover:opacity-100">
+
+    <div class="flex flex-col w-1/2">
+
+      <table mat-table [dataSource]="dataSource" matSort class="mx-auto w-1/2 ">
+        <caption class="text-lg font-bold bg-yellow-300 text-black p-2 rounded-t">
+          Liste des : {{ countQuizzes() }} quizzes de {{ user.username}}
+        </caption>
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Titre</th>
+          <td mat-cell *matCellDef="let quizzes">{{ quizzes.title }}</td>
+        </ng-container>
+        <ng-container matColumnDef="image">
+          <th mat-header-cell *matHeaderCellDef>Image
+          </th>
+          <td mat-cell *matCellDef="let quizzes">
+            <img class="flex justify-center shadow h-12 w-12 "
+                 *ngIf="quizzes.image"
+                 [src]="'data:' + quizzes.mimeType + ';base64,' + quizzes.image"
+                 alt="Image quiz"
+            />
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+          <td mat-cell *matCellDef="let quizzes">{{ quizzes.description }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Créer le</th>
+          <td mat-cell *matCellDef="let quizzes">{{ quizzes.createdAt | date }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let quizzes">
+            <button (click)="onDeleteQuiz(quizzes.id)"
+                    class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
+                    title="Supprimer le quiz">❌
+            </button>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+      <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of quizzes"></mat-paginator>
+    </div>
+  </div>
+</div>

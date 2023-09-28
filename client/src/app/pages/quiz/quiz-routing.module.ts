@@ -3,11 +3,13 @@ import {RouterModule, Routes} from '@angular/router';
 import {QuizPreviewComponent} from './components/quiz-preview/quiz-preview.component';
 import {QuizPlayComponent} from './components/quiz-play/quiz-play.component';
 import {QuizCreateComponent} from "./components/quiz-create/quiz-create.component";
+import {QuizListUserComponent} from "./components/quiz-list-user/quiz-list-user.component";
 
 const routes: Routes = [
   {path: 'preview', component: QuizPreviewComponent},
   {path: 'play/:id', component: QuizPlayComponent},
-  {path: 'create-quiz', component: QuizCreateComponent}
+  {path: 'create-quiz', component: QuizCreateComponent},
+  {path: 'quiz-list-user/:id', component: QuizListUserComponent}
 ];
 
 @NgModule({
