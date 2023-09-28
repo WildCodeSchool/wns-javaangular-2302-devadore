@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from "../../../models/user.model";
 import {UserService} from "../../../services/user.service";
@@ -7,24 +7,35 @@ import {MatTableDataSource} from "@angular/material/table";
 import {tap} from "rxjs/operators";
 import {catchError, of} from "rxjs";
 import {ToastService} from "../../../services/toastService";
+import {MatSort, Sort} from "@angular/material/sort";
+import {LiveAnnouncer} from "@angular/cdk/a11y";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent implements AfterViewInit {
+  user = {} as User;
 
-  users!: MatTableDataSource<User>;
   displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'createdAt', 'updatedAt', 'actions'];
+  dataSource = new MatTableDataSource<User>;
 
-  constructor(private userService: UserService, private router: Router, private authService: AuthService, public toastService: ToastService) {
+  constructor(private userService: UserService, private router: Router, private authService: AuthService, public toastService: ToastService, private _liveAnnouncer: LiveAnnouncer) {
   }
 
-  ngOnInit(): void {
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+
+  ngAfterViewInit() {
     this.loadUsers();
+    console.log(this.dataSource instanceof MatTableDataSource);
+    this.dataSource.sort = this.sort;
+    console.log('actvie: ', this.dataSource.sort.active);
+    console.log(this.dataSource.sort.direction);
   }
-
 
   loadUsers(): void {
     const jwtToken = this.authService.getToken();
@@ -32,8 +43,13 @@ export class UserListComponent implements OnInit {
     if (jwtToken) {
       this.userService.getUsers().pipe(
         tap(users => {
-          this.users = new MatTableDataSource(users);
+          this.dataSource = new MatTableDataSource(users);
           console.log('userlist: ', users);
+          console.log(this.dataSource instanceof MatTableDataSource);
+          this.dataSource.paginator = this.paginator;
+          this.dataSource.sort = this.sort;
+          console.log('actvie: ', this.dataSource.sort.active);
+          console.log(this.dataSource.sort.direction);
         }),
         catchError(error => {
           console.error(error);
@@ -63,7 +79,7 @@ export class UserListComponent implements OnInit {
 
   deleteUser(userId: number): void {
     // Trouvez l'utilisateur par son ID dans la liste des utilisateurs
-    const user = this.users.data.find(u => u.id === userId);
+    const user = this.dataSource.data.find(u => u.id === userId);
 
     // Si l'utilisateur a été trouvé et que son rôle est "admin", arrêtez la fonction ici
     if (user && user.roles.some(role => role.name === 'ADMIN')) {
@@ -80,7 +96,14 @@ export class UserListComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.users.filter = filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  countUser(): number {
+    return this.dataSource.data.length;
   }
 
   goToHome() {
