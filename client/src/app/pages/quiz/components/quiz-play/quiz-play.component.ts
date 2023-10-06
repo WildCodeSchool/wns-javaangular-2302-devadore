@@ -160,15 +160,15 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
 
         // Calcul du nombre de réponses incorrectes sélectionnées.
         const incorrectSelectedCount = this.answers.filter(a => a.isSelected && !a.isCorrect).length;
-
+        console.log('incorrectSelectedCount: ', incorrectSelectedCount)
         // Conditions pour définir le pourcentage du score à attribuer, basé sur le "gap" et le compte de réponses incorrectes sélectionnées.
-        if (incorrectSelectedCount >= correctSelectedCount) {
+        if (incorrectSelectedCount > correctSelectedCount) {
           scorePercentage = 0;
         } else if (incorrectSelectedCount < correctSelectedCount) {
           scorePercentage = 0.5;
         } else if (gap === 2 && totalSelectedCount > correctSelectedCount) {
           scorePercentage = 0;
-        } else if (gap === 1 && (totalSelectedCount > correctSelectedCount || totalSelectedCount < correctSelectedCount)) {
+        } else if (gap === 1 && (totalSelectedCount < correctSelectedCount)) {
           scorePercentage = 0.5;
         } else if (totalSelectedCount === totalCorrectCount) {
           scorePercentage = timeLeft / this.maxTime;
