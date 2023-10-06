@@ -66,3 +66,12 @@
   text-align: center; /* Centrer le texte */
   line-height: 30px; /* Aligner le texte verticalement */
 }
+
+.selected-answer {
+  background-color: lightblue; /* or any color you prefer to indicate selection */
+}
+
+.multiple-choice-warning {
+  color: red; /* ou une autre couleur qui attire l'attention */
+  font-weight: bold;
+}
