@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleService {
@@ -23,7 +24,7 @@ public class RoleService {
         List<Role> roles = roleRepository.findAll();
         List<RoleDTO> roleDTOs = roles.stream()
                 .map(role -> modelMapper.map(role, RoleDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
         return roleDTOs;
     }

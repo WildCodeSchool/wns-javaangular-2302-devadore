@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import com.wcs.server.dto.CreateQuizDTO;
 import com.wcs.server.entity.*;
@@ -37,7 +38,7 @@ public class QuizService {
         List<Quiz> quizs = quizRepository.findAll();
         return quizs.stream()
                 .map(this::convertQuizToDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public QuizDTO getQuizByRandomId() {
@@ -58,7 +59,7 @@ public class QuizService {
         List<Quiz> quizzes = quizRepository.findQuizzesByCreatedBy(userId);
         return quizzes.stream()
                 .map(quiz -> modelMapper.map(quiz, QuizDTO.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public QuizDTO createCompleteQuiz(CreateQuizDTO createQuizDTO, Authentication authentication) {
@@ -107,7 +108,7 @@ public class QuizService {
                 answer.setIsCorrect(answerDTO.isCorrect());
                 answer.setQuestion(question);
                 return answer;
-            }).toList();
+            }).collect(Collectors.toList());
 
             question.setAnswers(questionAnswers);
             quizQuestions.add(question);

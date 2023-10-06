@@ -3,6 +3,7 @@ package com.wcs.server.service;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,14 @@ public class QuestionService {
         List<Question> questions = questionRepository.findAll();
         return questions.stream()
                 .map(this::convertQuestionToDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public List<QuestionDTO> getQuestionsByQuizId(Long id) {
         List<Question> questions = questionRepository.findAllByQuizId(id);
         return questions.stream()
                 .map(this::convertQuestionToDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public QuestionDTO getRandomQuestionByQuizId(Long quizId, List<Long> excludeIds) {

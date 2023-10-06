@@ -1,6 +1,7 @@
 package com.wcs.server.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class AnswerService {
         List<Answer> answers = answerRepository.findAllByQuestionId(id);
         return answers.stream()
                 .map(this::convertQuestionToDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     private AnswerDTO convertQuestionToDTO(Answer answer) {

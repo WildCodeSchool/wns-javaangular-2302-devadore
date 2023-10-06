@@ -20,6 +20,7 @@ import com.wcs.server.repository.UserRepository;
 import java.util.List;
 
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -48,7 +49,7 @@ public class UserService {
         List<User> users = userRepository.findAll();
         return users.stream()
                 .map(user -> modelMapper.map(user, UserDTO.class))
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public UserDTO getUserById(Long id) {
@@ -59,7 +60,7 @@ public class UserService {
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         List<RoleDTO> roleDTOs = user.getRoles().stream()
                 .map(role -> modelMapper.map(role, RoleDTO.class))
-                .toList();
+                .collect(Collectors.toList());
 
         userDTO.setRoles(roleDTOs);
 
@@ -84,7 +85,7 @@ public class UserService {
         User user = modelMapper.map(userDTO, User.class);
         List<Role> roles = userDTO.getRoles().stream()
                 .map(roleDTO -> modelMapper.map(roleDTO, Role.class))
-                .toList();
+                .collect(Collectors.toList());
         user.setRoles(roles);
         User savedUser = userRepository.save(user);
         return modelMapper.map(savedUser, UserDTO.class);
@@ -106,7 +107,7 @@ public class UserService {
             List<Role> roles = userDTO.getRoles().stream()
                     .map(roleDto -> roleRepository.findById(roleDto.getId())
                             .orElseThrow(() -> new IllegalArgumentException("Role with id " + roleDto.getId() + " not found")))
-                    .toList();
+                    .collect(Collectors.toList());
             user.setRoles(roles);
         }
         if (userDTO.getImage() != null && userDTO.getMimeType() != null) {
@@ -117,8 +118,10 @@ public class UserService {
             image.setUser(user);
             user.setImage(image);
         }
+
         User updatedUser = userRepository.save(user);
         return modelMapper.map(updatedUser, UserDTO.class);
+
     }
 
     @Transactional
