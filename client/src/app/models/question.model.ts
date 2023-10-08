@@ -1,4 +1,4 @@
-import { AnswerModel } from "./answer.model";
+import {AnswerModel} from "./answer.model";
 
 export interface QuestionModel {
   id: number;
@@ -7,4 +7,6 @@ export interface QuestionModel {
   image: string;
   answers: AnswerModel[];
   timer: number;
+  isMultipleChoice: boolean;
+  isAnswered: boolean;
 }

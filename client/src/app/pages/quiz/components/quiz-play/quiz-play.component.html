@@ -1,30 +1,69 @@
-<div class="quiz-section">
-
-    <div class="question">
-      <h2>{{ question?.text }}</h2>
-    </div>
-  
-    <ul class="answers">
-      <li *ngFor="let answer of question?.answers"
-          [class.correct-answer]="isAnswered && answer.isCorrect"
-          [class.wrong-answer]="isAnswered && !answer.isCorrect && answer === selectedAnswer"
-          (click)="!isAnswered && onAnswerSelected(answer)">
-        {{ answer.text }}   
-      </li>  
-
-    </ul>
-    <button *ngIf="isAnswered && excludeIds.length != 10" (click)="getNextQuestion()">Question suivante</button>
-
-    <div *ngIf="isAnswered && excludeIds.length == 10" >
-      <div>
-        <button (click)="resetQuiz()">Recommencer</button>
-      </div>
-      <div>
-        <button [routerLink]="'/'">Retour au menu</button>
-      </div>
-      <p>Score : {{ score }}/10</p>
-    </div>
+<div
+  class="h-full bg-cover bg-center text-white"
+  style="
+    background-image: url(/assets/images/defaultAvatars/MidJourney-wizard-hall.jpg);
+  "
+>
+  <div class="mx-auto flex flex-col items-center justify-center px-6 py-10 ">
+    <app-logo [textColor]="'orange'"></app-logo>
   </div>
+  <div class="quiz-section bg-gray-900 p-8 rounded-lg shadow-md text-white">
 
-  
-  
+    <div class="timer-container mb-4 relative h-2 rounded-full overflow-hidden">
+      <div class="timer-bar bg-gradient-to-r from-green-400 to-blue-500 h-full"
+           [ngStyle]="{'width': (timeLeft / maxTime) * 100 + '%'}"></div>
+    </div>
+
+    <div class="flex justify-center ">
+      <div *ngIf="userImage" class="w-16 h-16 rounded-full overflow-hidden">
+        <img [src]="userImage" alt="User Image" class="w-full h-full rounded-full border-4 border-amber-500">
+      </div>
+    </div>
+    <h1 class="text-2xl font-bold mb-6 text-center">A toi de jouer "{{user?.username}}" </h1>
+    <div class="question mb-6">
+      <h2 class="text-2xl font-bold text-green-400">{{ question?.text }}</h2>
+      <p *ngIf="question?.isMultipleChoice" class="multiple-choice-warning text-sm text-red-400">Choix multiple</p>
+    </div>
+
+    <ul class="answers list-decimal pl-5 mb-4">
+      <li *ngFor="let answer of question?.answers"
+          [ngClass]="{
+        'bg-green-700': isAnswered && answer.isCorrect,
+        'bg-red-700': isAnswered && !answer.isCorrect && answer.isSelected,
+        'bg-blue-700': !isAnswered && answer.isSelected
+      }"
+          class="mb-2 p-2 rounded cursor-pointer hover:bg-gray-800"
+          (click)="!question?.isAnswered && onAnswerSelected(answer)">
+        {{ answer.text }}
+      </li>
+    </ul>
+
+    <button *ngIf="!isAnswered" (click)="onSubmitAnswers()"
+            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring focus:border-blue-300">
+      je valide !
+    </button>
+
+    <div *ngIf="isAnswered" class="score-display mt-4">
+      <p class="text-lg font-semibold text-orange-600">Ton score: {{ score }}</p>
+    </div>
+
+    <button *ngIf="isAnswered && excludeIds.length != 10" (click)="getNextQuestion()"
+            class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring focus:border-blue-300 mt-4">
+      Question suivante
+    </button>
+
+    <div *ngIf="isAnswered && excludeIds.length == 10" class="score-display mt-4">
+      <button (click)="resetQuiz()"
+              class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-opacity-50">
+        Recommencer
+      </button>
+      <br>
+      <button [routerLink]="'/'"
+              class="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-600 focus:ring-opacity-50 mt-2">
+        Retour au menu
+      </button>
+      <p class="text-lg font-semibold text-orange-600 mt-2">Score : {{ score }}</p>
+    </div>
+
+  </div>
+</div>
