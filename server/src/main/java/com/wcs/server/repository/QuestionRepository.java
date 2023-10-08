@@ -8,11 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 import com.wcs.server.entity.Question;
 
-public interface QuestionRepository extends JpaRepository<Question, Long>{
+public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findAllByQuizId(Long id);
 
     @Query(value = "SELECT * FROM Question WHERE quiz_id = :quizId AND id NOT IN (:excludeIds) ORDER BY RAND() LIMIT 1", nativeQuery = true)
     Question getRandomQuestionByQuizIdExcluding(@Param("quizId") Long quizId, @Param("excludeIds") List<Long> excludeIds);
+
 
 }

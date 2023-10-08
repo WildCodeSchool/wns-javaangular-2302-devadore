@@ -24,7 +24,13 @@ export class QuizCreateComponent implements OnInit {
   image: File | null = null;
   previewUrl: any = null;
 
-  constructor(private fb: FormBuilder, private quizService: QuizService, private categoryService: CategoryService, private userProfileService: UserProfileService, private router: Router, public toastService: ToastService) {
+  constructor(
+    private fb: FormBuilder,
+    private quizService: QuizService,
+    private categoryService: CategoryService,
+    private userProfileService: UserProfileService,
+    private router: Router,
+    public toastService: ToastService) {
     this.quizForm = this.createQuizForm();
   }
 
@@ -37,7 +43,7 @@ export class QuizCreateComponent implements OnInit {
     });
     this.userProfileService.getUser().subscribe(user => {
       this.user = user;
-      this.username = user?.username || null;
+      this.username = user?.username ?? null;
     });
   }
 

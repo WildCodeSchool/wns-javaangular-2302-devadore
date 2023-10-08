@@ -6,7 +6,7 @@
         <img class=" shadow h-20 w-20 m-auto"
              *ngIf="randomQuiz.image"
              [src]="'data:' + randomQuiz.mimeType + ';base64,' + randomQuiz.image"
-             alt="Avatar"
+             alt="Image du Quiz"
         />
         <p class="text-gray-700 text-base">{{ randomQuiz.description }}</p>
       </div>

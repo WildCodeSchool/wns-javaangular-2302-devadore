@@ -43,6 +43,7 @@ export class QuizListUserComponent implements OnInit, AfterViewInit {
     private userService: UserService,
     private quizService: QuizService,
     private route: ActivatedRoute,
+    private router: Router,
     public toastService: ToastService
   ) {
   }
@@ -78,6 +79,10 @@ export class QuizListUserComponent implements OnInit, AfterViewInit {
   // fonction quui renvoie le nombre de quiz
   countQuizzes(): number {
     return this.quizzes.length;
+  }
+
+  editQuiz(userId: number): void {
+    this.router.navigate(['/edit-quiz', userId]);
   }
 
   onDeleteQuiz(id: number) {

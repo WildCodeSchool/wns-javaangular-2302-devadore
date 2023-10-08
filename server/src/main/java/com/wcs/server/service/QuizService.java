@@ -1,10 +1,7 @@
 package com.wcs.server.service;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.wcs.server.dto.CreateQuizDTO;
@@ -60,6 +57,15 @@ public class QuizService {
         return quizzes.stream()
                 .map(quiz -> modelMapper.map(quiz, QuizDTO.class))
                 .collect(Collectors.toList());
+    }
+
+    public Optional<CreateQuizDTO> findById(Long id) {
+        Optional<Quiz> quizOptional = quizRepository.findById(Math.toIntExact(id));
+        if (quizOptional.isEmpty()) {
+            return Optional.empty();
+        }
+        CreateQuizDTO quizDTO = modelMapper.map(quizOptional.get(), CreateQuizDTO.class);
+        return Optional.of(quizDTO);
     }
 
     public QuizDTO createCompleteQuiz(CreateQuizDTO createQuizDTO, Authentication authentication) {
@@ -131,4 +137,77 @@ public class QuizService {
         }
         quizRepository.delete(quiz);
     }
+
+    public QuizDTO updateQuiz(Long id, CreateQuizDTO createQuizDTO) {
+        // Trouver le quiz existant par ID
+        Quiz quiz = quizRepository.findById(Math.toIntExact(id))
+                .orElseThrow(() -> new NoSuchElementException("Quiz avec l'id " + id + " n'est pas trouvé"));
+
+        // Mettre à jour les propriétés du quiz
+        updateQuizProperties(quiz, createQuizDTO);
+
+        // Mise à jour des questions
+        List<Question> existingQuestions = questionRepository.findAllByQuizId(id);
+        updateQuestions(quiz, createQuizDTO.getQuestions(), existingQuestions);
+
+        // Sauvegarde de l'entité Quiz mise à jour
+        quiz = quizRepository.save(quiz);
+
+        return modelMapper.map(quiz, QuizDTO.class);
+    }
+
+    private void updateQuizProperties(Quiz quiz, CreateQuizDTO createQuizDTO) {
+        quiz.setTitle(createQuizDTO.getTitle());
+        quiz.setDescription(createQuizDTO.getDescription());
+
+        // Récupération de la catégorie existante en utilisant l'ID
+        Category category = categoryRepository.findById(createQuizDTO.getCategoryId())
+                .orElseThrow(() -> new NoSuchElementException("Catégorie avec l'id " + createQuizDTO.getCategoryId() + " n'est pas trouvée"));
+        quiz.setCategory(category);
+
+        // Mettre à jour l'image si une nouvelle est fournie
+        if (createQuizDTO.getImage() != null) {
+            Image image = new Image();
+            image.setName(createQuizDTO.getTitle() + "_image");
+            image.setImage(createQuizDTO.getImage());
+            image.setMimeType(createQuizDTO.getMimeType());
+            image.setQuiz(quiz);
+            quiz.setImage(image);
+        }
+    }
+
+    private void updateQuestions(Quiz quiz, List<CreateQuizDTO.QuestionDTO> questionDTOs, List<Question> existingQuestions) {
+        List<Question> updatedQuestions = new ArrayList<>();
+
+        for (CreateQuizDTO.QuestionDTO questionDTO : questionDTOs) {
+            Question question = existingQuestions.stream()
+                    .filter(q -> q.getId().equals(questionDTO.getId()))
+                    .findFirst()
+                    .orElseGet(() -> new Question());
+
+            question.setText(questionDTO.getText());
+            question.setQuiz(quiz);
+
+            // Mettez à jour ou ajoutez les réponses
+            List<Answer> updatedAnswers = questionDTO.getAnswers().stream().map(answerDTO -> {
+                Answer answer = new Answer();
+                answer.setText(answerDTO.getText());
+                answer.setIsCorrect(answerDTO.isCorrect());
+                answer.setQuestion(question);
+                return answer;
+            }).collect(Collectors.toList());
+
+            question.setAnswers(updatedAnswers);
+            updatedQuestions.add(question);
+        }
+
+        // Supprimer les questions qui ne sont plus nécessaires
+        existingQuestions.removeAll(updatedQuestions);
+        questionRepository.deleteAll(existingQuestions);
+
+        // Sauvegarde des questions mises à jour
+        questionRepository.saveAll(updatedQuestions);
+    }
+
+
 }

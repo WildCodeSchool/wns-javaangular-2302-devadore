@@ -79,8 +79,17 @@ public class CreateQuizDTO {
 
 
     public static class QuestionDTO {
+        private Long id;
         private String text;
         private List<AnswerDTO> answers;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
 
         public String getText() {
             return text;
@@ -97,6 +106,8 @@ public class CreateQuizDTO {
         public void setAnswers(List<AnswerDTO> answers) {
             this.answers = answers;
         }
+
+
     }
 
     public static class AnswerDTO {

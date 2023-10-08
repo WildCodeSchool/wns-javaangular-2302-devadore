@@ -1,6 +1,7 @@
 package com.wcs.server.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -54,6 +55,18 @@ public class QuizController {
         return ResponseEntity.ok(quizzes);
     }
 
+    @Operation(summary = "Retourne quiz par Id")
+    @GetMapping("/quiz/show/{id}")
+    public ResponseEntity<CreateQuizDTO> getQuizById(@PathVariable Long id) {
+        Optional<CreateQuizDTO> quizOptional = quizService.findById(id);
+
+        if (!quizOptional.isPresent()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(quizOptional.get(), HttpStatus.OK);
+    }
+
     @Operation(summary = "permet à un utilisateur de créer un quiz")
     @PostMapping("/quiz")
     public ResponseEntity<String> createQuiz(
@@ -97,6 +110,46 @@ public class QuizController {
         }
     }
 
+    @Operation(summary = "permet de mettre à jour un quiz pas son ID")
+    @PutMapping("/quiz/{id}")
+    public ResponseEntity<String> updateQuiz(@PathVariable Long id, MultipartHttpServletRequest request) {
+        try {
+            String title = request.getParameter("title");
+            String description = request.getParameter("description");
+            Long categoryId = Long.valueOf(request.getParameter("categoryId"));
+            MultipartFile image = request.getFile("image");
+            String mimeType = request.getParameter("mimeType");
+
+
+            byte[] imageData = null;
+            if (image != null && !image.isEmpty()) {
+                imageData = image.getBytes();
+            }
+
+            String questionsJson = request.getParameter("questions");
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<CreateQuizDTO.QuestionDTO> questionList = objectMapper.readValue(questionsJson, new TypeReference<>() {
+            });
+            CreateQuizDTO createQuizDTO = new CreateQuizDTO();
+            createQuizDTO.setTitle(title);
+            createQuizDTO.setDescription(description);
+            createQuizDTO.setQuestions(questionList);
+            createQuizDTO.setCategoryId(categoryId);
+            createQuizDTO.setImage(imageData);
+            createQuizDTO.setMimeType(mimeType);
+
+            QuizDTO quizDTO = quizService.updateQuiz(id, createQuizDTO);
+            if (quizDTO != null) {
+                return ResponseEntity.ok().body("{\"message\": \"Quiz registered successfully\"}");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"Quiz registration failed\"}");
+            }
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"Invalid questions format\"}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"message\": \"An error occurred during registration\"}");
+        }
+    }
 
     @DeleteMapping("/quiz/{id}")
     public ResponseEntity<Void> deleteQuiz(@PathVariable Long id, Authentication authentication) {

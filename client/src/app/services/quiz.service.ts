@@ -14,14 +14,15 @@ export class QuizService {
   constructor(private http: HttpClient, private authService: AuthService) {
   }
 
-  getQuizs(): Observable<QuizModel[]> {
+  getQuizzs(): Observable<QuizModel[]> {
     const headers = new HttpHeaders().set('Authorization', 'Basic QWRtaW46YWRtaW4=');
     return this.http.get<QuizModel[]>(this.apiUrl, {headers});
   }
 
   getQuizById(id: number): Observable<QuizModel[]> {
-    const headers = new HttpHeaders().set('Authorization', 'Basic QWRtaW46YWRtaW4=');
-    return this.http.get<QuizModel[]>(`${this.apiUrl}/${id}`, {headers});
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    return this.http.get<QuizModel[]>(`${this.apiUrl}/show/${id}`, {headers});
   }
 
   getRandomQuiz(): Observable<QuizModel> {
@@ -44,14 +45,16 @@ export class QuizService {
   }
 
 
-  updateQuiz(id: number, quiz: QuizModel): Observable<QuizModel[]> {
-    return this.http.put<QuizModel[]>(`${this.apiUrl}/${id}`, quiz);
+  updateQuiz(id: number, formData: FormData): Observable<QuizModel[]> {
+    const jwtToken = this.authService.getToken();
+    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    return this.http.put<QuizModel[]>(`${this.apiUrl}/${id}`, formData, {headers});
   }
 
   deleteQuiz(id: number): Observable<QuizModel[]> {
     const jwtToken = this.authService.getToken();
     const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-    return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`);
+    return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`, {headers});
   }
 }
 

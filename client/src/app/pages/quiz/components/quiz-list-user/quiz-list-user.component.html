@@ -48,6 +48,10 @@
                     class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
                     title="Supprimer le quiz">❌
             </button>
+            <button (click)="editQuiz(quizzes.id)"
+                    class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
+                    title="Supprimer le quiz">✏️
+            </button>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

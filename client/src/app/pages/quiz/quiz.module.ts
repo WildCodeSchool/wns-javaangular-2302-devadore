@@ -12,6 +12,7 @@ import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {SharedModule} from "../../shared/shared.module";
 import {LogoComponent} from "../../shared/logo/logo.component";
+import {QuizEditComponent} from "./components/quiz-edit/quiz-edit.component";
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import {LogoComponent} from "../../shared/logo/logo.component";
     QuizPlayComponent,
     QuizCreateComponent,
     QuizListUserComponent,
+    QuizEditComponent,
     LogoComponent
   ],
   exports: [
