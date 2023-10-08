@@ -37,7 +37,7 @@ import {QuizModule} from "../quiz/quiz.module";
     MatSortModule,
     NgOptimizedImage,
     MatPaginatorModule,
-    QuizModule,
+    QuizModule
   ]
 })
 export class UserModule {
