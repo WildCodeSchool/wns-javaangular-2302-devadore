@@ -5,6 +5,7 @@ import {catchError, Observable, of} from 'rxjs';
 import {User} from '../models/user.model';
 import {AuthService} from "./auth.service";
 import {Role} from "../models/role.model";
+import {HeaderUtilService} from "./header-util.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class UserService {
   private baseUrl = 'http://localhost:8080/api/users';
   private regUrl = 'http://localhost:8080/auth';
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private headerUtil: HeaderUtilService) {
   }
 
   getUsers(): Observable<User[]> {
@@ -25,52 +26,39 @@ export class UserService {
       return this.http.get<User[]>(`${this.baseUrl}/list`, {headers}).pipe(
         catchError((error) => {
           console.error(error);
-          return of([]); // returning empty array as an error occurred
+          return of([]);
         })
       );
 
     } else {
       console.log('Pas de jeton JWT trouvé');
-      return of([]); // returning empty array as no JWT token found
+      return of([]);
     }
   }
 
   getUserById(userId: number | null): Observable<User> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     const url = `${this.baseUrl}/${userId}`;
     console.log('userId =', userId)
-    return this.http.get<User>(url, {headers});
+    return this.http.get<User>(url, {headers: this.headerUtil.getHeaders()});
   }
 
   getUserIdByUsername(username: string): Observable<number> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     const url = `${this.baseUrl}/name/id?username=${encodeURIComponent(username)}`;
-    return this.http.get<number>(url, {headers});
+    return this.http.get<number>(url, {headers: this.headerUtil.getHeaders()});
   }
 
   createUser(user: User): Observable<User> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-
-    return this.http.post<User>(this.baseUrl, user, {headers});
+    return this.http.post<User>(this.baseUrl, user, {headers: this.headerUtil.getHeaders()});
   }
 
   updateUser(user: User): Observable<User> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     const url = `${this.baseUrl}/${user.id}`;
-
-    return this.http.put<User>(url, user, {headers});
+    return this.http.put<User>(url, user, {headers: this.headerUtil.getHeaders()});
   }
 
   deleteUser(userId: number): Observable<any> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     const url = `${this.baseUrl}/${userId}`;
-
-    return this.http.delete(url, {headers});
+    return this.http.delete(url, {headers: this.headerUtil.getHeaders()});
   }
 
   getAllRoles(): Observable<Role[]> {
@@ -119,10 +107,8 @@ export class UserService {
 
 
   deleteUserImage(userId: number): Observable<any> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
     const url = `${this.baseUrl}/${userId}/image`;
 
-    return this.http.delete(url, {headers});
+    return this.http.delete(url, {headers: this.headerUtil.getHeaders()});
   }
 }

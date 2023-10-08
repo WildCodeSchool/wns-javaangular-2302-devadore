@@ -70,73 +70,77 @@ public class QuizService {
 
     public QuizDTO createCompleteQuiz(CreateQuizDTO createQuizDTO, Authentication authentication) {
 
-        // Récupération de la catégorie existante en utilisant l'ID
-        Category category = categoryRepository.findById(createQuizDTO.getCategoryId())
-                .orElseThrow(() -> new NoSuchElementException("Catégorie avec l'id " + createQuizDTO.getCategoryId() + " n'est pas trouvée"));
+        // Obtenir une catégorie existante à l'aide de l'ID
+        Category category = getCategory(createQuizDTO.getCategoryId());
 
-        // Création de l'entité Quiz
+        // Créer et sauvegarder l'entité Quiz
+        Quiz quiz = createAndSaveQuiz(createQuizDTO, category, authentication);
+
+        // Traiter et enregistrer les questions
+        saveQuestions(createQuizDTO.getQuestions(), quiz);
+
+        return modelMapper.map(quiz, QuizDTO.class);
+    }
+
+    private Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NoSuchElementException("Catégorie avec ID " + categoryId + " non trouvée"));
+    }
+
+    private Quiz createAndSaveQuiz(CreateQuizDTO createQuizDTO, Category category, Authentication authentication) {
         Quiz quiz = new Quiz();
         quiz.setTitle(createQuizDTO.getTitle());
         quiz.setDescription(createQuizDTO.getDescription());
         quiz.setCategory(category);
+        setUserAndImage(quiz, createQuizDTO, authentication);
+        return quizRepository.save(quiz);
+    }
 
-        // Récupération et affectation de l'utilisateur (créateur du quiz)
+    private void setUserAndImage(Quiz quiz, CreateQuizDTO createQuizDTO, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(userDetails.getUsername());
         quiz.setCreatedBy(user);
-        // Ajouter une image à l'utilisateur
         if (createQuizDTO.getImage() != null) {
-            Image image = new Image();
-            image.setName(createQuizDTO.getTitle() + "_image");
-            image.setImage(createQuizDTO.getImage());
-            image.setMimeType(createQuizDTO.getMimeType());
-            image.setQuiz(quiz);
-            quiz.setImage(image);
+            setImage(quiz, createQuizDTO);
         }
-        // Sauvegarde de l'entité Quiz
-        quiz = quizRepository.save(quiz);
+    }
 
-        // Traitement des questions
+    private void setImage(Quiz quiz, CreateQuizDTO createQuizDTO) {
+        Image image = new Image();
+        image.setName(createQuizDTO.getTitle() + "_image");
+        image.setImage(createQuizDTO.getImage());
+        image.setMimeType(createQuizDTO.getMimeType());
+        image.setQuiz(quiz);
+        quiz.setImage(image);
+    }
+
+    private void saveQuestions(List<CreateQuizDTO.QuestionDTO> questionDTOs, Quiz quiz) {
         List<Question> quizQuestions = new ArrayList<>();
-        List<CreateQuizDTO.QuestionDTO> questions = createQuizDTO.getQuestions();
-
-        for (CreateQuizDTO.QuestionDTO questionDTO : questions) {
-
+        for (CreateQuizDTO.QuestionDTO questionDTO : questionDTOs) {
             Question question = new Question();
             question.setText(questionDTO.getText());
             question.setQuiz(quiz);
-
-            // Traitement des réponses de la question
-            List<Answer> questionAnswers = questionDTO.getAnswers().stream().map(answerDTO -> {
-                Answer answer = new Answer();
-                answer.setText(answerDTO.getText());
-                answer.setIsCorrect(answerDTO.isCorrect());
-                answer.setQuestion(question);
-                return answer;
-            }).collect(Collectors.toList());
-
-            question.setAnswers(questionAnswers);
+            setAnswers(question, questionDTO.getAnswers());
             quizQuestions.add(question);
         }
-
-        // Sauvegarde des questions et des réponses associées
         questionRepository.saveAll(quizQuestions);
+    }
 
-        return modelMapper.map(quiz, QuizDTO.class);
+    private void setAnswers(Question question, List<CreateQuizDTO.AnswerDTO> answerDTOs) {
+        List<Answer> questionAnswers = answerDTOs.stream().map(answerDTO -> {
+            Answer answer = new Answer();
+            answer.setText(answerDTO.getText());
+            answer.setIsCorrect(answerDTO.isCorrect());
+            answer.setQuestion(question);
+            return answer;
+        }).collect(Collectors.toList());
+        question.setAnswers(questionAnswers);
     }
 
     private QuizDTO convertQuizToDTO(Quiz quiz) {
         return modelMapper.map(quiz, QuizDTO.class);
     }
 
-    public void deleteQuiz(Long quizId, String username) {
-        Quiz quiz = quizRepository.findById(Math.toIntExact(quizId)).orElseThrow(() -> new ResourceNotFoundException("Quiz not found"));
-        if (!quiz.getCreatedBy().getUsername().equals(username)) {
-            throw new UnauthorizedException("Only the creator can delete this quiz");
-        }
-        quizRepository.delete(quiz);
-    }
 
     public QuizDTO updateQuiz(Long id, CreateQuizDTO createQuizDTO) {
         // Trouver le quiz existant par ID
@@ -209,5 +213,11 @@ public class QuizService {
         questionRepository.saveAll(updatedQuestions);
     }
 
-
+    public void deleteQuiz(Long quizId, String username) {
+        Quiz quiz = quizRepository.findById(Math.toIntExact(quizId)).orElseThrow(() -> new ResourceNotFoundException("Quiz non trouvé"));
+        if (!quiz.getCreatedBy().getUsername().equals(username)) {
+            throw new UnauthorizedException("Seul le créateur peut supprimer ce quiz");
+        }
+        quizRepository.delete(quiz);
+    }
 }

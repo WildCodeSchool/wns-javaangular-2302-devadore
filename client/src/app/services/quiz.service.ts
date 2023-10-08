@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, map} from 'rxjs';
 import {QuizModel} from "../models/quiz.model";
 import {CreateQuizModel} from "../models/create-quiz.model";
-import {AuthService} from "./auth.service";
+import {HeaderUtilService} from "./header-util.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import {AuthService} from "./auth.service";
 export class QuizService {
   private apiUrl = 'http://localhost:8080/api/quiz';
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private headerUtil: HeaderUtilService) {
   }
 
   getQuizzs(): Observable<QuizModel[]> {
@@ -20,9 +20,7 @@ export class QuizService {
   }
 
   getQuizById(id: number): Observable<QuizModel[]> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-    return this.http.get<QuizModel[]>(`${this.apiUrl}/show/${id}`, {headers});
+    return this.http.get<QuizModel[]>(`${this.apiUrl}/show/${id}`, {headers: this.headerUtil.getHeaders()});
   }
 
   getRandomQuiz(): Observable<QuizModel> {
@@ -32,29 +30,20 @@ export class QuizService {
   }
 
   getAllQuizzesCreatedByUser(userId: number): Observable<QuizModel[]> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-    return this.http.get<QuizModel[]>(`${this.apiUrl}/${userId}`, {headers});
+    return this.http.get<QuizModel[]>(`${this.apiUrl}/${userId}`, {headers: this.headerUtil.getHeaders()});
   }
 
   createQuiz(formData: FormData): Observable<CreateQuizModel[]> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-
-    return this.http.post<CreateQuizModel[]>(`${this.apiUrl}`, formData, {headers: headers});
+    return this.http.post<CreateQuizModel[]>(`${this.apiUrl}`, formData, {headers: this.headerUtil.getHeaders()});
   }
 
 
   updateQuiz(id: number, formData: FormData): Observable<QuizModel[]> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-    return this.http.put<QuizModel[]>(`${this.apiUrl}/${id}`, formData, {headers});
+    return this.http.put<QuizModel[]>(`${this.apiUrl}/${id}`, formData, {headers: this.headerUtil.getHeaders()});
   }
 
   deleteQuiz(id: number): Observable<QuizModel[]> {
-    const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
-    return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`, {headers});
+    return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`, {headers: this.headerUtil.getHeaders()});
   }
 }
 
