@@ -9,7 +9,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wcs.server.dto.AnswerDTO;
 import com.wcs.server.dto.QuestionDTO;
 import com.wcs.server.entity.Question;
 import com.wcs.server.repository.QuestionRepository;
@@ -23,18 +22,18 @@ public class QuestionService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<QuestionDTO> getAll(){
+    public List<QuestionDTO> getAll() {
         List<Question> questions = questionRepository.findAll();
         return questions.stream()
-            .map(this::convertQuestionToDTO)
-            .collect(Collectors.toList());
+                .map(this::convertQuestionToDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<QuestionDTO> getQuestionsByQuizId(Long id){
+    public List<QuestionDTO> getQuestionsByQuizId(Long id) {
         List<Question> questions = questionRepository.findAllByQuizId(id);
         return questions.stream()
-            .map(this::convertQuestionToDTO)
-            .collect(Collectors.toList());
+                .map(this::convertQuestionToDTO)
+                .collect(Collectors.toList());
     }
 
     public QuestionDTO getRandomQuestionByQuizId(Long quizId, List<Long> excludeIds) {
@@ -48,10 +47,10 @@ public class QuestionService {
         if (randomQuestion == null) {
             throw new NoSuchElementException("Aucune question trouvée pour le quiz avec l'id " + quizId);
         }
-    
+
         return convertQuestionToDTO(randomQuestion);
     }
-    
+
 
     private QuestionDTO convertQuestionToDTO(Question question) {
         QuestionDTO questionDTO = modelMapper.map(question, QuestionDTO.class);

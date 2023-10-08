@@ -39,7 +39,6 @@ import {QuizModule} from "../quiz/quiz.module";
     MatPaginatorModule,
     QuizModule,
   ]
-
 })
 export class UserModule {
 }

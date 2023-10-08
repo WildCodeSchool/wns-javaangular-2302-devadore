@@ -21,7 +21,6 @@ import {SharedModule} from "./shared/shared.module";
     AnimatedSlideComponent,
   ],
   imports: [
-
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,

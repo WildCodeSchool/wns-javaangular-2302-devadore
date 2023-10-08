@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
+
 @Service
 public class UserService {
 
@@ -42,6 +43,7 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+    private static final String IMAGE_SUFFIX = "_image";
 
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -110,14 +112,16 @@ public class UserService {
         }
         if (userDTO.getImage() != null && userDTO.getMimeType() != null) {
             Image image = new Image();
-            image.setName(userDTO.getUsername() + "_image");
+            image.setName(userDTO.getUsername() + IMAGE_SUFFIX);
             image.setImage(userDTO.getImage());
             image.setMimeType(userDTO.getMimeType());
             image.setUser(user);
             user.setImage(image);
         }
+
         User updatedUser = userRepository.save(user);
         return modelMapper.map(updatedUser, UserDTO.class);
+
     }
 
     @Transactional
@@ -164,7 +168,7 @@ public class UserService {
         // Ajouter une image à l'utilisateur
         if (registrationRequest.getImage() != null) {
             Image image = new Image();
-            image.setName(registrationRequest.getUsername() + "_image");
+            image.setName(registrationRequest.getUsername() + IMAGE_SUFFIX);
             image.setImage(registrationRequest.getImage());
             image.setMimeType(registrationRequest.getMimeType());
             image.setUser(user);
@@ -191,17 +195,15 @@ public class UserService {
             // Mettre à jour les données de l'image
             userImage.setImage(imageData);
             userImage.setMimeType(mimeType);
-            userImage.setName(user.getUsername() + "_image");
+            userImage.setName(user.getUsername() + IMAGE_SUFFIX);
 
             // Mettre à jour la relation entre User et Image
             user.setImage(userImage);
             userImage.setUser(user);
 
             // Enregistrer les modifications dans la base de données
-            User updatedUser = userRepository.save(user);
+            return userRepository.save(user);
 
-
-            return updatedUser;
         } catch (Exception e) {
             // Gérer l'exception en conséquence
             e.printStackTrace();
