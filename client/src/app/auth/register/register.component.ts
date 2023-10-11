@@ -23,13 +23,21 @@ export class RegisterComponent implements OnInit {
   }, {validator: this.matchPasswords});
   image: File | null = null;
   previewUrl: any = null;
+  showToast = false;
+  toastMessage = '';
 
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private userService: UserService, private router: Router, public toastService: ToastService) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    public toastService: ToastService
+  ) {
     this.registerForm.get('username')!.setAsyncValidators(this.usernameValidator.bind(this));
     this.registerForm.get('email')!.setAsyncValidators(this.emailValidator.bind(this));
   }
 
   ngOnInit() {
+
   }
 
   usernameValidator(control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> {
@@ -110,18 +118,15 @@ export class RegisterComponent implements OnInit {
     }
     this.userService.register(formData).subscribe(
       response => {
+        this.toastService.showToast('L\'enrgistrement est réalisé avec succès', 'success');
         setTimeout(() => {
-          this.toastService.showToast('L\'enrgistrement est réalisé avec succès', 'success');
           this.router.navigate(['/home']);
         }, 2000);
         console.log(response);
       },
       error => {
         if (error) {
-          this.toastService.showToast('Ce nom d\'utilisateur est déjà pris.', 'error');
-        } else {
           this.toastService.showToast('Une erreur s\'est produite. Veuillez réessayer plus tard.', 'error');
-          alert('Une erreur s\'est produite. Veuillez réessayer plus tard.');
         }
       }
     );

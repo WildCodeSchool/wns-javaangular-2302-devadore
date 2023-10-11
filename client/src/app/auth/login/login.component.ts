@@ -48,11 +48,10 @@ export class LoginComponent implements OnInit {
         this.authService.setAuthenticationState(true);
         this.router.navigate(['/home']).then(() => {
         }).catch((error) => {
-          console.error('Erreur de navigation:', error);
+          this.toastService.showToast('Erreur de navigation', 'error');
         });
       },
       error: (err) => {
-        console.error('Erreur d\'authentification:', err);
         if (err.error.message === 'User not found') {
           this.toastService.showToast('Utilisateur non trouvé', 'error');
         } else {

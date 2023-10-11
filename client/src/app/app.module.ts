@@ -29,7 +29,6 @@ import {SharedModule} from "./shared/shared.module";
     MatCheckboxModule,
     MatTableModule,
     FontAwesomeModule,
-    SharedModule
   ],
   exports: [MatButtonModule, MatCheckboxModule],
   providers: [

@@ -10,6 +10,7 @@ import {User} from "../../../../models/user.model";
 import {hasCorrectAnswerValidator} from "../../../../validators/question.validator";
 import {tap} from "rxjs/operators";
 import {ToastService} from "../../../../services/toastService";
+import {DomSanitizer} from "@angular/platform-browser";
 
 
 @Component({
@@ -26,7 +27,7 @@ export class QuizEditComponent implements OnInit {
   username: string | null = null;
   image: File | null = null;
   previewUrl: any = null;
-
+  imageQuiz: any;
 
   constructor(
     private fb: FormBuilder,
@@ -35,23 +36,19 @@ export class QuizEditComponent implements OnInit {
     private quizService: QuizService,
     private categoryService: CategoryService,
     private userProfileService: UserProfileService,
+    private sanitizer: DomSanitizer,
     public toastService: ToastService
   ) {
   }
 
   ngOnInit(): void {
-    // Initializing form with empty values or you can set default values
     this.quizForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
       categoryId: [null, Validators.required],
       questions: this.fb.array([]),
-      // other form controls...
     });
-    this.categoryService.getAllCategories().subscribe(categories => {
-      console.log(categories);
-      this.categories = categories;
-    });
+
     this.userProfileService.getUserImage().subscribe(image => {
       this.userImage = image;
     });
@@ -60,15 +57,20 @@ export class QuizEditComponent implements OnInit {
       this.username = user?.username ?? null;
     });
 
-    // Getting quiz id from route parameters
     this.quizId = +this.route.snapshot.paramMap.get('id')!;
 
-    // Loading quiz details if id is present
     if (this.quizId) {
+
       this.loadQuizDetails(this.quizId);
     }
   }
 
+  /**
+   * Charger les détails du quiz en fournissant un identifiant et initialiser le formulaire avec ces données.
+   * De plus, si le champ categoryId du formulaire n'est pas défini, il sera par défaut défini sur l'id de la première catégorie dans la liste de toutes les catégories.
+   *
+   * @param id - Identifiant du quiz à charger.
+   */
   loadQuizDetails(id: number): void {
     this.quizService.getQuizById(id)
       .pipe(
@@ -76,47 +78,99 @@ export class QuizEditComponent implements OnInit {
       )
       .subscribe(quizData => {
         console.log('Quiz Data:', quizData);
+        this.categoryService.getAllCategories().subscribe(categories => {
+          console.log(categories);
+          this.categories = categories;
+
+          // Utilisez la categoryId de quizData si elle est disponible; sinon, utilisez l'ID de la première catégorie
+          let defaultCategoryId = quizData.categoryId ?? categories[0]?.id;
+
+          if (defaultCategoryId) {
+            this.quizForm.patchValue({
+              categoryId: defaultCategoryId
+            });
+          }
+        });
+
         this.initializeFormWithQuizData(quizData);
       });
   }
 
+  /**
+   * Initialise le formulaire avec les données fournies du quiz.
+   *
+   * @param quizData: any - Les données du quiz qui seront utilisées pour initialiser le formulaire.
+   * quizData doit contenir les propriétés suivantes:
+   * - title: string - Le titre du quiz.
+   * - description: string - Une description du quiz.
+   * - questions: array - Un tableau de questions du quiz, chaque question doit aussi contenir un tableau de réponses possibles.
+   * - image: string - Une image du quiz encodée en base64.
+   */
   initializeFormWithQuizData(quizData: any): void {
     console.log('Initializing form with quiz data:', quizData);
-    // Pré-supposant que quizData est un objet avec une structure correspondant à votre formulaire.
     const {title, description, questions, image} = quizData;
     console.log('Title:', title);
     console.log('Description:', description);
     console.log('Questions:', questions);
     console.log('Image:', image);
-    // En considérant que les questions et les réponses sont des tableaux,
-    // vous devriez également les initialiser correctement.
+    // Transformez la chaîne image Base64 en URL sécurisée
+    let imagePrefix: string;
+    const imageType = this.detectImageType(image); // Détectez le type
+    if (imageType === 'jpeg' || imageType === 'jpg') {
+      imagePrefix = 'data:image/jpeg;base64,';
+    } else if (imageType === 'png') {
+      imagePrefix = 'data:image/png;base64,';
+    } /*else if (imageType === 'gif') {
+      imagePrefix = 'data:image/gif;base64,';
+    }*/ else {
+      imagePrefix = 'data:image/jpeg;base64,';
+    }
 
+    this.imageQuiz = this.sanitizer.bypassSecurityTrustResourceUrl(imagePrefix + image);
     // Initialiser le tableau des questions
     const questionFGs: FormGroup[] = questions.map((questionData: { answers: any[]; text: any; }) => {
       // Initialiser le tableau des réponses pour chaque question
       const answerFGs: FormGroup[] = questionData.answers.map(answerData => {
         return this.fb.group({
-          text: [answerData.text, Validators.required], // ajouter plus de validateurs si nécessaire
-          correct: [answerData.correct, Validators.required] // ajouter plus de validateurs si nécessaire
+          text: [answerData.text, Validators.required],
+          correct: [answerData.correct, Validators.required]
         });
       });
 
       return this.fb.group({
-        text: [questionData.text, Validators.required], // ajouter plus de validateurs si nécessaire
+        text: [questionData.text, Validators.required],
         answers: this.fb.array(answerFGs),
-        // Ajouter d'autres champs si nécessaire
       }, {validators: [hasCorrectAnswerValidator()]});
     });
 
     // Définir les valeurs du formulaire
     this.quizForm = this.fb.group({
-      title: [title, Validators.required], // ajouter plus de validateurs si nécessaire
-      description: [description, Validators.required], // ajouter plus de validateurs si nécessaire
-      categoryId: [+this.categories, Validators.required], // ajouter plus de validateurs si nécessaire
+      title: [title, Validators.required],
+      description: [description, Validators.required],
+      categoryId: [+this.categories, Validators.required],
       questions: this.fb.array(questionFGs),
-      image: [image] // Vous devriez manipuler l'image différemment puisqu'il s'agit d'un fichier
-      // Ajouter d'autres champs si nécessaire
+      image: [this.imageQuiz]
     });
+  }
+
+  /**
+   * Fonction pour détecter le type d'image à partir d'une chaîne Base64.
+   *
+   * @param imageBase64: string - La chaîne Base64 de l'image dont le type doit être détecté.
+   * Cette chaîne doit représenter une image encodée en Base64 et doit commencer par une signature caractéristique de son type.
+   * Par exemple, pour JPEG, elle pourrait commencer par '/9j/', et pour PNG, par 'iVBOR'.
+   *
+   * @returns string - Retourne une chaîne représentant le type de l'image détecté ('jpeg', 'png' ou 'unknown').
+   */
+  detectImageType(imageBase64: string): string {
+    // Logique simple de détection de type - vous pourriez avoir besoin de plus de conditions pour d'autres types
+    if (imageBase64.startsWith('/9j/')) {
+      return 'jpeg'; // ou 'jpg'
+    } else if (imageBase64.startsWith('iVBOR')) {
+      return 'png';
+    }
+    // Ajoutez d'autres détections de type selon les besoins
+    return 'unknown'; // ou un type par défaut
   }
 
   createQuestion(): FormGroup {

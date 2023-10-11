@@ -1,6 +1,8 @@
 package com.wcs.server.configuration;
 
+import com.wcs.server.dto.CreateQuizDTO;
 import com.wcs.server.dto.RoleDTO;
+import com.wcs.server.entity.Quiz;
 import com.wcs.server.entity.Role;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +25,11 @@ public class ApplicationConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.createTypeMap(RoleDTO.class, Role.class);
-
+        modelMapper.createTypeMap(Quiz.class, CreateQuizDTO.class)
+                .addMappings(mapper -> {
+                    mapper.map(Quiz::getImage, CreateQuizDTO::setImage);
+                    mapper.map(src -> src.getImage().getMimeType(), CreateQuizDTO::setMimeType);
+                });
         return modelMapper;
     }
 

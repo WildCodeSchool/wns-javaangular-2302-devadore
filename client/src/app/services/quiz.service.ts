@@ -19,8 +19,8 @@ export class QuizService {
     return this.http.get<QuizModel[]>(this.apiUrl, {headers});
   }
 
-  getQuizById(id: number): Observable<QuizModel[]> {
-    return this.http.get<QuizModel[]>(`${this.apiUrl}/show/${id}`, {headers: this.headerUtil.getHeaders()});
+  getQuizById(id: number): Observable<QuizModel> {
+    return this.http.get<QuizModel>(`${this.apiUrl}/show/${id}`, {headers: this.headerUtil.getHeaders()});
   }
 
   getRandomQuiz(): Observable<QuizModel> {

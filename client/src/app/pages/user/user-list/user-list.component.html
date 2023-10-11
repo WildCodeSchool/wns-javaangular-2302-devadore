@@ -1,17 +1,13 @@
 <div class="user-list bg-black rounded-lg shadow-lg p-8 flex flex-col items-center h-full">
-  <div class="fixed top-0 left-0 z-50">
-    <div *ngFor="let toast of toastService.toasts"
-         class="mb-2 p-4 rounded shadow-lg"
-         [ngClass]="{
-          'bg-green-500 text-white': toast.type === 'success',
-          'bg-red-500 text-white': toast.type === 'error'
-       }">
-      <!-- {{ toast.message }}-->
-    </div>
-  </div>
+  <app-toast
+    *ngIf="showToast"
+    [message]="toastMessage"
+    (onConfirm)="onToastConfirm()"
+    (onCancel)="onToastCancel()"
+  ></app-toast>
   <div class="opacity-75 hover:opacity-100">
     <div class="mx-auto flex flex-col items-center justify-center px-6 py-10 ">
-      <app-logo [textColor]="'white'"></app-logo>
+      <app-logo [textColor]="'yellow'"></app-logo>
     </div>
     <mat-form-field>
       <mat-label>Recherche</mat-label>
@@ -69,7 +65,7 @@
           </button>
           <button
             class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
-            (click)="deleteUser(user.id)"
+            (click)="onDeleteUser(user.id)"
             title="Supprimer le profile">❌
           </button>
         </td>

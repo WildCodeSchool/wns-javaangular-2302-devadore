@@ -22,11 +22,8 @@ import {QuizEditComponent} from "./components/quiz-edit/quiz-edit.component";
     QuizCreateComponent,
     QuizListUserComponent,
     QuizEditComponent,
-    LogoComponent
   ],
-  exports: [
-    LogoComponent
-  ],
+
   imports: [
     CommonModule,
     QuizRoutingModule,

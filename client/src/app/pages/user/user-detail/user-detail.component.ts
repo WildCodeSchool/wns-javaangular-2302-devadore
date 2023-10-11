@@ -6,8 +6,6 @@ import {Role} from "../../../models/role.model";
 import {forkJoin} from "rxjs";
 import {ToastService} from "../../../services/toastService";
 import {AuthService} from "../../../services/auth.service";
-import {QuizModel} from "../../../models/quiz.model";
-import {QuizService} from "../../../services/quiz.service";
 
 
 @Component({
@@ -24,13 +22,13 @@ export class UserDetailComponent implements OnInit {
   isAdmin: boolean = false;
   isUser: boolean = false;
   user = {} as User;
-  quizzes: QuizModel[] = [];
-
+  showToast = false;
+  toastMessage = '';
+  selectedUserId: number | null = null;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private quizService: QuizService,
     private route: ActivatedRoute,
     private router: Router,
     public toastService: ToastService
@@ -161,26 +159,44 @@ export class UserDetailComponent implements OnInit {
     });
   }
 
-  deleteUser(userId: number): void {
+  onDeleteUser(userId: number) {
+    if (!this.user || this.user.id !== userId) {
+      console.error('User not found or not loaded');
+      return;
+    }
+
     if (this.user.roles.some(role => ['ADMIN'].includes(role.name))) {
       // Si l'utilisateur a le rôle ADMIN
       this.toastService.showToast('La suppression est impossible pour les utilisateurs avec un rôle ADMIN', 'warning');
-    } else if (this.user.roles.some(role => ['USER'].includes(role.name))) {
-      // Si l'utilisateur a le rôle USER
-      this.userService.deleteUser(userId).subscribe({
+    } else {
+      this.toastMessage = `Êtes-vous sûr de vouloir supprimer l'utilisateur "${this.user.username}" ?`;
+      this.showToast = true;
+      this.selectedUserId = userId;
+    }
+  }
+
+
+  onToastConfirm() {
+    if (this.selectedUserId !== null) {
+      this.userService.deleteUser(this.selectedUserId).subscribe({
         next: () => {
           this.toastService.showToast('Profil supprimé avec succès', 'success');
-          this.logoutAfterDelete(); // Déconnexion après la suppression de l'utilisateur
+          this.logoutAfterDelete();
         },
         error: (error) => {
           this.toastService.showToast('Erreur lors de la suppression du profil', 'error');
           console.error('Erreur lors de la suppression du profil:', error);
         }
       });
-    } else {
-      // Cas pour d'autres rôles mais y en a pas !
-      this.toastService.showToast('Rôle non reconnu', 'warning');
+      this.showToast = false;
+      this.selectedUserId = null;
     }
+  }
+
+
+  onToastCancel() {
+    this.showToast = false;
+    this.selectedUserId = null;
   }
 
   logoutAfterDelete(): void {

@@ -1,21 +1,16 @@
-<div class="fixed top-0 left-0 z-50">
-  <div *ngFor="let toast of toastService.toasts"
-       class="mb-2 p-4 rounded shadow-lg"
-       [ngClass]="{
+<div *ngFor="let toast of toastService.toasts"
+     class="toast flex items-center justify-between p-3 rounded-lg shadow-lg"
+     [ngClass]="{
           'bg-green-500 text-white': toast.type === 'success',
           'bg-red-500 text-white': toast.type === 'error',
           'bg-orange-500 text-white': toast.type === 'warning'
        }">
-    {{ toast.message }}
-  </div>
+  {{ toast.message }}
 </div>
+
 <div class="flex items-center justify-center">
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto ">
-    <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-black">
-      <img class="w-8 h-8 mr-2" ngSrc="../../../assets/images/defaultAvatars/LOGO-QUIZ-FOR-ALL.png" alt="logo"
-           width="24" height="24">
-      Quizz4all
-    </a>
+    <app-logo [textColor]="'blue'"></app-logo>
     <form class="w-full max-w-md bg-white rounded-lg shadow" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="p-6 space-y-4">
         <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900">

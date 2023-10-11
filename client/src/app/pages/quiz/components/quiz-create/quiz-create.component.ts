@@ -179,8 +179,8 @@ export class QuizCreateComponent implements OnInit {
 
     this.quizService.createQuiz(formData).subscribe(
       data => {
+        this.toastService.showToast('L\'enrgistrement de ton quiz est réalisé avec succès', 'success');
         setTimeout(() => {
-          this.toastService.showToast('L\'enrgistrement de ton quiz est réalisé avec succès', 'success');
           if (this.user) this.router.navigate(['/user-detail', this.user.id]);
         }, 2000);
         console.log(data);

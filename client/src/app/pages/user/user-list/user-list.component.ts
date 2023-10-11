@@ -19,6 +19,9 @@ import {MatPaginator} from "@angular/material/paginator";
 export class UserListComponent implements AfterViewInit {
 
   User = {} as User;
+  showToast = false;
+  toastMessage = '';
+  selectedUserId: number | null = null;
 
   displayedColumns: string[] = ['avatar', 'id', 'username', 'email', 'roles', 'createdAt', 'updatedAt', 'actions'];
   dataSource = new MatTableDataSource<User>;
@@ -95,6 +98,45 @@ export class UserListComponent implements AfterViewInit {
     });
   }
 
+  onDeleteUser(userId: number) {
+    const userToDelete = this.dataSource.data.find(u => u.id === userId);
+    if (!userToDelete) {
+      console.error('User not found');
+      return;
+    }
+
+    if (userToDelete.roles && userToDelete.roles.some(role => role.name === 'ADMIN')) {
+      // Si l'utilisateur a le rôle ADMIN
+      this.toastService.showToast('La suppression est impossible pour les utilisateurs avec un rôle ADMIN', 'warning');
+    } else {
+      this.toastMessage = `Êtes-vous sûr de vouloir supprimer l'utilisateur "${userToDelete.username}" ?`;
+      this.showToast = true;
+      this.selectedUserId = userId;
+    }
+  }
+
+  onToastConfirm() {
+    if (this.selectedUserId !== null) {
+      this.userService.deleteUser(this.selectedUserId).subscribe({
+        next: () => {
+          this.toastService.showToast('Profil supprimé avec succès', 'success');
+          this.loadUsers();
+        },
+        error: (error) => {
+          this.toastService.showToast('Erreur lors de la suppression du profil', 'error');
+          console.error('Erreur lors de la suppression du profil:', error);
+        }
+      });
+      this.showToast = false;
+      this.selectedUserId = null;
+    }
+  }
+
+  onToastCancel() {
+    this.showToast = false;
+    this.selectedUserId = null;
+  }
+
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -106,11 +148,4 @@ export class UserListComponent implements AfterViewInit {
   countUser(): number {
     return this.dataSource.data.length;
   }
-
-  goToHome() {
-    this.router.navigateByUrl('../home').then(() => {
-      // Après avoir navigué vers la page d'accueil, déclenchez la vérification
-    });
-  }
-
 }

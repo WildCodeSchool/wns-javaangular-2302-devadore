@@ -27,7 +27,7 @@ public class Quiz {
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
-    @OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Image image;
 
     private LocalDate createdAt;
@@ -130,9 +130,9 @@ public class Quiz {
                 ", category=" + category +
                 ", createdBy=" + createdBy +
                 ", questions=" + questions +
+                ", image=" + image +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 '}';
     }
-
 }

@@ -1,5 +1,4 @@
-import {Component} from '@angular/core';
-import {ToastService} from "../../services/toastService";
+import {Component, Input, EventEmitter, Output} from '@angular/core';
 
 @Component({
   selector: 'app-toast',
@@ -7,6 +6,16 @@ import {ToastService} from "../../services/toastService";
   styleUrls: ['./toast.component.scss']
 })
 export class ToastComponent {
-  constructor(public toastService: ToastService) {
+  @Input() message: string = '';
+  @Input() type: 'confirm' | 'success' | 'error' | 'warning' = 'confirm';
+  @Output() onConfirm = new EventEmitter<void>();
+  @Output() onCancel = new EventEmitter<void>();
+
+  confirm() {
+    this.onConfirm.emit();
+  }
+
+  cancel() {
+    this.onCancel.emit();
   }
 }

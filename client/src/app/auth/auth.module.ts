@@ -10,6 +10,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
+import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatButtonModule,
     MatInputModule,
     MatIconModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    SharedModule
   ]
 })
 export class AuthModule {
