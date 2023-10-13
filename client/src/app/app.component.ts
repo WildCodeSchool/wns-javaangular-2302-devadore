@@ -14,8 +14,16 @@ export class AppComponent {
   }
 
   @HostListener('window:beforeunload', ['$event'])
-  unloadNotification($event: any): void {
-    this.authService.clearToken();
+  unloadNotification($event: Event): void {
+    if (sessionStorage.getItem('refresh') === null) {
+      this.authService.clearToken();
+    } else {
+      sessionStorage.removeItem('refresh');
+    }
   }
 
+  @HostListener('window:unload', ['$event'])
+  unloadHandler(event: Event): void {
+    sessionStorage.setItem('refresh', 'true');
+  }
 }
