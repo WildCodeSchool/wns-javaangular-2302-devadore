@@ -34,11 +34,13 @@
       >
         <button
           class="mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
+          [class.text-red]="isAuthenticated()"
           (click)="handleButtonClick()"
         >
           {{ isAuthenticated() ? "Logout" : "Login" }}
         </button>
-        <br />
+
+
         <button
           *ngIf="isAdmin"
           class="mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"

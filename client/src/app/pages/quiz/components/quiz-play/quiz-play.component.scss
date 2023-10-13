@@ -61,17 +61,14 @@
 .timer-bar {
   height: 100%;
   background-color: #76c7c0;
-  transition: width 1s linear;
-  color: #fff; /* Couleur du texte */
-  text-align: center; /* Centrer le texte */
-  line-height: 30px; /* Aligner le texte verticalement */
+  /*  transition: width 1s linear;*/
 }
 
 .selected-answer {
-  background-color: lightblue; /* or any color you prefer to indicate selection */
+  background-color: lightblue;
 }
 
 .multiple-choice-warning {
-  color: red; /* ou une autre couleur qui attire l'attention */
+  color: red;
   font-weight: bold;
 }
