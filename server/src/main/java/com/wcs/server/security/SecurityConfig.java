@@ -123,9 +123,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/auth/**", "/auth/checkUsername", "/auth/checkMailExist").permitAll()
-                        .requestMatchers("/api/users/{id}/image", "/api/users/name/**", "/api/users/{id}", "/api/quiz/**", "/api/categories/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/api/users/{id}/image", "/api/users/name/**", "/api/users/{id}", "/api/categories/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/api/users/**").hasAuthority("ADMIN")
-                        .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/api/quiz/random", "/api/question/random/quiz/**").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(userDetailsService, jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
 
