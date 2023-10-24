@@ -67,6 +67,13 @@ public class QuizController {
         return new ResponseEntity<>(quizOptional.get(), HttpStatus.OK);
     }
 
+    @Operation(summary = "permet de connaitre le total de question-quizID")
+    @GetMapping("/quiz/{quizId}/totalQuestions")
+    public ResponseEntity<Integer> getTotalQuestionsForQuiz(@PathVariable Long quizId) {
+        int total = quizService.getTotalQuestionsByQuizId(quizId);
+        return ResponseEntity.ok(total);
+    }
+
     @Operation(summary = "permet à un utilisateur de créer un quiz")
     @PostMapping("/quiz")
     public ResponseEntity<String> createQuiz(

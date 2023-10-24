@@ -220,4 +220,8 @@ public class QuizService {
         }
         quizRepository.delete(quiz);
     }
+
+    public int getTotalQuestionsByQuizId(Long quizId) {
+        return questionRepository.countByQuizId(quizId);
+    }
 }

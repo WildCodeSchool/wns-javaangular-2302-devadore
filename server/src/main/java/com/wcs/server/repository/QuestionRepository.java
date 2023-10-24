@@ -16,4 +16,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
     Question getRandomQuestionByQuizIdExcluding(@Param("quizId") Long quizId, @Param("excludeIds") List<Long> excludeIds);
 
 
+    int countByQuizId(Long quizId);
 }
