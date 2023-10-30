@@ -8,18 +8,23 @@ import com.wcs.server.errormessage.UsernameAlreadyTakenException;
 import com.wcs.server.repository.ImageRepository;
 import com.wcs.server.repository.QuizRepository;
 import com.wcs.server.repository.RoleRepository;
+import com.wcs.server.security.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.wcs.server.dto.UserDTO;
 import com.wcs.server.repository.UserRepository;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.List;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -43,6 +48,14 @@ public class UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private SpringTemplateEngine templateEngine;
     private static final String IMAGE_SUFFIX = "_image";
 
     public List<UserDTO> getAllUsers() {
@@ -176,6 +189,28 @@ public class UserService {
         }
 
         return userRepository.save(user);
+    }
+
+    public void processForgotPassword(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            // Générer un token de réinitialisation avec une durée de vie limitée (par exemple 30 minutes)
+            String resetToken = jwtTokenProvider.createResetPasswordToken(user.getUsername());
+
+            // Envoyer un e-mail à l'utilisateur avec un lien pour réinitialiser son mot de passe
+            String resetUrl = "http://localhost:4200/reset-password?token=" + resetToken;
+            String emailContent = generateEmailContent(resetUrl);
+
+            emailService.sendSimpleMessage(user.getEmail(), "Réinitialisation de votre mot de passe", emailContent);
+        }
+    }
+
+    public String generateEmailContent(String resetUrl) {
+        Context context = new Context();
+        context.setVariable("resetUrl", resetUrl);
+        return templateEngine.process("resetPasswordEmail", context);
     }
 
     public User updateUserImage(Long userId, byte[] imageData, String mimeType) {
