@@ -21,10 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -52,10 +49,12 @@ public class AuthController {
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         userService.processForgotPassword(email);
-        return ResponseEntity.ok("La demande de récupération de mot de passe a été envoyée.");
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("message", "La demande de récupération de mot de passe a été envoyée à cette adresse : " + email + ".");
+        return ResponseEntity.ok(responseMap);
     }
 
     @PostMapping("/reset-password")

@@ -11,8 +11,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
 import {MatIconModule} from "@angular/material/icon";
 import {SharedModule} from "../shared/shared.module";
-import { ResetPasswordComponent } from './reset-password/reset-password.component';
-
+import {ResetPasswordComponent} from './reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +30,7 @@ import { ResetPasswordComponent } from './reset-password/reset-password.componen
     MatInputModule,
     MatIconModule,
     NgOptimizedImage,
-    SharedModule
+    SharedModule,
   ]
 })
 export class AuthModule {

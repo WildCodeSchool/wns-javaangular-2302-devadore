@@ -196,7 +196,7 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            // Générer un token de réinitialisation avec une durée de vie limitée (par exemple 30 minutes)
+            // Générer un token de réinitialisation avec une durée de vie limitée 30 min
             String resetToken = jwtTokenProvider.createResetPasswordToken(user.getUsername());
 
             // Envoyer un e-mail à l'utilisateur avec un lien pour réinitialiser son mot de passe

@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../../services/auth.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-forgot-password',
@@ -10,9 +10,12 @@ import {AuthService} from "../../services/auth.service";
 })
 export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm!: FormGroup;
-  errorMessage?: string;
+  showToast = false;
+  toastMessage: string;
+  toastType: 'confirm' | 'success' | 'error' | 'warning';
+  isLoading = false;
 
-  constructor(private formBuilder: FormBuilder, private http: HttpClient, private authService: AuthService) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router, private ngZone: NgZone) {
   }
 
   ngOnInit(): void {
@@ -25,14 +28,36 @@ export class ForgotPasswordComponent implements OnInit {
     if (this.forgotPasswordForm.invalid) {
       return;
     }
-    this.errorMessage = '';
 
     const email = this.forgotPasswordForm.get('email')?.value ?? '';
+    this.isLoading = true;
+    this.authService.forgotPassword(email).subscribe(
+      (response: any) => {  // Notez l'ajout du type "any" ici pour faciliter l'accès à la propriété "message"
+        this.ngZone.run(() => {
+          this.isLoading = false;
+          console.log(response);
+          // Utilisez la réponse pour extraire le message et l'afficher
+          this.toastMessage = response.message;
+          this.toastType = 'success';
+          this.showToast = true;
 
-    this.authService.forgotPassword(email).subscribe(response => {
-      console.log(response);
-    });
-
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+            this.showToast = false;
+          }, 4000);
+        });
+      },
+      error => {
+        this.ngZone.run(() => {
+          this.isLoading = false;
+          console.error("Erreur lors de l'envoi du mot de passe oublié:", error);
+          this.toastMessage = 'Une erreur s\'est produite. Veuillez réessayer plus tard.';
+          this.toastType = 'error';
+          this.showToast = true;
+        });
+      }
+    );
   }
+
 
 }
