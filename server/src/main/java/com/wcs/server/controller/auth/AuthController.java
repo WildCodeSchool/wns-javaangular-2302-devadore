@@ -48,15 +48,26 @@ public class AuthController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @Operation(summary = "permet à l'utilisateur authentifié de recevoir un mail pour renouveller son pwd")
     @PostMapping("/forgot-password")
-    public ResponseEntity<Map<String, String>> forgotPassword(@RequestBody Map<String, String> request) {
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
-        userService.processForgotPassword(email);
+        boolean emailSent = userService.processForgotPassword(email);
+
+        if (!emailSent) {
+            // Utilisateur non trouvé
+            Map<String, String> responseMap = new HashMap<>();
+            responseMap.put("error", "Aucun compte n'est associé à cet e-mail. Vérifiez l'adresse et réessayez.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseMap);
+        }
+
+        // Utilisateur trouvé
         Map<String, String> responseMap = new HashMap<>();
-        responseMap.put("message", "La demande de récupération de mot de passe a été envoyée à cette adresse : " + email + ".");
+        responseMap.put("message", "Si votre adresse e-mail est valide, nous vous enverrons un lien pour réinitialiser votre mot de passe.");
         return ResponseEntity.ok(responseMap);
     }
 
+    @Operation(summary = "permet à l'utilisateur de renouveller son pwd")
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
         String token = request.getToken();

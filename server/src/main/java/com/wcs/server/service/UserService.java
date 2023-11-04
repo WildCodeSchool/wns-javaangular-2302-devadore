@@ -191,7 +191,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void processForgotPassword(String email) {
+    public boolean processForgotPassword(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
@@ -204,7 +204,9 @@ public class UserService {
             String emailContent = generateEmailContent(resetUrl);
 
             emailService.sendSimpleMessage(user.getEmail(), "Réinitialisation de votre mot de passe", emailContent);
+            return true;
         }
+        return false;
     }
 
     public String generateEmailContent(String resetUrl) {

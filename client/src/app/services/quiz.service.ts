@@ -29,6 +29,10 @@ export class QuizService {
       ));
   }
 
+  getTotalQuestionsForQuiz(quizId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/${quizId}/totalQuestions`);
+  }
+
   getAllQuizzesCreatedByUser(userId: number): Observable<QuizModel[]> {
     return this.http.get<QuizModel[]>(`${this.apiUrl}/${userId}`, {headers: this.headerUtil.getHeaders()});
   }
