@@ -7,17 +7,24 @@ public class JwtResponse {
     private String type = "Bearer";
     private String refreshToken;
     private List<String> roles;
-/*    public JwtResponse(String token, String refreshToken) {
-        this.token = token;
-        this.refreshToken = refreshToken;
-    }*/
+    private String message;
+    private boolean success;
 
+    // Constructeur pour la réponse de succès
     public JwtResponse(String token, String refreshToken, List<String> roles) {
         this.token = token;
         this.refreshToken = refreshToken;
         this.roles = roles;
+        this.success = true;
     }
 
+    // Constructeur pour la réponse d'erreur
+    public JwtResponse(String message) {
+        this.message = message;
+        this.success = false;
+    }
+
+    // Getters et setters pour tous les champs
     public String getToken() {
         return token;
     }
@@ -48,5 +55,21 @@ public class JwtResponse {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 }

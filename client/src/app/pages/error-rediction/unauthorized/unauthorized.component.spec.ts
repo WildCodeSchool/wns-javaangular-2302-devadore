@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AnimatedSlideComponent } from './animated-slide.component';
+import { UnauthorizedComponent } from './unauthorized.component';
 
-describe('AnimatedSlideComponent', () => {
-  let component: AnimatedSlideComponent;
-  let fixture: ComponentFixture<AnimatedSlideComponent>;
+describe('UnauthorizedComponent', () => {
+  let component: UnauthorizedComponent;
+  let fixture: ComponentFixture<UnauthorizedComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AnimatedSlideComponent ]
+      declarations: [ UnauthorizedComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AnimatedSlideComponent);
+    fixture = TestBed.createComponent(UnauthorizedComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

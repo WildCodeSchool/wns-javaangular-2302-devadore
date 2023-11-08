@@ -11,7 +11,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {SharedModule} from "../../shared/shared.module";
-import {LogoComponent} from "../../shared/logo/logo.component";
 import {QuizEditComponent} from "./components/quiz-edit/quiz-edit.component";
 
 

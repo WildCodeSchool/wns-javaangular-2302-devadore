@@ -1,138 +1,138 @@
 <div
-        class="bg-cover bg-center text-white"
-        style="
+  class="bg-cover bg-center text-white"
+  style="
     background-image: url(/assets/images/defaultAvatars/MidJourney-wizard-hall.jpg);
   "
 >
-    <app-toast
-            *ngIf="showToast"
-            [message]="toastMessage"
-            [type]="toastType"
-            [canShowButton]="canShowButton"
-            (onConfirm)="onToastConfirmed()"
-            (onCancel)="showToast=false"
-            (close)="showToast=false">
-    </app-toast>
-    <div class="mx-auto flex flex-col items-center justify-center px-6 py-10 ">
-        <app-logo [textColor]="'orange'"></app-logo>
-    </div>
-    <div class="flex justify-center items-center">
-        <form [formGroup]="quizForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data"
-              class="bg-gray-900 text-gray-200 p-8 border-2 border-yellow-500 rounded w-2/3 mx-auto opacity-75 hover:opacity-100">
+  <app-toast
+    *ngIf="showToast"
+    [message]="toastMessage"
+    [type]="toastType"
+    [canShowButton]="canShowButton"
+    (onConfirm)="onToastConfirmed()"
+    (onCancel)="showToast=false"
+    (close)="showToast=false">
+  </app-toast>
+  <div class="mx-auto flex flex-col items-center justify-center px-6 py-10 ">
+    <app-logo [textColor]="'orange'"></app-logo>
+  </div>
+  <div class="flex justify-center items-center">
+    <form [formGroup]="quizForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data"
+          class="bg-gray-900 text-gray-200 p-8 border-2 border-yellow-500 rounded w-2/3 mx-auto opacity-75 hover:opacity-100">
 
-            <h1 class="text-2xl font-bold mb-6 text-center">Crée ton quiz "{{user?.username}}" </h1>
-            <div class="flex justify-center ">
-                <div *ngIf="userImage" class="w-16 h-16 rounded-full overflow-hidden"
-                     (mouseover)="isHovered = true"
-                     (mouseout)="isHovered = false">
+      <h1 class="text-2xl font-bold mb-6 text-center">Crée ton quiz "{{user?.username | uppercase}}" </h1>
+      <div class="flex justify-center ">
+        <div *ngIf="userImage" class="w-16 h-16 rounded-full overflow-hidden"
+             (mouseover)="isHovered = true"
+             (mouseout)="isHovered = false">
 
-                    <!-- L'image de l'utilisateur -->
-                    <img *ngIf="!isHovered"
-                         [src]="userImage"
-                         alt="User Image"
-                         class="w-full h-full rounded-full border-4 border-amber-500"
-                         (click)="editUser(user?.id)">
-                    <!-- L'icône SVG "retour arrière" lors du survol -->
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                         class="w-full h-full rounded-full border-4 border-amber-500" (click)="editUser(user?.id)">
-                        <path fill-rule="evenodd"
-                              d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </div>
+          <!-- L'image de l'utilisateur -->
+          <img *ngIf="!isHovered"
+               [src]="userImage"
+               alt="User Image"
+               class="w-full h-full rounded-full border-4 border-amber-500"
+               (click)="editUser(user?.id)">
+          <!-- L'icône SVG "retour arrière" lors du survol -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+               class="w-full h-full rounded-full border-4 border-amber-500" (click)="editUser(user?.id)">
+            <path fill-rule="evenodd"
+                  d="M9.53 2.47a.75.75 0 010 1.06L4.81 8.25H15a6.75 6.75 0 010 13.5h-3a.75.75 0 010-1.5h3a5.25 5.25 0 100-10.5H4.81l4.72 4.72a.75.75 0 11-1.06 1.06l-6-6a.75.75 0 010-1.06l6-6a.75.75 0 011.06 0z"
+                  clip-rule="evenodd"/>
+          </svg>
+        </div>
 
-            </div>
-            <div class="m-4">
-                <label for="category" class="block mb-2">Category</label>
-                <select id="category" formControlName="categoryId"
-                        class="w-1/4 bg-gray-800 border-2 border-yellow-500 rounded py-2">
-                    <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
-                </select>
-                <div *ngIf="!quizForm.get('categoryId')?.value" class="text-orange-600">
-                    Veuillez sélectionner une catégorie.
-                </div>
-            </div>
-            <div class="m-4">
-                <label for="image" class="mb-2 block">Image</label>
-                <div class="flex items-center">
-                    <label for="image"
-                           class="bg-gray-500 text-white text-sm px-2 py-2 cursor-pointer hover:bg-gray-600 border rounded">
-                        Sélectionnez une image
-                    </label>
-                    <span class="ml-3 text-sm" id="selectedFilename">Aucune image sélectionnée</span>
-                    <input
-                            type="file"
-                            id="image"
-                            name="image"
-                            (change)="onImageSelected($event)"
-                            class="hidden"
-                    />
-                </div>
-                <div class="mt-4 w-24 h-24 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
-                    <img *ngIf="previewUrl" [src]="previewUrl" alt="Image preview">
-                </div>
-            </div>
-            <!-- Other fields -->
-            <label class="block m-2">Titre du quiz</label>
-            <div class="mb-4">
-                <input type="text" placeholder="Title" formControlName="title"
-                       class="w-1/2 bg-gray-800 border-2 border-yellow-500 rounded px-3 py-2">
-                <div *ngIf="!quizForm.get('title')?.value" class="text-orange-600">
-                    Veuillez saisir titre.
-                </div>
-            </div>
-            <label class="block m-2">Description du thème</label>
-            <div class="mb-4">
+      </div>
+      <div class="m-4">
+        <label for="category" class="block mb-2">Category</label>
+        <select id="category" formControlName="categoryId"
+                class="w-1/4 bg-gray-800 border-2 border-yellow-500 rounded py-2">
+          <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+        </select>
+        <div *ngIf="!quizForm.get('categoryId')?.value" class="text-orange-600">
+          Veuillez sélectionner une catégorie.
+        </div>
+      </div>
+      <div class="m-4">
+        <label for="image" class="mb-2 block">Image</label>
+        <div class="flex items-center">
+          <label for="image"
+                 class="bg-gray-500 text-white text-sm px-2 py-2 cursor-pointer hover:bg-gray-600 border rounded">
+            Sélectionnez une image
+          </label>
+          <span class="ml-3 text-sm" id="selectedFilename">Aucune image sélectionnée</span>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            (change)="onImageSelected($event)"
+            class="hidden"
+          />
+        </div>
+        <div class="mt-4 w-24 h-24 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
+          <img *ngIf="previewUrl" [src]="previewUrl" alt="Image preview">
+        </div>
+      </div>
+      <!-- Other fields -->
+      <label class="block m-2">Titre du quiz</label>
+      <div class="mb-4">
+        <input type="text" placeholder="Title" formControlName="title"
+               class="w-1/2 bg-gray-800 border-2 border-yellow-500 rounded px-3 py-2">
+        <div *ngIf="!quizForm.get('title')?.value" class="text-orange-600">
+          Veuillez saisir titre.
+        </div>
+      </div>
+      <label class="block m-2">Description du thème</label>
+      <div class="mb-4">
       <textarea type="text" placeholder="Description" formControlName="description"
                 class="w-full bg-gray-800 border-2 border-yellow-500 rounded px-3 py-2"></textarea>
-                <div *ngIf="!quizForm.get('description')?.value" class="text-orange-600">
-                    Veuillez saisir une description.
-                </div>
+        <div *ngIf="!quizForm.get('description')?.value" class="text-orange-600">
+          Veuillez saisir une description.
+        </div>
+      </div>
+      <div formArrayName="questions">
+        <div *ngFor="let questionCtrl of questionsArray.controls; let i = index" [formGroupName]="i"
+             class="mb-4">
+
+          <label class="block m-2">Question -{{ i + 1 }}</label>
+          <input type="text" placeholder="Texte de la question" formControlName="text"
+                 class="w-3/4 bg-gray-800 border-2 border-amber-700 rounded px-3 py-2 mb-3">
+          <button type="button" (click)="removeQuestion(i)"
+                  class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
+                  title="Supprimer la question">❌
+          </button>
+          <div *ngIf="questionCtrl.hasError('noCorrectAnswer')">
+            <p class="text-orange-600">La question doit comporter au moins une réponse correcte.</p>
+          </div>
+          <label class="block m-2">Cocher la(les) bonne(s) réponse(s)</label>
+          <div formArrayName="answers">
+            <div *ngFor="let answerCtrl of getAnswersArray(questionCtrl); let j = index" [formGroupName]="j"
+                 class="mb-2 flex items-center">
+              <input type="text" placeholder="Texte de la réponse" formControlName="text"
+                     class="w-3/4 bg-gray-800 border-2 border-blue-700 rounded px-3 py-2 mb-3">
+              <input type="checkbox" formControlName="correct" class="m-6" title="Correct ?">
+              <button type="button" (click)="removeAnswer(i, j)"
+                      class="bg-transparent text-gray-200 px-3 py-2 rounded border-2 border-gray-900"
+                      title="Supprimer la réponse">❌
+              </button>
             </div>
-            <div formArrayName="questions">
-                <div *ngFor="let questionCtrl of questionsArray.controls; let i = index" [formGroupName]="i"
-                     class="mb-4">
-
-                    <label class="block m-2">Question -{{ i + 1 }}</label>
-                    <input type="text" placeholder="Texte de la question" formControlName="text"
-                           class="w-3/4 bg-gray-800 border-2 border-amber-700 rounded px-3 py-2 mb-3">
-                    <button type="button" (click)="removeQuestion(i)"
-                            class="bg-transparent text-gray-200 px-2 py-1 rounded border-2 border-gray-900"
-                            title="Supprimer la question">❌
-                    </button>
-                    <div *ngIf="questionCtrl.hasError('noCorrectAnswer')">
-                        <p class="text-orange-600">La question doit comporter au moins une réponse correcte.</p>
-                    </div>
-                    <label class="block m-2">Cocher la(les) bonne(s) réponse(s)</label>
-                    <div formArrayName="answers">
-                        <div *ngFor="let answerCtrl of getAnswersArray(questionCtrl); let j = index" [formGroupName]="j"
-                             class="mb-2 flex items-center">
-                            <input type="text" placeholder="Texte de la réponse" formControlName="text"
-                                   class="w-3/4 bg-gray-800 border-2 border-blue-700 rounded px-3 py-2 mb-3">
-                            <input type="checkbox" formControlName="correct" class="m-6" title="Correct ?">
-                            <button type="button" (click)="removeAnswer(i, j)"
-                                    class="bg-transparent text-gray-200 px-3 py-2 rounded border-2 border-gray-900"
-                                    title="Supprimer la réponse">❌
-                            </button>
-                        </div>
-                        <button type="button" (click)="addAnswer(i)"
-                                class="bg-yellow-500 text-gray-900 px-3 py-2 rounded hover:bg-blue-600">
-                            Ajouter une autre réponse
-                        </button>
-                    </div>
-
-                </div>
-                <button type="button" (click)="addQuestion()"
-                        class="bg-yellow-500 text-gray-900 px-3 py-2 rounded mb-4 hover:bg-amber-600">
-                    Ajouter une autre question
-                </button>
-            </div>
-
-            <button type="submit"
-                    class="bg-yellow-500 text-gray-900 px-4 py-2 rounded border-2 border-gray-900 hover:bg-yellow-600">
-                Créer un quiz
+            <button type="button" (click)="addAnswer(i)"
+                    class="bg-yellow-500 text-gray-900 px-3 py-2 rounded hover:bg-blue-600">
+              Ajouter une autre réponse
             </button>
+          </div>
 
-        </form>
-    </div>
+        </div>
+        <button type="button" (click)="addQuestion()"
+                class="bg-yellow-500 text-gray-900 px-3 py-2 rounded mb-4 hover:bg-amber-600">
+          Ajouter une autre question
+        </button>
+      </div>
+
+      <button type="submit"
+              class="bg-yellow-500 text-gray-900 px-4 py-2 rounded border-2 border-gray-900 hover:bg-yellow-600">
+        Créer un quiz
+      </button>
+
+    </form>
+  </div>
 </div>

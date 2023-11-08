@@ -158,6 +158,12 @@ public class QuizController {
         }
     }
 
+    @GetMapping("/quiz/{quizId}/can-edit")
+    public ResponseEntity<?> canUserEditQuiz(@PathVariable Long quizId, Authentication authentication) {
+        boolean canEdit = quizService.canUserEditQuiz(quizId, authentication);
+        return ResponseEntity.ok(canEdit);
+    }
+
     @DeleteMapping("/quiz/{id}")
     public ResponseEntity<Void> deleteQuiz(@PathVariable Long id, Authentication authentication) {
         // Récupération et affectation de l'utilisateur (créateur du quiz)

@@ -49,5 +49,9 @@ export class QuizService {
   deleteQuiz(id: number): Observable<QuizModel[]> {
     return this.http.delete<QuizModel[]>(`${this.apiUrl}/${id}`, {headers: this.headerUtil.getHeaders()});
   }
+
+  canUserEditQuiz(quizId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/${quizId}/can-edit`, {headers: this.headerUtil.getHeaders()});
+  }
 }
 

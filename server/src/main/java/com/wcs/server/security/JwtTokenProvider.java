@@ -32,8 +32,8 @@ public class JwtTokenProvider {
     private long expirationresetpwd;
 
     @Value("${jwt.refresh}")
-    private static long jwtRefresh;
-    private static SecretKey secretKey;
+    private long jwtRefresh;
+    private SecretKey secretKey;
     private final ConcurrentHashMap<String, Boolean> invalidatedTokens = new ConcurrentHashMap<>();
 
     @PostConstruct
@@ -142,7 +142,7 @@ public class JwtTokenProvider {
      * @param username
      * @return le refresh token JWT.
      */
-    public static String createRefreshToken(String username) {
+    public String createRefreshToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -158,14 +158,14 @@ public class JwtTokenProvider {
      * @param refreshToken
      * @return les revendications (informations contenues dans le token lui-même) du token si il est valide.
      */
-    public static Claims validateRefreshToken(String refreshToken) {
+    public Claims validateRefreshToken(String refreshToken) {
         try {
             return Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(refreshToken)
                     .getBody();
         } catch (Exception e) {
-            throw new IllegalStateException("Invalid refresh token");
+            throw new IllegalStateException("Invalid refresh token", e);
         }
     }
 

@@ -10,15 +10,17 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatTableModule} from "@angular/material/table";
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {AnimatedSlideComponent} from './pages/home/components/animated-slide/animated-slide.component';
 import {ToastService} from "./services/toastService";
-import {SharedModule} from "./shared/shared.module";
+import {ErrorComponent} from './pages/error-rediction/error/error.component';
+import {UnauthorizedComponent} from './pages/error-rediction/unauthorized/unauthorized.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    AnimatedSlideComponent,
+    ErrorComponent,
+    UnauthorizedComponent,
   ],
   imports: [
     BrowserModule,

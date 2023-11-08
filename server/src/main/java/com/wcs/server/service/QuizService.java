@@ -224,4 +224,16 @@ public class QuizService {
     public int getTotalQuestionsByQuizId(Long quizId) {
         return questionRepository.countByQuizId(quizId);
     }
+
+    public boolean canUserEditQuiz(Long quizId, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User currentUser = userRepository.findByUsername(userDetails.getUsername());
+
+        Quiz quiz = quizRepository.findById(Math.toIntExact(quizId))
+                .orElseThrow(() -> new ResourceNotFoundException("Quiz avec id " + quizId + " non trouvé"));
+
+        return quiz.getCreatedBy().equals(currentUser);
+    }
 }
+
+

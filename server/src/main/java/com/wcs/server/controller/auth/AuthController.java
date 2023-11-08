@@ -32,20 +32,28 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
-        this.authenticationManager = authenticationManager;
+    public AuthController(
+            AuthenticationManager authenticationManager,
+            UserService userService,
+            JwtTokenProvider jwtTokenProvider,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
+        this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
     @Operation(summary = "permet à l'utilisateur authentifié de recevoir un mail pour renouveller son pwd")
@@ -69,18 +77,16 @@ public class AuthController {
 
     @Operation(summary = "permet à l'utilisateur de renouveller son pwd")
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
+    public ResponseEntity<JwtResponse> resetPassword(@RequestBody ResetPasswordRequestDTO request) {
         String token = request.getToken();
         String newPassword = request.getNewPassword();
 
         if (jwtTokenProvider.validateToken(token)) {
             String username = jwtTokenProvider.getUsernameFromJWT(token);
-            Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
+            User user = userRepository.findByUsername(username);
 
-            if (userOptional.isPresent()) {
-                User user = userOptional.get();
-
-                // Mettre à jour le mot de passe de l'utilisateur
+            if (user != null) {
+                // Mise à jour du mot de passe de l'utilisateur
                 user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
 
@@ -93,22 +99,28 @@ public class AuthController {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                // Générer de nouveaux tokens d'accès et de rafraîchissement
+                // Générer de nouveaux jetons d'accès et de rafraîchissement
                 String accessToken = jwtTokenProvider.generateToken(authentication);
-                String refreshToken = JwtTokenProvider.createRefreshToken(username);
+                String refreshToken = jwtTokenProvider.createRefreshToken(username);
                 List<String> roles = authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toList());
 
-                // Invalider l'ancien token
+                // Invalider l'ancien jeton
                 jwtTokenProvider.invalidate(token);
 
                 return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken, roles));
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : L'utilisateur n'existe pas.");
+                // Retourne une erreur si l'utilisateur n'existe pas
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new JwtResponse("Error: User does not exist."));
             }
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : Token invalide ou expiré.");
+            // Renvoie une erreur si le jeton n'est pas valide ou a expiré
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new JwtResponse("Error: Token is invalid or expired."));
         }
     }
 
@@ -126,7 +138,7 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String accessToken = jwtTokenProvider.generateToken(authentication);
-        String refreshToken = JwtTokenProvider.createRefreshToken(loginRequest.getUsername());
+        String refreshToken = jwtTokenProvider.createRefreshToken(loginRequest.getUsername());
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
