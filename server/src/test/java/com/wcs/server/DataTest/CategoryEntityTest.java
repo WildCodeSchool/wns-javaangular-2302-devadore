@@ -8,18 +8,14 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import com.wcs.server.ServerApplication;
-import com.wcs.server.configuration.ApplicationConfig;
+import org.springframework.context.annotation.Import;
+import com.wcs.server.configuration.ApplicationTestConfig;
 import com.wcs.server.entity.Category;
 import com.wcs.server.repository.CategoryRepository;
-import com.wcs.server.security.SecurityConfig;
 
 @DataJpaTest
-@EnableAutoConfiguration(exclude= {WebMvcAutoConfiguration.class, ApplicationConfig.class, SecurityConfig.class, ServerApplication.class})
+@Import(ApplicationTestConfig.class)
 public class CategoryEntityTest {
 
     @Autowired

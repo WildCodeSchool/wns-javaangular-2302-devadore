@@ -1,15 +1,12 @@
 package com.wcs.server.DataTest;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
-import com.wcs.server.ServerApplication;
-import com.wcs.server.configuration.ApplicationConfig;
-import com.wcs.server.security.SecurityConfig;
+import com.wcs.server.configuration.ApplicationTestConfig;
 
 @DataJpaTest
-@EnableAutoConfiguration(exclude= {WebMvcAutoConfiguration.class, ApplicationConfig.class, SecurityConfig.class, ServerApplication.class})
+@Import(ApplicationTestConfig.class)
 public class UserEntityTest {
     
 }

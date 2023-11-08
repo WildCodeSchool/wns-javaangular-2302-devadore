@@ -1,25 +1,22 @@
 package com.wcs.server.configuration;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.TestConfiguration;
-
+import org.springframework.context.annotation.Bean;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 
 @TestConfiguration
-@EnableAutoConfiguration(exclude= WebMvcAutoConfiguration.class)
 public class ApplicationTestConfig {
-/* 
+
     @Bean
-    public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
-        modelMapper.createTypeMap(RoleDTO.class, Role.class);
+    public JavaMailSender javaMailSender() {
+        return Mockito.mock(JavaMailSender.class);
+    }
 
-        return modelMapper;
-    } */
-
-/*     @Bean(name = "mvcHandlerMappingIntrospector")
-    public HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-        return new HandlerMappingIntrospector();
-    }  */
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        return Mockito.mock(SpringTemplateEngine.class);
+    }
 }
