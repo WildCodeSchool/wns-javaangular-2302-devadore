@@ -45,6 +45,7 @@ public class QuizController {
     @GetMapping("/quiz/random")
     public ResponseEntity<QuizDTO> getRandomQuiz() {
         QuizDTO randomQuiz = quizService.getQuizByRandomId();
+        System.out.println("request quiz random at controller");
         return ResponseEntity.ok(randomQuiz);
     }
 

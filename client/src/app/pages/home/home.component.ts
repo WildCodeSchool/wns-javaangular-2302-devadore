@@ -1,10 +1,11 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {faCircleUser} from '@fortawesome/free-solid-svg-icons';
-import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
-import {UserService} from "../../services/user.service";
-import {User} from "../../models/user.model";
-import {UserProfileService} from "../../services/user-profile-service";
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { faCircleUser } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../models/user.model';
+import { UserProfileService } from '../../services/user-profile-service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +13,6 @@ import {UserProfileService} from "../../services/user-profile-service";
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
   faCircleUser = faCircleUser;
   isDropdownVisible: boolean = false;
   userImage: any;
@@ -23,9 +23,12 @@ export class HomeComponent implements OnInit {
   user: User | null;
   isMenuHovered: boolean = false;
 
-  constructor(private authService: AuthService, private userService: UserService, private router: Router, private userProfileService: UserProfileService) {
-
-  }
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private router: Router,
+    private userProfileService: UserProfileService
+  ) {}
 
   showDropdown() {
     this.isDropdownVisible = true;
@@ -45,25 +48,25 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.authService.checkAdminStatus();
+    console.log(environment.URL, 'environment.URL');
     this.authService.isAdmin$.subscribe((isAdminValue) => {
       this.isAdmin = isAdminValue;
-      console.log('isAdminValue', isAdminValue)
+      console.log('isAdminValue', isAdminValue);
     });
     this.authService.checkUserStatus();
     this.authService.isUser$.subscribe((isUserValue) => {
       this.isUser = isUserValue;
-      console.log('isUserValue', isUserValue)
+      console.log('isUserValue', isUserValue);
     });
-    this.userProfileService.getUserImage().subscribe(image => {
+    this.userProfileService.getUserImage().subscribe((image) => {
       this.userImage = image;
     });
-    this.userProfileService.getUser().subscribe(user => {
+    this.userProfileService.getUser().subscribe((user) => {
       this.user = user;
     });
     /*   this.loadImage()*/
     this.isLoggedIn = this.authService.isAuthenticated();
   }
-
 
   isAuthenticated(): boolean {
     return this.authService.isAuthenticated();
@@ -78,30 +81,28 @@ export class HomeComponent implements OnInit {
     });
   }
 
-
   editUser(userId: number): void {
-
     if (!this.user) {
-      console.error("User data is missing.");
+      console.error('User data is missing.');
       // TODO Gérer l'erreur en affichant un message à l'utilisateur
       return;
     }
 
     if (this.user.id !== userId) {
-      console.error(`User ID mismatch. Expected ${this.user.id}, but got ${userId}.`);
+      console.error(
+        `User ID mismatch. Expected ${this.user.id}, but got ${userId}.`
+      );
       // TODO Gérer l'erreur en affichant un message à l'utilisateur
       return;
     }
 
-    this.router.navigate(['/user-detail', userId])
-      .then(success => {
-        if (!success) {
-          console.error("Failed to navigate to user detail page.");
-          // TODO Gérer l'erreur en affichant un message à l'utilisateur
-        }
-      });
+    this.router.navigate(['/user-detail', userId]).then((success) => {
+      if (!success) {
+        console.error('Failed to navigate to user detail page.');
+        // TODO Gérer l'erreur en affichant un message à l'utilisateur
+      }
+    });
   }
-
 
   handleButtonClick(): void {
     if (this.isAuthenticated()) {

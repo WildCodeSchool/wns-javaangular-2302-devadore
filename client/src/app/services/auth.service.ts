@@ -1,15 +1,16 @@
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
-import {Injectable} from "@angular/core";
-import {Router} from "@angular/router";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import jwt_decode from 'jwt-decode';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/auth';
+  private apiUrl = environment.URL + '/auth';
   roles: string[] = [];
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -19,8 +20,7 @@ export class AuthService {
   private isUserSubject = new BehaviorSubject<boolean>(false);
   public isUser$ = this.isUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
-  }
+  constructor(private http: HttpClient, private router: Router) {}
 
   isAuthenticated(): boolean {
     return this.getToken() !== null;
@@ -29,12 +29,12 @@ export class AuthService {
   authenticateUser(username: string, password: string): Observable<any> {
     const loginData = {
       username: username,
-      password: password
+      password: password,
     };
 
     return this.http.post<any>(`${this.apiUrl}/authenticate`, loginData).pipe(
       tap((response) => {
-        console.log('authservice:', response)
+        console.log('authservice:', response);
         const token = response.token;
         const roles = response.roles;
         this.saveToken(token);
@@ -84,7 +84,8 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.post(`${this.apiUrl}/logout`, {}, {headers: headers})
+      return this.http
+        .post(`${this.apiUrl}/logout`, {}, { headers: headers })
         .pipe(
           tap(() => {
             console.log('Removing tokens...');
@@ -94,7 +95,7 @@ export class AuthService {
           })
         );
     }
-    throw new Error("User is not logged in");
+    throw new Error('User is not logged in');
   }
 
   checkAdminStatus() {
@@ -135,6 +136,5 @@ export class AuthService {
 
     return this.http.post(`${this.apiUrl}/reset-password`, payload);
   }
+
 }
-
-

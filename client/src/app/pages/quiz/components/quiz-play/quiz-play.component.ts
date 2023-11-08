@@ -305,9 +305,10 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
    * des informations de la prochaine question.
    */
   getNextQuestion(): void {
+    this.timeLeft = this.maxTime;
+
     // Réinitialisation de la variable isAnswered à false.
     this.isAnswered = false;
-
     // Réinitialisation de la variable selectedAnswer à undefined.
     this.selectedAnswer = undefined;
 

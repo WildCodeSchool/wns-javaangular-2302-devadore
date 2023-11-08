@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AnswerModel } from '../models/answer.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AnswerService {
+  private readonly apiUrl = environment.URL + '/api/answers';
 
-  private readonly apiUrl = 'http://localhost:8080/api/answers';
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAnswers(): Observable<AnswerModel[]> {
     return this.http.get<AnswerModel[]>(this.apiUrl);

@@ -3,49 +3,55 @@ version: "3.5"
 # this docker compose file is used for deployment
 
 services:
-
   # define database container
   db:
-    container_name: app_${APP_ENV}_db
-    image: postgres:14.1-alpine
+    container_name: quizz_${APP_ENV}_db
+    image: mysql:8.1.0
     restart: always
     environment:
-      - POSTGRES_USER=appdb
-      - POSTGRES_PASSWORD=appdb
-      - POSTGRES_DB=appdb
+      MYSQL_DATABASE: "quizzforall"
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: "lateam"
+      # You can use whatever password you like
+      MYSQL_PASSWORD: "devadore"
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: "password"
     volumes:
-      - db:/var/lib/postgresql/data
+      - quizzdb:/var/lib/mysql
     networks:
-      - appinternals
-
+      - quizzappinternals
   # define backend container
-  back:
-    container_name: app_${APP_ENV}_back
-    image: ${DOCKER_USER}/wns-deploy-angular-spring-back:${DOCKER_IMAGE_TAG}
+  server:
+    container_name: quizz_${APP_ENV}_server
+    image: ${DOCKER_USER}/wns-javaangular-2302-devadore-server:${DOCKER_IMAGE_TAG}
     restart: always
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://db:3306/quizzforall?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true"
+      SPRING_DATASOURCE_USERNAME: "lateam"
+      SPRING_DATASOURCE_PASSWORD: "devadore"
     depends_on:
       - db
     networks:
-      appinternals:
+      quizzappinternals:
         aliases:
-          - back
-  
+          - server
+
   # define nginx + front container
   nginx:
-    container_name: app_${APP_ENV}_front
-    image: ${DOCKER_USER}/wns-deploy-angular-spring-front:${DOCKER_IMAGE_TAG}
+    container_name: quizz__${APP_ENV}_client
+    image: ${DOCKER_USER}/wns-javaangular-2302-devadore-client:${DOCKER_IMAGE_TAG}
     depends_on:
-      - back
+      - server
     restart: always
     networks:
-      - appinternals
+      - quizzappinternals
     ports:
       - ${GATEWAY_PORT:-8000}:80
 
 volumes:
-  db:
+  quizzdb:
     driver: local
 networks:
-  appinternals:
-    # customize the actual network name depending on environment, so "prod" containers do not share network with "preprod" even on same machine / docker server 
-    name: appinternals_${APP_ENV}
+  quizzappinternals:
+    # customize the actual network name depending on environment, so "prod" containers do not share network with "preprod" even on same machine / docker server
+    name: quizzappinternals_${APP_ENV}

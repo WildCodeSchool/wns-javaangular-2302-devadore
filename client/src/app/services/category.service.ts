@@ -1,22 +1,23 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {CategoryModel} from '../models/category.model';
-import {AuthService} from "./auth.service";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { CategoryModel } from '../models/category.model';
+import { AuthService } from './auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
+  private readonly apiUrl = environment + '/api/categories';
 
-  private readonly apiUrl = 'http://localhost:8080/api/categories';
-
-  constructor(private http: HttpClient, private authService: AuthService) {
-  }
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getAllCategories(): Observable<CategoryModel[]> {
     const jwtToken = this.authService.getToken();
-    const headers = jwtToken ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`) : {};
+    const headers = jwtToken
+      ? new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`)
+      : {};
     return this.http.get<CategoryModel[]>(this.apiUrl);
   }
 
@@ -38,5 +39,4 @@ export class CategoryService {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete(url);
   }
-
 }

@@ -18,6 +18,9 @@
         <java.version>17</java.version>
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
         <junit.platform.version>1.9.1</junit.platform.version>
+		<image.dockeruser></image.dockeruser>
+		<image.name>wns-javaangular-2302-devadore-server</image.name>
+		<image.tag>latest</image.tag>
     </properties>
     <dependencies>
 
@@ -174,6 +177,8 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <jvmArguments>${argLine}</jvmArguments>
+                    <imageName>${image.dockeruser}${image.name}:${image.tag}</imageName>
+					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
                 </configuration>
                 <executions>
                     <execution>

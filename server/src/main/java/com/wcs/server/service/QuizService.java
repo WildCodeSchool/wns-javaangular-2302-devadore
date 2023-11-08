@@ -43,6 +43,7 @@ public class QuizService {
 
         // nextInt(n) genère un nombre aléatoire entre 0 inclus et n exclus
         // Ce qui permet de récupérer un index aléatoire de la liste et retourner son id
+    
         Random random = new Random();
         int randomId = ids.get(random.nextInt(ids.size()));
 
@@ -138,6 +139,7 @@ public class QuizService {
     }
 
     private QuizDTO convertQuizToDTO(Quiz quiz) {
+        System.out.println("request quiz random at DTO");
         return modelMapper.map(quiz, QuizDTO.class);
     }
 

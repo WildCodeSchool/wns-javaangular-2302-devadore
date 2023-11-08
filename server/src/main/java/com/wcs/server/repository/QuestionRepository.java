@@ -12,7 +12,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     List<Question> findAllByQuizId(Long id);
 
-    @Query(value = "SELECT * FROM Question WHERE quiz_id = :quizId AND id NOT IN (:excludeIds) ORDER BY RAND() LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM question WHERE quiz_id = :quizId AND id NOT IN (:excludeIds) ORDER BY RAND() LIMIT 1", nativeQuery = true)
     Question getRandomQuestionByQuizIdExcluding(@Param("quizId") Long quizId, @Param("excludeIds") List<Long> excludeIds);
 
 
