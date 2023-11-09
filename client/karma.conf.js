@@ -27,15 +27,15 @@ module.exports = function (config) {
       colors: true,
       logLevel: config.LOG_INFO,
       autoWatch: true,
-      browsers: ['Chrome', 'ChromeHeadless', 'ChromeHeadlessCI'],
+      browsers: ['ChromeHeadless'],
+      singleRun: false,
+      restartOnFileChange: true, 
       customLaunchers: {
         ChromeHeadlessCI: {
-            base: 'ChromeHeadless',
-            flags: ['--no-sandbox']
+          base: 'ChromeHeadless',
+          flags: ['--no-sandbox', '--disable-gpu'] 
         }
-        },
-      singleRun: false,
-      restartOnFileChange: true
+      },
     });
   };
   
