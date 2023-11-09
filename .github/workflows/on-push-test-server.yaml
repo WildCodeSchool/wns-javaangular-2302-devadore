@@ -14,4 +14,4 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: Run tests
-        run: cd server && mvn clean install
+        run: cd server && mvn clean install -Pci-build
