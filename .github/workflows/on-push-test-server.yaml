@@ -8,5 +8,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v2
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Run tests
         run: cd server && mvn clean install
