@@ -39,8 +39,6 @@ export class UserListComponent implements AfterViewInit {
         this.loadUsers();
         console.log(this.dataSource instanceof MatTableDataSource);
         this.dataSource.sort = this.sort;
-        console.log('actvie: ', this.dataSource.sort.active);
-        console.log(this.dataSource.sort.direction);
     }
 
     loadUsers(): void {
