@@ -15,4 +15,4 @@ jobs:
       - name: Install dependencies
         run: cd client && npm install
       - name: Run tests
-        run: cd client && npm run test
+        run: cd client && npm run test:ci
