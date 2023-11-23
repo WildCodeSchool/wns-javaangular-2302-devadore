@@ -55,22 +55,22 @@ CREATE TABLE answer
     updated_at  DATE       NULL
 );
 
-create table user_roles
+CREATE TABLE user_roles
 (
-    user_id int not null,
-    role_id int not null,
-    primary key (user_id, role_id)
+    user_id INT NOT NULL,
+    role_id INT NOT NULL,
+    PRIMARY KEY (user_id, role_id)
 );
 
-create table images
+CREATE TABLE images
 (
-    id          int auto_increment primary key,
-    image       mediumblob   null,
-    mime_type   varchar(255) null,
-    name        varchar(255) null,
-    user_id     int          null,
-    quiz_id     int          null,
-    question_id int          null
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    image       MEDIUMBLOB   NULL,
+    mime_type   VARCHAR(255) NULL,
+    name        VARCHAR(255) NULL,
+    user_id     INT          NULL,
+    quiz_id     INT          NULL,
+    question_id INT          NULL
 );
 
 create table quiz_attempt
@@ -85,32 +85,34 @@ create table quiz_attempt
     end_time          date,
     total_time_spent  int
 );
-create index question_id on answer (question_id);
-create index quiz_id on question (quiz_id);
-create index category_id on quiz (category_id);
-create index created_by on quiz (created_by);
+
+
+-- Indexes
+CREATE INDEX question_id ON answer (question_id);
+CREATE INDEX quiz_id ON question (quiz_id);
+CREATE INDEX category_id ON quiz (category_id);
+CREATE INDEX created_by ON quiz (created_by);
 
 -- Contraintes de clé étrangère
-ALTER TABLE images
-    ADD CONSTRAINT images_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id);
 ALTER TABLE quiz
     ADD CONSTRAINT quiz_ibfk_1 FOREIGN KEY (category_id) REFERENCES category (id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE quiz
     ADD CONSTRAINT quiz_ibfk_2 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE images
-    ADD CONSTRAINT images_ibfk_2 FOREIGN KEY (quiz_id) REFERENCES quiz (id);
 ALTER TABLE question
     ADD CONSTRAINT question_ibfk_1 FOREIGN KEY (quiz_id) REFERENCES quiz (id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE answer
     ADD CONSTRAINT answer_ibfk_1 FOREIGN KEY (question_id) REFERENCES question (id);
-ALTER TABLE images
-    ADD CONSTRAINT images_ibfk_3 FOREIGN KEY (question_id) REFERENCES question (id);
 ALTER TABLE user_roles
     ADD CONSTRAINT user_roles_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id) ON UPDATE CASCADE;
 ALTER TABLE user_roles
     ADD CONSTRAINT user_roles_ibfk_2 FOREIGN KEY (role_id) REFERENCES role (id) ON UPDATE CASCADE;
+ALTER TABLE images
+    ADD CONSTRAINT FK_fccua10sh2240kfshte8bkbpt FOREIGN KEY (user_id) REFERENCES user (id);
+ALTER TABLE images
+    ADD CONSTRAINT FK_1q6j2w8hj0y8f8i1j6qy5t5k4 FOREIGN KEY (quiz_id) REFERENCES quiz (id);
+ALTER TABLE images
+    ADD CONSTRAINT FK_1q6j2w8hj0y8f8i1j6qy5t5k3 FOREIGN KEY (question_id) REFERENCES question (id);
 alter table quiz_attempt
-    add constraint quiz_attempt_ibfk_1 foreign key (user_id) references user (id) on update cascade on delete cascade;
+    add constraint FK_quiz_attempt_user foreign key (user_id) references user (id) on update cascade on delete cascade;
 alter table quiz_attempt
-    add constraint quiz_attempt_ibfk_2 foreign key (quiz_id) references quiz (id) on update cascade on delete cascade;
-
+    add constraint FK_quiz_attempt_quiz foreign key (quiz_id) references quiz (id) on update cascade on delete cascade;

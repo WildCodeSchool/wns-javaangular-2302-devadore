@@ -18,9 +18,9 @@
         <java.version>17</java.version>
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
         <junit.platform.version>1.9.1</junit.platform.version>
-		<image.dockeruser></image.dockeruser>
-		<image.name>wns-javaangular-2302-devadore-server</image.name>
-		<image.tag>latest</image.tag>
+        <image.dockeruser></image.dockeruser>
+        <image.name>wns-javaangular-2302-devadore-server</image.name>
+        <image.tag>latest</image.tag>
     </properties>
 
     <dependencies>
@@ -179,7 +179,7 @@
                 <configuration>
                     <jvmArguments>${argLine}</jvmArguments>
                     <imageName>${image.dockeruser}${image.name}:${image.tag}</imageName>
-					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                 </configuration>
                 <executions>
                     <execution>
@@ -255,6 +255,12 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>9.8.1</version>
+                <configuration>
+                    <url>jdbc:mysql://localhost:3306/quizzforall?serverTimezone=GMT</url>
+                    <user>${env.DATABASE_USERNAME}</user>
+                    <password>${env.DATABASE_PASSWORD}</password>
+                    <cleanDisabled>true</cleanDisabled>
+                </configuration>
             </plugin>
         </plugins>
     </build>
