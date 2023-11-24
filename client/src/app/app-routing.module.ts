@@ -23,6 +23,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/quiz/quiz.module').then((m) => m.QuizModule),
   },
+  {
+    path: 'multijoueur',
+    loadChildren: () =>
+      import('./pages/quiz-multijoueur/quiz-multijoueur.module').then((m) => m.QuizMultijoueurModule),
+  },
   {path: 'unauthorized', component: UnauthorizedComponent},
   {path: 'error', component: ErrorComponent},
   {path: '**', redirectTo: '/error', pathMatch: 'full'},

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.0.6</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath /> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.wcs</groupId>
     <artifactId>server</artifactId>
@@ -18,12 +18,18 @@
         <java.version>17</java.version>
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
         <junit.platform.version>1.9.1</junit.platform.version>
-		<image.dockeruser></image.dockeruser>
-		<image.name>wns-javaangular-2302-devadore-server</image.name>
-		<image.tag>latest</image.tag>
+        <image.dockeruser></image.dockeruser>
+        <image.name>wns-javaangular-2302-devadore-server</image.name>
+        <image.tag>latest</image.tag>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.atmosphere</groupId>
+            <artifactId>atmosphere-runtime</artifactId>
+            <version>3.0.3</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -169,7 +175,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
-
     </dependencies>
     <build>
         <plugins>
@@ -180,12 +185,13 @@
                     <image>
                         <name>${image.dockeruser}${image.name}:${image.tag}</name>
                         <env>
-                            <JAVA_TOOL_OPTIONS>-Xmx64m -XX:MaxMetaspaceSize=64M -XX:ReservedCodeCacheSize=64M </JAVA_TOOL_OPTIONS>
+                            <JAVA_TOOL_OPTIONS>-Xmx64m -XX:MaxMetaspaceSize=64M
+                                -XX:ReservedCodeCacheSize=64M </JAVA_TOOL_OPTIONS>
                         </env>
                     </image>
-                    <jvmArguments>${argLine} 
+                    <jvmArguments>${argLine}
                     </jvmArguments>
-					<pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                    <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                 </configuration>
                 <executions>
                     <execution>
