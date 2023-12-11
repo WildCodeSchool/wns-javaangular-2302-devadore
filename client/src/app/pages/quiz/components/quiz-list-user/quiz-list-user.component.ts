@@ -9,7 +9,6 @@ import {AuthService} from "../../../../services/auth.service";
 import {UserService} from "../../../../services/user.service";
 import {QuizService} from "../../../../services/quiz.service";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ToastService} from "../../../../services/toastService";
 import {forkJoin, map} from "rxjs";
 import {CategoryService} from "../../../../services/category.service";
 
