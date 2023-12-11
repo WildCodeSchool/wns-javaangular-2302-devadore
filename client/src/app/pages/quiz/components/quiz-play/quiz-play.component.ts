@@ -214,7 +214,7 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
     if (this.excludeIds.length < this.totalQuestions) {
       setTimeout(() => {
         this.getNextQuestion();
-      }, 3000);
+      }, 2000);
     }
   }
 

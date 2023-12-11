@@ -1,10 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
 import jwt_decode from 'jwt-decode';
-import { environment } from 'src/environments/environment';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +20,8 @@ export class AuthService {
   private isUserSubject = new BehaviorSubject<boolean>(false);
   public isUser$ = this.isUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+  }
 
   isAuthenticated(): boolean {
     return this.getToken() !== null;
@@ -85,7 +86,7 @@ export class AuthService {
     if (token) {
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
       return this.http
-        .post(`${this.apiUrl}/logout`, {}, { headers: headers })
+        .post(`${this.apiUrl}/logout`, {}, {headers: headers})
         .pipe(
           tap(() => {
             console.log('Removing tokens...');
@@ -102,7 +103,7 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       const decodedToken = this.decodeToken(token);
-      if (decodedToken && decodedToken.roles) {
+      if (decodedToken?.roles) {
         const isAdmin = decodedToken.roles.includes('ADMIN');
         this.setAdminState(isAdmin);
       }
@@ -115,7 +116,7 @@ export class AuthService {
     const token = this.getToken();
     if (token) {
       const decodedToken = this.decodeToken(token);
-      if (decodedToken && decodedToken.roles) {
+      if (decodedToken?.roles) {
         const isUser = decodedToken.roles.includes('USER');
         this.setUserState(isUser);
       }

@@ -259,7 +259,7 @@
                     <url>jdbc:mysql://localhost:3306/quizzforall?serverTimezone=GMT</url>
                     <user>${env.DATABASE_USERNAME}</user>
                     <password>${env.DATABASE_PASSWORD}</password>
-                    <cleanDisabled>true</cleanDisabled>
+                    <cleanDisabled>false</cleanDisabled>
                 </configuration>
             </plugin>
         </plugins>
