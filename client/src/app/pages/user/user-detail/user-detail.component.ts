@@ -1,19 +1,17 @@
-import {Component, OnInit} from '@angular/core';
-import {User} from "../../../models/user.model";
-import {UserService} from "../../../services/user.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Role} from "../../../models/role.model";
-import {forkJoin} from "rxjs";
-import {AuthService} from "../../../services/auth.service";
-
+import { Component, OnInit } from '@angular/core';
+import { User } from '../../../models/user.model';
+import { UserService } from '../../../services/user.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Role } from '../../../models/role.model';
+import { forkJoin } from 'rxjs';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-detail',
   templateUrl: './user-detail.component.html',
-  styleUrls: ['./user-detail.component.scss']
+  styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit {
-
   allRoles!: Role[];
   userRoles!: Role[];
   imageFile?: File;
@@ -31,38 +29,41 @@ export class UserDetailComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private route: ActivatedRoute,
-    private router: Router,
-  ) {
-  }
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     const id = parseInt(this.route.snapshot.paramMap.get('id') ?? '0', 10);
 
-    forkJoin([this.userService.getAllRoles(), this.userService.getUserById(id)])
-      .subscribe(([roles, user]) => {
-        this.allRoles = roles;
-        this.user = user;
-        this.userRoles = user.roles;
-        console.log(user);
-      });
+    forkJoin([
+      this.userService.getAllRoles(),
+      this.userService.getUserById(id),
+    ]).subscribe(([roles, user]) => {
+      this.allRoles = roles;
+      this.user = user;
+      this.userRoles = user.roles;
+      console.log(user);
+    });
     this.authService.checkAdminStatus();
     this.authService.isAdmin$.subscribe((isAdminValue) => {
       this.isAdmin = isAdminValue;
-      console.log('isAdminValue', isAdminValue)
+      console.log('isAdminValue', isAdminValue);
     });
     this.authService.checkUserStatus();
     this.authService.isUser$.subscribe((isUserValue) => {
       this.isUser = isUserValue;
-      console.log('isUserValue', isUserValue)
+      console.log('isUserValue', isUserValue);
     });
   }
 
   isRoleSelected(role: Role): boolean {
-    return this.userRoles?.some(userRole => userRole.id === role.id);
+    return this.userRoles?.some((userRole) => userRole.id === role.id);
   }
 
   toggleRoleSelection(role: Role): void {
-    const roleIndex = this.userRoles.findIndex(userRole => userRole.id === role.id);
+    const roleIndex = this.userRoles.findIndex(
+      (userRole) => userRole.id === role.id
+    );
 
     if (roleIndex !== -1) {
       this.userRoles.splice(roleIndex, 1);
@@ -89,7 +90,6 @@ export class UserDetailComponent implements OnInit {
     }
   }
 
-
   previewImage(file: File) {
     // show preview
     const reader = new FileReader();
@@ -106,27 +106,29 @@ export class UserDetailComponent implements OnInit {
         const userId = this.user.id;
         const imageFile = this.imageFile;
 
-        this.userService.updateUserImage(userId, imageFile, mimeType).subscribe({
-          next: () => {
-            // Met à jour uniquement les détails de l'utilisateur après la mise à jour de l'image
-            if (this.isAdmin) {
-              this.toastMessage = 'Image du profil mise à jour avec succès';
-              this.toastType = 'success';
+        this.userService
+          .updateUserImage(userId, imageFile, mimeType)
+          .subscribe({
+            next: () => {
+              // Met à jour uniquement les détails de l'utilisateur après la mise à jour de l'image
+              if (this.isAdmin) {
+                this.toastMessage = 'Image du profil mise à jour avec succès';
+                this.toastType = 'success';
+                this.showToast = true;
+              } else if (this.isUser) {
+                this.toastMessage = 'Profil mis à jour avec succès';
+                this.toastType = 'success';
+                this.showToast = true;
+              }
+            },
+            error: (error) => {
+              this.toastMessage =
+                "Une erreur s'est produite. Veuillez réessayer plus tard.";
+              this.toastType = 'error';
               this.showToast = true;
-            } else if (this.isUser) {
-              this.toastMessage = 'Profil mis à jour avec succès';
-              this.toastType = 'success';
-              this.showToast = true;
-            }
-          },
-          error: (error) => {
-            this.toastMessage = 'Une erreur s\'est produite. Veuillez réessayer plus tard.';
-            this.toastType = 'error';
-            this.showToast = true;
-            console.error('Erreur lors de la suppression du profil:', error);
-          }
-        });
-
+              console.error('Erreur lors de la suppression du profil:', error);
+            },
+          });
       } else {
         // Si aucune image n'est spécifiée, mettre à jour uniquement les détails de l'utilisateur
         this.updateUserDetails();
@@ -138,7 +140,7 @@ export class UserDetailComponent implements OnInit {
     this.userService.updateUser(this.user).subscribe({
       next: () => {
         if (this.isAdmin) {
-          console.log(this.isAdmin)
+          console.log(this.isAdmin);
           this.toastMessage = 'Profil mise à jour avec succès';
           this.toastType = 'success';
           this.showToast = true;
@@ -149,11 +151,12 @@ export class UserDetailComponent implements OnInit {
         }
       },
       error: (error) => {
-        this.toastMessage = 'Une erreur s\'est produite. Veuillez réessayer plus tard.';
+        this.toastMessage =
+          "Une erreur s'est produite. Veuillez réessayer plus tard.";
         this.toastType = 'error';
         this.showToast = true;
         console.error('Erreur lors de la mise à jour du profil:', error);
-      }
+      },
     });
   }
 
@@ -162,9 +165,10 @@ export class UserDetailComponent implements OnInit {
       return;
     }
 
-    if (this.user.roles.some(role => ['ADMIN'].includes(role.name))) {
+    if (this.user.roles.some((role) => ['ADMIN'].includes(role.name))) {
       // Si l'utilisateur a le rôle ADMIN
-      this.toastMessage = 'La suppression est impossible pour les utilisateurs avec un rôle ADMIN';
+      this.toastMessage =
+        'La suppression est impossible pour les utilisateurs avec un rôle ADMIN';
       this.toastType = 'warning';
       this.showToast = true;
       this.canShowButton = false;
@@ -177,7 +181,6 @@ export class UserDetailComponent implements OnInit {
     }
   }
 
-
   onToastConfirmed() {
     if (this.selectedUserId !== null) {
       this.userService.deleteUser(this.selectedUserId).subscribe({
@@ -185,17 +188,17 @@ export class UserDetailComponent implements OnInit {
           this.logoutAfterDelete();
         },
         error: (error) => {
-          this.toastMessage = 'Une erreur s\'est produite. Veuillez réessayer plus tard.';
+          this.toastMessage =
+            "Une erreur s'est produite. Veuillez réessayer plus tard.";
           this.toastType = 'error';
           this.showToast = true;
           console.error('Erreur lors de la suppression du profil:', error);
-        }
+        },
       });
 
       this.selectedUserId = null;
     }
   }
-
 
   logoutAfterDelete(): void {
     console.log('Removing tokens...');
@@ -204,16 +207,14 @@ export class UserDetailComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-
   goToUserlist() {
-    this.router.navigateByUrl('user-list').then(() => {
-    });
+    this.router.navigateByUrl('user-list').then(() => {});
   }
 
   goToQuizlistUser() {
-    if (this.user) this.router.navigateByUrl(`quiz/quiz-list-user/${this.user.id}`).then(() => {
-    });
+    if (this.user)
+      this.router
+        .navigateByUrl(`quiz/quiz-list-user/${this.user.id}`)
+        .then(() => {});
   }
-
-
 }

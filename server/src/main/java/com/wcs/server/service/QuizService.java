@@ -40,19 +40,29 @@ public class QuizService {
     }
 
     public QuizDTO getQuizByRandomId() {
-        List<Integer> ids = quizRepository.findAllIds();
+        List<Long> ids = quizRepository.findAllIds();
 
         // nextInt(n) genère un nombre aléatoire entre 0 inclus et n exclus
         // Ce qui permet de récupérer un index aléatoire de la liste et retourner son id
 
         Random random = new Random();
-        int randomId = ids.get(random.nextInt(ids.size()));
+        long  randomId = ids.get(random.nextInt(ids.size()));
 
         Quiz quiz = quizRepository.findById(randomId)
                 .orElseThrow(() -> new NoSuchElementException("Le quiz avec l'id " + randomId + " n'existe pas ou n'est pas trouvé"));
 
         return convertQuizToDTO(quiz);
     }
+
+/*     public QuizDTO getRandomQuizByCat(Long categoryId) {
+
+
+        
+        List<Quiz> quizzes = quizRepository.findQuizzesByCategoryId(categoryId);
+
+        
+        return convertQuizToDTO(randomQuiz);
+    } */
 
     public List<QuizDTO> getQuizzesByUser(User userId) {
         List<Quiz> quizzes = quizRepository.findQuizzesByCreatedBy(userId);
@@ -69,7 +79,7 @@ public class QuizService {
     }
 
     public Optional<CreateQuizDTO> findById(Long id) {
-        Optional<Quiz> quizOptional = quizRepository.findById(Math.toIntExact(id));
+        Optional<Quiz> quizOptional = quizRepository.findById(id);
         if (quizOptional.isEmpty()) {
             return Optional.empty();
         }
@@ -154,7 +164,7 @@ public class QuizService {
 
     public QuizDTO updateQuiz(Long id, CreateQuizDTO createQuizDTO) {
         // Trouver le quiz existant par ID
-        Quiz quiz = quizRepository.findById(Math.toIntExact(id))
+        Quiz quiz = quizRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Quiz avec l'id " + id + " n'est pas trouvé"));
 
         // Mettre à jour les propriétés du quiz
@@ -224,7 +234,7 @@ public class QuizService {
     }
 
     public void deleteQuiz(Long quizId, String username) {
-        Quiz quiz = quizRepository.findById(Math.toIntExact(quizId)).orElseThrow(() -> new ResourceNotFoundException("Quiz non trouvé"));
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> new ResourceNotFoundException("Quiz non trouvé"));
         if (!quiz.getCreatedBy().getUsername().equals(username)) {
             throw new UnauthorizedException("Seul le créateur peut supprimer ce quiz");
         }
@@ -239,11 +249,11 @@ public class QuizService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User currentUser = userRepository.findByUsername(userDetails.getUsername());
 
-        Quiz quiz = quizRepository.findById(Math.toIntExact(quizId))
+        Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz avec id " + quizId + " non trouvé"));
 
         return quiz.getCreatedBy().equals(currentUser);
-    }
+    }   
 }
 
 

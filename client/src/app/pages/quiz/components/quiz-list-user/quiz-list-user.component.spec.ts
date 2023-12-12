@@ -7,7 +7,7 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-logo',
-  template: '<a [style.color]="textColor">Fake Logo</a>'
+  template: '<a [style.color]="textColor">Fake Logo</a>',
 })
 class AppLogoStubComponent {
   @Input() textColor: string;
@@ -19,16 +19,9 @@ describe('QuizListUserComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ 
-        QuizListUserComponent,
-        AppLogoStubComponent 
-      ],
-      imports: [ 
-        HttpClientTestingModule,
-        RouterTestingModule 
-      ]
-    })
-    .compileComponents();
+      declarations: [QuizListUserComponent, AppLogoStubComponent],
+      imports: [HttpClientTestingModule, RouterTestingModule],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(QuizListUserComponent);
     component = fixture.componentInstance;

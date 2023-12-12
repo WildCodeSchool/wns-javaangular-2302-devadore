@@ -1,15 +1,16 @@
-<div class="flex flex-col items-center justify-center px-6 py-8 ">
+<div class="flex flex-col items-center justify-center px-6 py-8">
   <app-toast
     *ngIf="showToast"
     [message]="toastMessage"
     [type]="toastType"
     [canShowButton]="canShowButton"
     (onConfirm)="onToastConfirmed()"
-    (onCancel)="showToast=false"
-    (close)="showToast=false">
+    (onCancel)="showToast = false"
+    (close)="showToast = false"
+  >
   </app-toast>
   <div
-    class="mx-auto flex h-full flex-col items-center justify-center px-6 py-8 "
+    class="mx-auto flex h-full flex-col items-center justify-center px-6 py-8"
   >
     <app-logo [textColor]="'orange'"></app-logo>
     <div class="flex w-full max-w-3xl rounded-lg bg-white p-6 shadow">
@@ -23,7 +24,7 @@
             <h2 class="mb-4 text-2xl font-bold">Mise à jour du profil</h2>
             <div class="mb-4">
               <label for="username" class="mb-2 block"
-              >Nom d'utilisateur :</label
+                >Nom d'utilisateur :</label
               >
               <input
                 [(ngModel)]="user.username"
@@ -61,7 +62,7 @@
           </div>
           <button
             type="submit"
-            class="mt-4 w-full rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-current transform transition-transform duration-200 hover:scale-105"
+            class="mt-4 w-full transform rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-current transition-transform duration-200 hover:scale-105"
           >
             Mettre à jour le profil
           </button>
@@ -78,39 +79,48 @@
 
             <div class="mb-4 flex">
               <div>
-                <figcaption class="text-sm text-neutral-600 dark:text-neutral-400">
+                <figcaption
+                  class="text-sm text-neutral-600 dark:text-neutral-400"
+                >
                   Avant
                 </figcaption>
-                <img class="mt-4 w-24 h-24 bg-gray-100 border border-gray-300 rounded flex items-center justify-center"
-                     *ngIf="user.image"
-                     [src]="'data:' + user.mimeType + ';base64,' + user.image"
-                     alt="Avatar"
+                <img
+                  class="mt-4 flex h-24 w-24 items-center justify-center rounded border border-gray-300 bg-gray-100"
+                  *ngIf="user.image"
+                  [src]="'data:' + user.mimeType + ';base64,' + user.image"
+                  alt="Avatar"
                 />
               </div>
 
               <div class="mx-8"></div>
 
               <div>
-                <figcaption class="text-sm text-neutral-600 dark:text-neutral-400">
+                <figcaption
+                  class="text-sm text-neutral-600 dark:text-neutral-400"
+                >
                   Après
                 </figcaption>
-                <img class="mt-4 w-24 h-24 bg-gray-100 border border-gray-300 rounded flex items-center justify-center"
-                     *ngIf="previewUrl"
-                     [src]="previewUrl"
-                     alt="Image preview"
+                <img
+                  class="mt-4 flex h-24 w-24 items-center justify-center rounded border border-gray-300 bg-gray-100"
+                  *ngIf="previewUrl"
+                  [src]="previewUrl"
+                  alt="Image preview"
                 />
               </div>
-
             </div>
 
             <div class="mb-4">
               <label for="image" class="mb-2 block">Image</label>
               <div class="flex items-center">
-                <label for="image"
-                       class="bg-gray-500 text-white text-sm px-2 py-2 cursor-pointer hover:bg-gray-600 border rounded">
+                <label
+                  for="image"
+                  class="cursor-pointer rounded border bg-gray-500 px-2 py-2 text-sm text-white hover:bg-gray-600"
+                >
                   Sélectionnez une image
                 </label>
-                <span class="ml-3 text-sm" id="selectedFilename">Aucun fichier sélectionné</span>
+                <span class="ml-3 text-sm" id="selectedFilename"
+                  >Aucun fichier sélectionné</span
+                >
                 <input
                   type="file"
                   id="image"
@@ -123,35 +133,37 @@
           </div>
           <button
             type="submit"
-            class="mt-4 w-full rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-current transform transition-transform duration-200 hover:scale-105"
+            class="mt-4 w-full transform rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-current transition-transform duration-200 hover:scale-105"
           >
             Mettre à jour l'image
           </button>
         </form>
       </div>
     </div>
-    <button *ngIf="isAdmin"
-            (click)="goToUserlist()"
-            class="mt-4 rounded-full border-2 border-b-amber-400 px-4 py-2 text-white transform transition-transform duration-200 hover:scale-105" >
+    <button
+      *ngIf="isAdmin"
+      (click)="goToUserlist()"
+      class="mt-4 transform rounded-full border-2 border-b-amber-400 px-4 py-2 text-white transition-transform duration-200 hover:scale-105"
+    >
       Liste des utilisateurs
     </button>
   </div>
   <div *ngIf="isUser">
-
     <button
-      class="mt-4 w-full rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-white transform transition-transform duration-200 hover:scale-105"
-      [routerLink]="'/quiz/create-quiz'">
+      class="mt-4 w-full transform rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-white transition-transform duration-200 hover:scale-105"
+      [routerLink]="'/quiz/create-quiz'"
+    >
       Créer son QUIZ
     </button>
     <button
-      class="mt-4 w-full rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-white transform transition-transform duration-200 hover:scale-105"
-     (click)="goToQuizlistUser()"
+      class="mt-4 w-full transform rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-white transition-transform duration-200 hover:scale-105"
+      (click)="goToQuizlistUser()"
     >
       Liste de tes QUIZZES
     </button>
     <button
       (click)="onDeleteUser(user.id)"
-      class="mt-4 rounded-full border-2 border-b-red-700 px-4 py-2 text-red-600 transform transition-transform duration-200 hover:scale-105"
+      class="mt-4 transform rounded-full border-2 border-b-red-700 px-4 py-2 text-red-600 transition-transform duration-200 hover:scale-105"
     >
       Supprimer le profil
     </button>

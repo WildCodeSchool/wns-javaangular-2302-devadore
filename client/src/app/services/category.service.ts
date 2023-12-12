@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {CategoryModel} from '../models/category.model';
-import {environment} from 'src/environments/environment';
-import {HeaderUtilService} from "./header-util.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { CategoryModel } from '../models/category.model';
+import { environment } from 'src/environments/environment';
+import { HeaderUtilService } from './header-util.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +11,10 @@ import {HeaderUtilService} from "./header-util.service";
 export class CategoryService {
   private readonly apiUrl = environment.URL + '/api/categories';
 
-  constructor(private http: HttpClient, private headerUtil: HeaderUtilService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private headerUtil: HeaderUtilService
+  ) {}
 
   getAllCategories(): Observable<CategoryModel[]> {
     return this.http.get<CategoryModel[]>(`${this.apiUrl}`, {

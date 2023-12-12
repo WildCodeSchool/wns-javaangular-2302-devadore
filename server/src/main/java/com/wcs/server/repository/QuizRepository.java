@@ -7,11 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface QuizRepository extends JpaRepository<Quiz, Integer> {
+public interface QuizRepository extends JpaRepository<Quiz, Long> {
     List<Quiz> findByCreatedBy(User user);
 
     List<Quiz> findQuizzesByCreatedBy(User user);
 
     @Query("SELECT id FROM Quiz")
-    List<Integer> findAllIds();
+    List<Long> findAllIds();
 }

@@ -10,6 +10,7 @@ import com.wcs.server.dto.CreateQuizDTO;
 import com.wcs.server.dto.QuestionDTO;
 import com.wcs.server.entity.User;
 import com.wcs.server.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,9 @@ public class QuizController {
     @Autowired
     private UserRepository userRepository;
 
+ /*    @Autowired
+    private CategoryRepository CategoryRepository; */
+
     @Operation(summary = "Retourne la liste de tous les quizs")
     @GetMapping("/quiz")
     public ResponseEntity<List<QuizDTO>> getAll() {
@@ -49,6 +53,14 @@ public class QuizController {
         System.out.println("request quiz random at controller");
         return ResponseEntity.ok(randomQuiz);
     }
+
+/*     @Operation(summary = "Retourne un quiz aléatoire par catégorie")
+    @GetMapping("/quiz/random/category/{categoryId}")
+    public ResponseEntity<QuizDTO> getRandomQuizByCatId(@PathVariable Category categoryId) {
+        QuizDTO randomQuiz = quizService.getQuizByRandomId();
+        System.out.println("request quiz random at controller");
+        return ResponseEntity.ok(randomQuiz);
+    } */
 
     @Operation(summary = "Retourne la liste quiz par userId")
     @GetMapping("/quiz/{userId}")

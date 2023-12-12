@@ -66,6 +66,8 @@ export class QuizService {
   }
 
   canUserEditQuiz(quizId: number): Observable<boolean> {
-    return this.http.get<boolean>(`${this.apiUrl}/${quizId}/can-edit`, {headers: this.headerUtil.getHeaders()});
+    return this.http.get<boolean>(`${this.apiUrl}/${quizId}/can-edit`, {
+      headers: this.headerUtil.getHeaders(),
+    });
   }
 }

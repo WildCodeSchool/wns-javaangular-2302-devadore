@@ -4,6 +4,12 @@ import { QuizPlayComponent } from './quiz-play.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Component, Input } from '@angular/core';
+import { QuizMusicService } from 'src/app/services/quiz-music.service';
+
+class MockQuizMusicService {
+  playMusic() {}
+  stopMusic() {}
+}
 
 @Component({
   selector: 'app-logo',
@@ -26,7 +32,9 @@ describe('QuizPlayComponent', () => {
       imports: [ 
         RouterTestingModule,
         HttpClientTestingModule
-       ]
+       ],
+       providers: [
+        { provide: QuizMusicService, useClass: MockQuizMusicService }]
     })
     .compileComponents();
 

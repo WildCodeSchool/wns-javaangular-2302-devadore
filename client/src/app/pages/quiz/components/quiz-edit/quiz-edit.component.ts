@@ -1,21 +1,26 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {FormGroup, FormBuilder, Validators, FormArray, AbstractControl} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {QuizService} from "../../../../services/quiz.service";
-import {CategoryService} from "../../../../services/category.service";
-import {UserProfileService} from "../../../../services/user-profile-service";
-import {CategoryModel} from "../../../../models/category.model";
-import {User} from "../../../../models/user.model";
-import {hasCorrectAnswerValidator} from "../../../../validators/question.validator";
-import {tap} from "rxjs/operators";
-import {DomSanitizer} from "@angular/platform-browser";
-
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormArray,
+  AbstractControl,
+} from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { QuizService } from '../../../../services/quiz.service';
+import { CategoryService } from '../../../../services/category.service';
+import { UserProfileService } from '../../../../services/user-profile-service';
+import { CategoryModel } from '../../../../models/category.model';
+import { User } from '../../../../models/user.model';
+import { hasCorrectAnswerValidator } from '../../../../validators/question.validator';
+import { tap } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quiz-edit',
   templateUrl: './quiz-edit.component.html',
-  styleUrls: ['./quiz-edit.component.scss']
+  styleUrls: ['./quiz-edit.component.scss'],
 })
 export class QuizEditComponent implements OnInit {
   quizForm: FormGroup;
@@ -41,9 +46,8 @@ export class QuizEditComponent implements OnInit {
     private quizService: QuizService,
     private categoryService: CategoryService,
     private userProfileService: UserProfileService,
-    private sanitizer: DomSanitizer,
-  ) {
-  }
+    private sanitizer: DomSanitizer
+  ) {}
 
   ngOnInit(): void {
     this.quizForm = this.fb.group({
@@ -53,10 +57,10 @@ export class QuizEditComponent implements OnInit {
       questions: this.fb.array([]),
     });
 
-    this.userProfileService.getUserImage().subscribe(image => {
+    this.userProfileService.getUserImage().subscribe((image) => {
       this.userImage = image;
     });
-    this.userProfileService.getUser().subscribe(user => {
+    this.userProfileService.getUser().subscribe((user) => {
       this.user = user;
       this.username = user?.username ?? null;
     });
@@ -64,7 +68,6 @@ export class QuizEditComponent implements OnInit {
     this.quizId = +this.route.snapshot.paramMap.get('id')!;
 
     if (this.quizId) {
-
       this.loadQuizDetails(this.quizId);
     }
   }
@@ -76,13 +79,12 @@ export class QuizEditComponent implements OnInit {
    * @param id - Identifiant du quiz à charger.
    */
   loadQuizDetails(id: number): void {
-    this.quizService.getQuizById(id)
-      .pipe(
-        tap(data => console.log('Data received in pipe:', data))
-      )
-      .subscribe(quizData => {
+    this.quizService
+      .getQuizById(id)
+      .pipe(tap((data) => console.log('Data received in pipe:', data)))
+      .subscribe((quizData) => {
         console.log('Quiz Data:', quizData);
-        this.categoryService.getAllCategories().subscribe(categories => {
+        this.categoryService.getAllCategories().subscribe((categories) => {
           console.log(categories);
           this.categories = categories;
 
@@ -90,7 +92,7 @@ export class QuizEditComponent implements OnInit {
 
           if (defaultCategoryId) {
             this.quizForm.patchValue({
-              categoryId: defaultCategoryId
+              categoryId: defaultCategoryId,
             });
           }
         });
@@ -111,7 +113,7 @@ export class QuizEditComponent implements OnInit {
    */
   initializeFormWithQuizData(quizData: any): void {
     console.log('Initializing form with quiz data:', quizData);
-    const {title, description, questions, image, mimeType} = quizData;
+    const { title, description, questions, image, mimeType } = quizData;
 
     console.log('Title:', title);
     console.log('Description:', description);
@@ -140,26 +142,35 @@ export class QuizEditComponent implements OnInit {
         }
       }
 
-      this.imageQuiz = this.sanitizer.bypassSecurityTrustResourceUrl(imagePrefix + image);
+      this.imageQuiz = this.sanitizer.bypassSecurityTrustResourceUrl(
+        imagePrefix + image
+      );
     } else {
       this.imageQuiz = null;
     }
 
     // Initialisation du tableau des questions
-    const questionFGs: FormGroup[] = questions.map((questionData: { answers: any[]; text: any; }) => {
-      // Initialiser le tableau des réponses pour chaque question
-      const answerFGs: FormGroup[] = questionData.answers.map(answerData => {
-        return this.fb.group({
-          text: [answerData.text, Validators.required],
-          correct: [answerData.correct, Validators.required]
-        });
-      });
+    const questionFGs: FormGroup[] = questions.map(
+      (questionData: { answers: any[]; text: any }) => {
+        // Initialiser le tableau des réponses pour chaque question
+        const answerFGs: FormGroup[] = questionData.answers.map(
+          (answerData) => {
+            return this.fb.group({
+              text: [answerData.text, Validators.required],
+              correct: [answerData.correct, Validators.required],
+            });
+          }
+        );
 
-      return this.fb.group({
-        text: [questionData.text, Validators.required],
-        answers: this.fb.array(answerFGs),
-      }, {validators: [hasCorrectAnswerValidator()]});
-    });
+        return this.fb.group(
+          {
+            text: [questionData.text, Validators.required],
+            answers: this.fb.array(answerFGs),
+          },
+          { validators: [hasCorrectAnswerValidator()] }
+        );
+      }
+    );
 
     // Définir les valeurs du formulaire
     this.quizForm = this.fb.group({
@@ -167,10 +178,9 @@ export class QuizEditComponent implements OnInit {
       description: [description, Validators.required],
       categoryId: [+this.categories, Validators.required],
       questions: this.fb.array(questionFGs),
-      image: [this.imageQuiz]
+      image: [this.imageQuiz],
     });
   }
-
 
   /**
    * Fonction pour détecter le type d'image à partir d'une chaîne Base64.
@@ -193,20 +203,20 @@ export class QuizEditComponent implements OnInit {
     return 'unknown';
   }
 
-
   createQuestion(): FormGroup {
-    return this.fb.group({
-      text: [''],
-      answers: this.fb.array([
-        this.createAnswer()
-      ]),
-    }, {validators: [hasCorrectAnswerValidator()]});
+    return this.fb.group(
+      {
+        text: [''],
+        answers: this.fb.array([this.createAnswer()]),
+      },
+      { validators: [hasCorrectAnswerValidator()] }
+    );
   }
 
   createAnswer(): FormGroup {
     return this.fb.group({
       text: [''],
-      correct: [false]
+      correct: [false],
     });
   }
 
@@ -215,8 +225,10 @@ export class QuizEditComponent implements OnInit {
   }
 
   addAnswer(questionIndex: number): void {
-    const questionsArray = (this.quizForm.get('questions') as FormArray);
-    (questionsArray.at(questionIndex).get('answers') as FormArray).push(this.createAnswer());
+    const questionsArray = this.quizForm.get('questions') as FormArray;
+    (questionsArray.at(questionIndex).get('answers') as FormArray).push(
+      this.createAnswer()
+    );
   }
 
   validateQuestions(questions: any[]): boolean {
@@ -272,7 +284,7 @@ export class QuizEditComponent implements OnInit {
   }
 
   get questionsArray() {
-    return (this.quizForm.get('questions') as FormArray);
+    return this.quizForm.get('questions') as FormArray;
   }
 
   getAnswersArray(questionCtrl: AbstractControl): AbstractControl[] {
@@ -294,10 +306,19 @@ export class QuizEditComponent implements OnInit {
 
       this.formData = new FormData();
       this.formData.append('title', this.quizForm.get('title')?.value);
-      this.formData.append('description', this.quizForm.get('description')?.value);
-      this.formData.append('categoryId', this.quizForm.get('categoryId')?.value);
+      this.formData.append(
+        'description',
+        this.quizForm.get('description')?.value
+      );
+      this.formData.append(
+        'categoryId',
+        this.quizForm.get('categoryId')?.value
+      );
 
-      this.formData.append('questions', JSON.stringify(this.quizForm.get('questions')?.value));
+      this.formData.append(
+        'questions',
+        JSON.stringify(this.quizForm.get('questions')?.value)
+      );
 
       if (this.image) {
         this.formData.append('image', this.image, this.image.name);
@@ -312,8 +333,10 @@ export class QuizEditComponent implements OnInit {
 
   onToastConfirmed() {
     this.canShowButton = false;
-    this.quizService.updateQuiz(this.quizId, this.formData).subscribe(response => {
-        this.toastMessage = 'L\'enregistrement de ton quiz est réalisé avec succès';
+    this.quizService.updateQuiz(this.quizId, this.formData).subscribe(
+      (response) => {
+        this.toastMessage =
+          "L'enregistrement de ton quiz est réalisé avec succès";
         this.toastType = 'success';
         this.showToast = true;
 
@@ -324,9 +347,10 @@ export class QuizEditComponent implements OnInit {
           }
         }, 2000);
       },
-      error => {
+      (error) => {
         if (error) {
-          this.toastMessage = 'Une erreur s\'est produite. Veuillez réessayer plus tard.';
+          this.toastMessage =
+            "Une erreur s'est produite. Veuillez réessayer plus tard.";
           this.toastType = 'error';
           this.showToast = true;
         }
@@ -341,4 +365,3 @@ export class QuizEditComponent implements OnInit {
     this.router.navigate(['/user-detail', userId]);
   }
 }
-

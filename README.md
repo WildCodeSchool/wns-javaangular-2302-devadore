@@ -298,7 +298,6 @@ Si vous avez des questions sur le processus de contribution, n'hésitez pas à o
 - Mehdi Zidouni - [Profil GitHub](https://github.com/kinotonik)
 ---
 ## Licence
-
 Ce projet est réalisé dans un cadre éducatif pour l'obtention d'un diplôme français de concepteur développeur d'application. Il est sous licence Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) - voir le fichier [LICENSE.md](LICENSE.md) pour plus de détails.
 
 Cette licence permet à d'autres de remixer, adapter et construire à partir de ce travail de manière non-commerciale, tant qu'ils créditent votre contribution et licencient leurs nouvelles créations dans les mêmes conditions.
