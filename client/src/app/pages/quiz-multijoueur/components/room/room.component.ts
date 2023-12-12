@@ -1,30 +1,34 @@
-import { Component } from '@angular/core';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { Component, OnInit } from '@angular/core';
+import { RoomWebsocketService } from 'src/app/services/room-websocket.service';
 
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.scss']
 })
-export class RoomComponent {
+export class RoomComponent implements OnInit {
+
+  rooms: any[] = [];
+  creator: string;
+  roomName: string;
+
+  constructor(private roomWebsocketService: RoomWebsocketService) {}
+
+  ngOnInit(): void {
+    this.roomWebsocketService.connectWebSocket().then(() => {
+      this.roomWebsocketService.fetchRoom();
+    }).catch(error => {
+      console.error("Erreur de connexion au Websocket :", error);
+    });
   
-  webSocketSubject!: WebSocketSubject<any>;
-
-  constructor() {}
-
-  connectToWebSocket(): void {
-    this.webSocketSubject = webSocket('ws://localhost:8080/websocket/room');
-
-    this.webSocketSubject.subscribe({
-      next: (msg) => console.log('message reçu: ', msg),
-      error: (err) => console.error(err),
-      complete: () => console.log('complete')
-    });    
+    this.roomWebsocketService.rooms$.subscribe(rooms => {
+      this.rooms = rooms;
+      console.log("Rooms updated:", this.rooms);
+    });
+  }
+  
+  createRoom(): void {
+    this.roomWebsocketService.createRoom(this.creator, this.roomName);
   }
 
-  closeConnection(): void {
-    if (this.webSocketSubject) {
-      this.webSocketSubject.complete();
-    }
-  }
 }
