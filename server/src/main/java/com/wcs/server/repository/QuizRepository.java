@@ -17,6 +17,8 @@ public interface QuizRepository extends JpaRepository<Quiz, Long> {
     @Query("SELECT id FROM Quiz")
     List<Long> findAllIds();    
 
+
     @Query(value = "SELECT id FROM quiz WHERE category_id = :categoryId", nativeQuery = true)
+
     List<Long> findAllIdsByCategory(@Param ("categoryId") Long categoryId);
 }
