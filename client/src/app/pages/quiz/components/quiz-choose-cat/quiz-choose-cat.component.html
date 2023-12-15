@@ -1,25 +1,27 @@
-<div  class="m-auto flex sm:h-screen flex-col place-items-center justify-center gap-3 overflow-hidden ">
+<div  class="m-auto flex flex-col place-items-center justify-center gap-3 overflow-hidden ">
   <div class="mx-auto flex flex-col items-center justify-center px-6 py-1 sm:py-10">
     <app-logo [textColor]="'orange'"></app-logo>
   </div>
   <div
-    class="m-auto grid h-screen grid-cols-2 sm:grid-cols-4 place-items-center justify-center"
+    class="m-auto grid  grid-cols-2 sm:grid-cols-4 place-items-center justify-center gap-y-3"
   >
     <div
-      class="flex w-9/12 flex-col items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-6 text-white shadow-lg"
+      class="flex w-9/12 flex-col  overflow-hidden justify-between items-center rounded-lg border border-white bg-gray-900 p-2 sm:p-6 mb-3 h-full text-white shadow-lg"
       *ngFor="let category of availableCategories"
     >
+    
       <h3 class="mb-2 font-lilita sm:text-4xl text:3xl font-bold">
         {{ category.name }}
       </h3>
       <h3 class="class text-xs sm:text-base">{{ category.description }}</h3>
       <div class="px-6 py-4">
         <button
-          (click)="getRandomQuizByCat(category.id)"
-          class="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 font-lexend font-bold text-white hover:from-purple-600 hover:to-pink-600 focus:border-blue-300 focus:outline-none focus:ring"
-        >
+        (click)="getRandomQuizByCat(category.id)"
+          class="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 text-xs texfont-lexend font-bold text-white hover:from-purple-600 hover:to-pink-600 focus:border-blue-300 focus:outline-none focus:ring"
+          >
           Lancer un quiz {{ category.name }}
         </button>
+  
       </div>
     </div>
   </div>
