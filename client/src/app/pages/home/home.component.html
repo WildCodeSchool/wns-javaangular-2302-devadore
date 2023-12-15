@@ -1,5 +1,5 @@
-<div class="flex h-screen flex-col sm:justify-between justify-evenly  sm:p-20 p-5 text-white">
-  <div class="flex items-start sm:justify-between justify-evenly">
+<div class="flex h-screen flex-col justify-between sm:p-20 p-5 text-white">
+  <div class="flex items-start justify-between ">
     <img
       class=" w-52 object-contain"
       src="assets/images/defaultAvatars/Quiz4All.png"
@@ -27,7 +27,7 @@
 
       <div
         #dropdownMenu
-        class="dropdown-menu sm:flex-row flex-col gap-1 pr-2"
+        class="dropdown-menu sm:flex-row flex-col sm:gap-1 sm:pr-2"
         [class.show]="isDropdownVisible"
         (mouseenter)="showDropdown()"
         (mouseleave)="hideDropdown()"
