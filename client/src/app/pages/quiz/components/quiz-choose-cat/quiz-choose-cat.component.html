@@ -1,23 +1,18 @@
-<div>
-  <div class="fixed flex content-start">
-    <button
-      class="ml-4 mt-4 rounded-lg border-b-4 border-gray-500 bg-white px-5 py-1 font-lexend"
-      [routerLink]="['/']"
-    >
-      Retour
-    </button>
+<div  class="m-auto flex sm:h-screen flex-col place-items-center justify-center gap-3 overflow-hidden ">
+  <div class="mx-auto flex flex-col items-center justify-center px-6 py-1 sm:py-10">
+    <app-logo [textColor]="'orange'"></app-logo>
   </div>
   <div
-    class="m-auto grid h-screen grid-cols-3 place-items-center justify-center"
+    class="m-auto grid h-screen grid-cols-2 sm:grid-cols-4 place-items-center justify-center"
   >
     <div
       class="flex w-9/12 flex-col items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-6 text-white shadow-lg"
       *ngFor="let category of availableCategories"
     >
-      <h3 class="mb-2 font-lilita text-4xl font-bold">
+      <h3 class="mb-2 font-lilita sm:text-4xl text:3xl font-bold">
         {{ category.name }}
       </h3>
-      <h3 class="hidden sm:block">{{ category.description }}</h3>
+      <h3 class="class text-xs sm:text-base">{{ category.description }}</h3>
       <div class="px-6 py-4">
         <button
           (click)="getRandomQuizByCat(category.id)"
