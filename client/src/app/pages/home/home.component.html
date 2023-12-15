@@ -1,11 +1,12 @@
 <div class="flex h-screen flex-col justify-between sm:p-20 p-5 text-white">
-  <div class="flex items-start justify-between ">
+ 
+  <div class="flex items-start flex-row justify-between ">
     <img
-      class=" w-52 object-contain"
+      class=" w-1/2 sm:w-52 object-contain"
       src="assets/images/defaultAvatars/Quiz4All.png"
       alt="Logo"
     />
-    <div class="dropdown-container flex sm:flex-row-reverse flex-col items-center  ">
+    <div class="dropdown-container w-1/2 flex sm:flex-row-reverse flex-col sm:items-center items-end">
       <div *ngIf="isLoggedIn && userImage" class="h-16 w-16 rounded-full ">
         <img
           [src]="userImage"
@@ -43,14 +44,14 @@
 
         <button
           *ngIf="isAdmin"
-          class="mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
+          class="sm:mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
           routerLink="/user-list"
         >
           Liste d'utilisateurs
         </button>
         <button
           *ngIf="isUser"
-          class="mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
+          class="sm:mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
           (click)="user && editUser(user.id)"
         >
           Profil
@@ -60,7 +61,7 @@
   </div>
 
   <div class="flex flex-col gap-9">
-    <div class="font-koulen  text-4xl sm:text-5xl uppercase">Testez vos connaissances !</div>
+    <div class="font-koulen  text-4xl sm:text-5xl uppercase ">Testez vos connaissances !</div>
     <div class="flex flex-col gap-2 place-self-start">
       <div
         class="relative"
