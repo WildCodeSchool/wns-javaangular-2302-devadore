@@ -17,7 +17,7 @@
       <h3 class="mb-2 font-lilita text-4xl font-bold">
         {{ category.name }}
       </h3>
-      <h3>{{ category.description }}</h3>
+      <h3 class="hidden sm:block">{{ category.description }}</h3>
       <div class="px-6 py-4">
         <button
           (click)="getRandomQuizByCat(category.id)"

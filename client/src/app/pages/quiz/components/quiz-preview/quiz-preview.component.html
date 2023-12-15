@@ -1,13 +1,13 @@
 <div
-  class="m-auto flex h-screen flex-col place-items-center justify-center gap-3"
+  class="m-auto flex h-screen flex-col place-items-center justify-center gap-3 overflow-hidden "
 >
   <div
-    class="flex flex-col items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-12 text-white shadow-lg"
+    class="flex flex-col w-5/6 sm:w-1/3 items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-12 text-white shadow-lg"
     *ngIf="randomQuiz"
   >
     <div class="flex w-96 flex-col items-center px-6 py-4">
       <div class="mb-2 p-5 font-lilita text-4xl font-bold">
-        {{ randomQuiz.title }}
+        {{ randomQuiz.title }}  
       </div>
       <img
         class="m-auto h-20 w-20 shadow"
