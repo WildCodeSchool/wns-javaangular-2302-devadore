@@ -48,7 +48,6 @@ export class UserListComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.loadUsers();
-    console.log(this.dataSource instanceof MatTableDataSource);
     this.dataSource.sort = this.sort;
   }
 
@@ -61,12 +60,8 @@ export class UserListComponent implements AfterViewInit {
         .pipe(
           tap((users) => {
             this.dataSource = new MatTableDataSource(users);
-            console.log('userlist: ', users);
-            console.log(this.dataSource instanceof MatTableDataSource);
             this.dataSource.paginator = this.paginator;
             this.dataSource.sort = this.sort;
-            console.log('actvie: ', this.dataSource.sort.active);
-            console.log(this.dataSource.sort.direction);
           }),
           catchError((error) => {
             console.error(error);

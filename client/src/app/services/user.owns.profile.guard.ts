@@ -28,7 +28,6 @@ export class UserOwnsProfileGuard implements CanActivate {
       return false;
     }
     const isAdmin = userRole?.includes('ADMIN');
-    console.log('isAdmin', isAdmin)
     if (isAdmin) {
       // Autoriser l'accès si l'utilisateur est un administrateur
       return true;

@@ -47,7 +47,6 @@ export class QuizListUserComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    console.log(this.dataSource instanceof MatTableDataSource);
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
   }
@@ -70,17 +69,14 @@ export class QuizListUserComponent implements OnInit, AfterViewInit {
         this.allRoles = roles;
         this.user = user;
         this.userRoles = user.roles;
-        console.log(user);
       });
     this.authService.checkAdminStatus();
     this.authService.isAdmin$.subscribe((isAdminValue) => {
       this.isAdmin = isAdminValue;
-      console.log('isAdminValue', isAdminValue)
     });
     this.authService.checkUserStatus();
     this.authService.isUser$.subscribe((isUserValue) => {
       this.isUser = isUserValue;
-      console.log('isUserValue', isUserValue)
     });
     this.quizService.getAllQuizzesCreatedByUser(id).subscribe(data => {
       const observables = data.map(quiz =>
@@ -128,7 +124,6 @@ export class QuizListUserComponent implements OnInit, AfterViewInit {
           if (this.paginator && this.quizzes.length <= this.paginator.pageSize) {
             this.paginator.previousPage();
           }
-          console.log('Quiz supprimé avec succès!');
           this.showToast = false;
         },
         error => {

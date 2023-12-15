@@ -39,9 +39,7 @@ export class LoginComponent implements OnInit {
         const {username, password} = this.loginForm.value;
         this.authService.authenticateUser(username, password).subscribe({
             next: (response) => {
-                console.log('Response:', response);
                 localStorage.setItem('jwtToken', response.token);
-                console.log('JWT stocké :', localStorage.getItem('jwtToken'));
                 localStorage.setItem('refreshToken', response.refreshToken);
 
                 const decodedToken = this.authService.decodeToken(response.token);

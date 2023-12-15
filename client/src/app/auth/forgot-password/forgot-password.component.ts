@@ -55,7 +55,6 @@ export class ForgotPasswordComponent implements OnInit {
       (response: any) => {
         this.ngZone.run(() => {
           this.isLoading = false;
-          console.log(response);
           this.toastMessage = response.message;
           this.toastType = 'success';
           this.showToast = true;

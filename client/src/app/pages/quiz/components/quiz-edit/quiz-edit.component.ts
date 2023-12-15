@@ -81,11 +81,9 @@ export class QuizEditComponent implements OnInit {
   loadQuizDetails(id: number): void {
     this.quizService
       .getQuizById(id)
-      .pipe(tap((data) => console.log('Data received in pipe:', data)))
+      .pipe(tap())
       .subscribe((quizData) => {
-        console.log('Quiz Data:', quizData);
         this.categoryService.getAllCategories().subscribe((categories) => {
-          console.log(categories);
           this.categories = categories;
 
           let defaultCategoryId = quizData.categoryId ?? categories[0]?.id;
@@ -112,13 +110,7 @@ export class QuizEditComponent implements OnInit {
    * - image: string - Une image du quiz encodée en base64.
    */
   initializeFormWithQuizData(quizData: any): void {
-    console.log('Initializing form with quiz data:', quizData);
     const { title, description, questions, image, mimeType } = quizData;
-
-    console.log('Title:', title);
-    console.log('Description:', description);
-    console.log('Questions:', questions);
-    console.log('Image:', image);
 
     if (image) {
       let imagePrefix: string;

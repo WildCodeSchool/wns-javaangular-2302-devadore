@@ -138,7 +138,6 @@ export class RegisterComponent {
           this.showToast = false;
         }, 2000);
 
-        console.log(response);
       },
       error => {
         if (error) {

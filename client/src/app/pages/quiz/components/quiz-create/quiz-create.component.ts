@@ -198,7 +198,6 @@ export class QuizCreateComponent implements OnInit {
     }
 
     for (let [key, value] of (this.formData as any).entries()) {
-      console.log(key, value);
     }
 
     this.toastMessage = 'Voulez-vous vraiment enregistrer ce quiz?';
@@ -224,7 +223,6 @@ export class QuizCreateComponent implements OnInit {
           }
         }, 2000);
 
-        console.log(data);
       },
       (error) => {
         if (error) {

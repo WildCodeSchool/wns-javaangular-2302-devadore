@@ -17,7 +17,6 @@ export class EditQuizGuard implements CanActivate {
     route: ActivatedRouteSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
     const quizId = route.params['id'];
-    console.log(quizId)
 
     if (!quizId) {
       this.router.navigate(['/error']);

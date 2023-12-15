@@ -18,16 +18,13 @@ export class RoleService {
 
   getRoles(): Observable<Role[]> {
     const jwtToken = localStorage.getItem('jwtToken');
-    console.log('Enregistrer le JWT récupéré', jwtToken);
     if (jwtToken) {
-      console.log(`Bearer ${jwtToken}`);
       const headers = new HttpHeaders().set(
         'Authorization',
         `Bearer ${jwtToken}`
       );
       return this.http.get<Role[]>(`${this.baseUrl}`, { headers });
     } else {
-      console.log('Pas de jeton JWT trouvé');
       return throwError('Pas de jeton JWT trouvé');
     }
   }

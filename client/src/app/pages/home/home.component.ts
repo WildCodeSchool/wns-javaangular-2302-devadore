@@ -48,15 +48,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.authService.checkAdminStatus();
-    console.log(environment.URL, 'environment.URL');
     this.authService.isAdmin$.subscribe((isAdminValue) => {
       this.isAdmin = isAdminValue;
-      console.log('isAdminValue', isAdminValue);
     });
     this.authService.checkUserStatus();
     this.authService.isUser$.subscribe((isUserValue) => {
       this.isUser = isUserValue;
-      console.log('isUserValue', isUserValue);
     });
     this.userProfileService.getUserImage().subscribe((image) => {
       this.userImage = image;
@@ -74,7 +71,6 @@ export class HomeComponent implements OnInit {
 
   logout(): void {
     this.authService.logout().subscribe(() => {
-      console.log('Logged out');
       this.authService.setAdminState(false);
       this.authService.setUserState(false);
       this.isLoggedIn = false;

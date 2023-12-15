@@ -48,7 +48,6 @@ export class UserProfileService {
                   reader.readAsDataURL(imageData);
                 },
                 error: error => {
-                  console.log('Erreur lors de la récupération de l\'image :', error);
                 }
               });
             }

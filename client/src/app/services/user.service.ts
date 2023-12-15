@@ -23,9 +23,7 @@ export class UserService {
 
   getUsers(): Observable<User[]> {
     const jwtToken = localStorage.getItem('jwtToken');
-    console.log('Enregistrer le JWT récupéré', jwtToken);
     if (jwtToken) {
-      console.log(`Bearer ${jwtToken}`);
       const headers = new HttpHeaders().set(
         'Authorization',
         `Bearer ${jwtToken}`
@@ -37,14 +35,12 @@ export class UserService {
         })
       );
     } else {
-      console.log('Pas de jeton JWT trouvé');
       return of([]);
     }
   }
 
   getUserById(userId: number | null): Observable<User> {
     const url = `${this.baseUrl}/${userId}`;
-    console.log('userId =', userId);
     return this.http.get<User>(url, { headers: this.headerUtil.getHeaders() });
   }
 
@@ -100,8 +96,6 @@ export class UserService {
     imageFile: File,
     mimeType: string
   ): Observable<User> {
-    console.log('Image File:', imageFile);
-    console.log('MIME Type:', mimeType);
     const formData = new FormData();
     formData.append('image', imageFile);
 
@@ -126,8 +120,6 @@ export class UserService {
           .set('Authorization', `Bearer ${jwtToken}`)
           .set('Content-Type', 'application/json')
       : new HttpHeaders().set('Content-Type', 'application/json');
-    console.log('Request URL:', `${this.baseUrl}/${userId}/image`);
-    console.log('Request Headers:', headers);
     return this.http.get<any>(`${this.baseUrl}/${userId}/image`, {
       headers,
       responseType: 'blob' as 'json',

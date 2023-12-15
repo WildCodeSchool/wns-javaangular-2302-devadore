@@ -42,17 +42,14 @@ export class UserDetailComponent implements OnInit {
       this.allRoles = roles;
       this.user = user;
       this.userRoles = user.roles;
-      console.log(user);
     });
     this.authService.checkAdminStatus();
     this.authService.isAdmin$.subscribe((isAdminValue) => {
       this.isAdmin = isAdminValue;
-      console.log('isAdminValue', isAdminValue);
     });
     this.authService.checkUserStatus();
     this.authService.isUser$.subscribe((isUserValue) => {
       this.isUser = isUserValue;
-      console.log('isUserValue', isUserValue);
     });
   }
 
@@ -140,7 +137,6 @@ export class UserDetailComponent implements OnInit {
     this.userService.updateUser(this.user).subscribe({
       next: () => {
         if (this.isAdmin) {
-          console.log(this.isAdmin);
           this.toastMessage = 'Profil mise à jour avec succès';
           this.toastType = 'success';
           this.showToast = true;
@@ -201,7 +197,6 @@ export class UserDetailComponent implements OnInit {
   }
 
   logoutAfterDelete(): void {
-    console.log('Removing tokens...');
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('refreshToken');
     this.router.navigate(['/home']);

@@ -20,7 +20,6 @@ export class QuizPreviewComponent implements OnInit {
     this.quizService.getRandomQuiz().subscribe((res) => {
       this.randomQuiz = res;
       this.quizId = this.randomQuiz.id;
-      console.log(this.randomQuiz, this.quizId);
     });
   }
 }
