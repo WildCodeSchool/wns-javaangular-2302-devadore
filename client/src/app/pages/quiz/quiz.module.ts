@@ -13,6 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from '../../shared/shared.module';
 import { QuizEditComponent } from './components/quiz-edit/quiz-edit.component';
 import { QuizChooseCatComponent } from './components/quiz-choose-cat/quiz-choose-cat.component';
+import { QuizHistoryComponent } from './components/quiz-history/quiz-history.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { QuizChooseCatComponent } from './components/quiz-choose-cat/quiz-choose
     QuizListUserComponent,
     QuizEditComponent,
     QuizChooseCatComponent,
+    QuizHistoryComponent,
   ],
 
   imports: [

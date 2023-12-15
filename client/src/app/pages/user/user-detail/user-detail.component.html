@@ -162,6 +162,12 @@
       Liste de tes QUIZ
     </button>
     <button
+      class="mt-4 w-full transform rounded-lg border-2 border-b-black px-5 py-2.5 font-medium text-white transition-transform duration-200 hover:scale-105"
+      [routerLink]="'/quiz/quiz-history'"
+    >
+      Historique de tes parties
+    </button>
+    <button
       (click)="onDeleteUser(user.id)"
       class="mt-4 rounded-full border-2 border-b-red-700 px-4 py-2 text-red-600 transition-transform duration-200 first-letter:transform hover:scale-105"
     >

@@ -128,7 +128,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/auth/**", "/auth/checkUsername", "/auth/checkMailExist", "/api/quiz/**", "/api/users/**", "/api/question/random/quiz/**", "/api/categories", "/api/quiz/random/category/{id}", "/api/categories/notempty").permitAll()
+                        .requestMatchers("/auth/**", "/auth/checkUsername", "/auth/checkMailExist", "/api/quiz/**", "/api/users/**", "/api/question/random/quiz/**", "/api/categories", "/api/quiz/random/category/{id}", "/api/categories/notempty", "/api/quizAttempt").permitAll()
                         .requestMatchers("/api/users/{id}/image", "/api/users/name/**", "/api/users/{id}", "/api/quiz/**", "/api/categories/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/api/users/**").hasAuthority("ADMIN")
                         .requestMatchers("/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**", "/api/quiz/random", "/api/question/random/quiz/**", "/api/quiz/random/category/{id}").permitAll()

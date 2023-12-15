@@ -9,6 +9,7 @@ import { UserOwnsProfileGuard } from '../../services/user.owns.profile.guard';
 import { EditQuizGuard } from '../../services/edit.quiz.guard';
 import { CreateQuizGuard } from '../../services/create.quiz.guard';
 import { QuizChooseCatComponent } from './components/quiz-choose-cat/quiz-choose-cat.component';
+import { QuizHistoryComponent } from './components/quiz-history/quiz-history.component';
 
 const routes: Routes = [
   { path: 'preview', component: QuizPreviewComponent },
@@ -29,6 +30,10 @@ const routes: Routes = [
     component: QuizEditComponent,
     canActivate: [EditQuizGuard],
   },
+  {
+    path: 'quiz-history',
+    component: QuizHistoryComponent
+  }
 ];
 
 @NgModule({

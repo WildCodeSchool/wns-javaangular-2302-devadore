@@ -8,6 +8,10 @@ import { Subject, Subscription, takeUntil, takeWhile, timer } from 'rxjs';
 import { User } from '../../../../models/user.model';
 import { UserProfileService } from '../../../../services/user-profile-service';
 import { QuizService } from '../../../../services/quiz.service';
+import { MatIconModule } from '@angular/material/icon';
+import { QuizAttemptService } from 'src/app/services/quiz-attempt.service';
+import { QuizAttempt } from 'src/app/models/quiz-attempt';
+import { QuizModel } from 'src/app/models/quiz.model';
 
 @Component({
   selector: 'app-quiz-play',
@@ -32,6 +36,10 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
   user: User | null;
   totalQuestions: number;
   sound: Boolean = true;
+  startDateQuiz: Date = new Date();
+  isQuizSubmitted: boolean = false;
+  totalIncorrectAnswer: number = 0;
+  totalCorrectAnswer: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +47,8 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private cdr: ChangeDetectorRef,
     private userProfileService: UserProfileService,
-    private quizMusicService: QuizMusicService
+    private quizMusicService: QuizMusicService,
+    private quizAttemptService: QuizAttemptService
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +64,6 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
       .getTotalQuestionsForQuiz(this.quizId)
       .subscribe((total) => {
         this.totalQuestions = total;
-        console.log('total question: ', total);
       });
     this.getPageInfos();
     this.quizMusicService.playMusic();
@@ -130,8 +138,6 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
           // Émet un signal pour arrêter tout timer existant avant d'en démarrer un nouveau.
           this.stopTimer$.next();
 
-          console.log(this.question, this.excludeIds, this.answers);
-
           // Démarre un nouveau timer pour la question en cours.
           this.startTimer();
         }
@@ -159,40 +165,31 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
       0,
       this.maxScorePerQuestion - 10 * (this.maxTime - timeLeft - 2)
     );
-    console.log('baseScore:', baseScore);
 
     // Compte du nombre total de réponses sélectionnées par l'utilisateur.
     const totalSelectedCount = this.answers.filter((a) => a.isSelected).length;
-    console.log('totalSelectedCount:', totalSelectedCount);
 
     // Si toutes les réponses sélectionnées sont correctes.
     if (allCorrect) {
       // Si l'utilisateur a répondu rapidement.
       if (this.maxTime - timeLeft < 2) {
         this.score += this.maxScorePerQuestion;
-        console.log('if -> this.maxTime - timeLeft < 2: ', this.score);
       } else {
         // Sinon, le score de base (avec pénalités de temps).
         this.score += baseScore;
-        console.log('else -> this.maxTime - timeLeft < 2: ', this.score);
       }
     } else {
-      console.log('Entered else block');
-      console.log('correctSelectedCount:', correctSelectedCount);
-      console.log('totalCorrectCount:', totalCorrectCount);
-
+      
       // Logique pour le calcul du score si toutes les réponses sélectionnées ne sont pas correctes.
       if (correctSelectedCount && totalCorrectCount && totalCorrectCount >= 1) {
         let scorePercentage = 0;
         // Calcul du "gap" entre les réponses totales et correctes sélectionnées.
         const gap = totalSelectedCount - correctSelectedCount;
-        console.log('gap: ', gap);
 
         // Calcul du nombre de réponses incorrectes sélectionnées.
         const incorrectSelectedCount = this.answers.filter(
           (a) => a.isSelected && !a.isCorrect
         ).length;
-        console.log('incorrectSelectedCount: ', incorrectSelectedCount);
         // Conditions pour définir le pourcentage du score à attribuer, basé sur le "gap" et le compte de réponses incorrectes sélectionnées.
         if (incorrectSelectedCount > correctSelectedCount) {
           scorePercentage = 0;
@@ -207,10 +204,7 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
         }
 
         // Mise à jour du score total en ajoutant le score calculé pour cette question.
-        console.log('Initial score:', this.score);
-        console.log('Adding score:', baseScore * scorePercentage);
         this.score += baseScore * scorePercentage;
-        console.log('Final score:', this.score);
 
         // Arrondissement du score total.
         this.score = Math.round(this.score / 5) * 5;
@@ -316,8 +310,13 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
     if (!this.isAnswered && this.question) {
       const { selected, correct } = this.getSelectedAndCorrectAnswers();
       if (this.checkAnswers(selected, correct)) {
+
+        this.totalCorrectAnswer = this.totalCorrectAnswer +1;
         this.calculateScore(true, this.timeLeft);
+
       } else {
+
+        this.totalIncorrectAnswer = this.totalIncorrectAnswer +1;
         this.calculateScore(
           false,
           this.timeLeft,
@@ -365,6 +364,10 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
     this.score = 0;
     this.isAnswered = false;
     this.excludeIds = [];
+    this.isQuizSubmitted = false;
+    this.totalCorrectAnswer = 0;
+    this.totalIncorrectAnswer = 0;
+    this.startDateQuiz = new Date();
     this.getPageInfos();
   }
 
@@ -385,4 +388,30 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
     // tous ses observateurs qu'ils peuvent se désabonner, car il n'y aura plus de valeurs émises.
     this.stopTimer$.complete();
   }
+
+  submitQuizAttempt(): void {
+
+    const endDateQuiz = new Date();
+
+    const quizAttempt: QuizAttempt = {
+      quiz: { id: this.quizId } as QuizModel,
+      userId: this.user?.id,
+      scorePoints: this.score,
+      correctAnswers: this.totalCorrectAnswer,
+      incorrectAnswers: this.totalIncorrectAnswer,
+      startTime: this.startDateQuiz,
+      endTime: endDateQuiz,
+      totalTimeSpent: (endDateQuiz.getTime() - this.startDateQuiz.getTime()) / 1000
+    };
+    
+    this.quizAttemptService.createQuizAttempt(quizAttempt).subscribe();
+  }
+
+  onFinishQuiz(): void {
+    if (this.excludeIds.length === this.totalQuestions && !this.isQuizSubmitted && this.user) {
+      this.submitQuizAttempt();
+      this.isQuizSubmitted = true;
+    }
+  }
+  
 }
