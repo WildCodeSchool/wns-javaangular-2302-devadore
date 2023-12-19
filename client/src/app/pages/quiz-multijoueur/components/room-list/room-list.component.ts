@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RoomWebsocketService } from 'src/app/services/room-websocket.service';
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-room-list',
@@ -11,6 +12,7 @@ export class RoomListComponent implements OnInit {
   rooms: any[] = [];
   creator: string;
   roomName: string;
+  faExclamationCircle = faExclamationCircle;
 
   constructor(private roomWebsocketService: RoomWebsocketService) {}
 
@@ -26,9 +28,4 @@ export class RoomListComponent implements OnInit {
       console.log("Rooms updated:", this.rooms);
     });
   }
-  
-  createRoom(): void {
-    this.roomWebsocketService.createRoom(this.creator, this.roomName);
-  }
-
 }

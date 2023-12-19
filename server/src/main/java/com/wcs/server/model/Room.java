@@ -8,6 +8,7 @@ public class Room {
     private String roomName;
     private Set<String> participants;
     private String creator;
+    private String categorie;
 
     public Room(int roomId, String roomName) {
         this.roomId = roomId;
@@ -15,9 +16,10 @@ public class Room {
         this.participants = ConcurrentHashMap.newKeySet();
     }
 
-    public Room(String roomName, String creator) {
+    public Room(String roomName, String creator, String categorie) {
         this.creator = creator;
         this.roomName = roomName;
+        this.categorie = categorie;
     }
 
     public void addParticipant(String participantId) {
@@ -59,5 +61,15 @@ public class Room {
     public void setCreator(String creator) {
         this.creator = creator;
     }
+
+    public String getCategorie() {
+        return categorie;
+    }
+
+    public void setCategorie(String categorie) {
+        this.categorie = categorie;
+    }
+
+    
     
 }

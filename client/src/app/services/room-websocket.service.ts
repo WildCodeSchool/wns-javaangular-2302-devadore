@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Room } from '../models/room.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +34,7 @@ export class RoomWebsocketService {
   
       this.webSocket.onmessage = (event) => {
         console.log(event);
-        console.log(event.data);
-        console.log(this.webSocket.readyState);
+        // console.log(this.webSocket.readyState);
 
         if (event.data != "X") {
           const data = JSON.parse(event.data);
@@ -53,9 +53,12 @@ export class RoomWebsocketService {
     this.webSocket.send(JSON.stringify(message));
   }
 
-  createRoom(creator: string, roomName: string) {
-    const message = { messageType: 'CREATE_ROOM', roomName: roomName, creator: creator };
-    this.webSocket.send(JSON.stringify(message));
+  createRoom(newRoom: Room) {
+    this.connectWebSocket().then(() => {
+      const message = { messageType: 'CREATE_ROOM', roomName: newRoom.name, creator: newRoom.creator, categorie: newRoom.categorie };
+      console.log(message);
+      this.webSocket.send(JSON.stringify(message));
+    });
   }
 
 }

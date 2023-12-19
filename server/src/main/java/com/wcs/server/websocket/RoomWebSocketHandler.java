@@ -43,8 +43,9 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         if ("CREATE_ROOM".equals(messageType)) {
             String roomName = jsonMessage.get("roomName").toString();
             String creator = jsonMessage.get("creator").toString();
+            String categorie = jsonMessage.get("categorie").toString();
 
-            createRoom(roomName, creator, webSocket);
+            createRoom(roomName, creator, categorie, webSocket);
         }
 
         if("FETCH_ROOM".equals(messageType)) {
@@ -72,6 +73,7 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
             JSONObject roomDetails = new JSONObject();
             roomDetails.put("creator", entry.getValue().getCreator());
             roomDetails.put("name", entry.getValue().getRoomName());
+            roomDetails.put("categorie", entry.getValue().getCategorie());
             roomsList.put(roomDetails);
         }
 
@@ -80,14 +82,16 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         return message.toString();
     }
 
-    private void createRoom(String roomName, String creator, WebSocket creatorWebSocket) throws IOException {
+    private void createRoom(String roomName, String creator, String categorie, WebSocket creatorWebSocket) throws IOException {
         if (!rooms.containsKey(roomName)) {
-            Room newRoom = new Room(roomName, creator);
+            Room newRoom = new Room(roomName, creator, categorie);
             rooms.put(roomName, newRoom);
 
             Set<WebSocket> connections = Collections.synchronizedSet(new HashSet<>());
             connections.add(creatorWebSocket);
             roomConnections.put(roomName, connections);
+
+            System.out.println("TOUTES LES ROOMS" + rooms);
 
             fetchingRoomList(creatorWebSocket);
             System.out.println("Nouvelle room créée: " + roomName);

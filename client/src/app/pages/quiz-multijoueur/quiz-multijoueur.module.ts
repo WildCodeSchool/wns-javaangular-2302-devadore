@@ -4,8 +4,9 @@ import { CommonModule } from '@angular/common';
 import { QuizMultijoueurRoutingModule } from './quiz-multijoueur-routing.module';
 import { RoomListComponent } from './components/room-list/room-list.component';
 import { CreateRoomComponent } from './components/create-room/create-room.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WaitingRoomComponent } from './components/waiting-room/waiting-room.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,9 @@ import { WaitingRoomComponent } from './components/waiting-room/waiting-room.com
   imports: [
     CommonModule,
     QuizMultijoueurRoutingModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule,
+    ReactiveFormsModule
   ]
 })
 export class QuizMultijoueurModule { }
