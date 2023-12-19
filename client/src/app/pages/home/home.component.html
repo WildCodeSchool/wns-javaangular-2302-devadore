@@ -1,13 +1,14 @@
-<div class="flex h-screen flex-col justify-between sm:p-20 p-5 text-white">
- 
-  <div class="flex items-start flex-row justify-between ">
+<div class="flex h-screen flex-col justify-between p-5 text-white sm:p-20">
+  <div class="flex flex-row items-start justify-between">
     <img
-      class=" w-1/2 sm:w-52 object-contain"
+      class="w-1/2 object-contain sm:w-52"
       src="assets/images/defaultAvatars/Quiz4All.png"
       alt="Logo"
     />
-    <div class="dropdown-container w-1/2 flex sm:flex-row-reverse flex-col sm:items-center items-end">
-      <div *ngIf="isLoggedIn && userImage" class="h-16 w-16 rounded-full ">
+    <div
+      class="dropdown-container flex w-1/2 flex-col items-end sm:flex-row-reverse sm:items-center"
+    >
+      <div *ngIf="isLoggedIn && userImage" class="h-16 w-16 rounded-full">
         <img
           [src]="userImage"
           alt="User Image"
@@ -28,7 +29,7 @@
 
       <div
         #dropdownMenu
-        class="dropdown-menu sm:flex-row flex-col sm:gap-1 sm:pr-2"
+        class="dropdown-menu flex-col sm:flex-row sm:gap-1 sm:pr-2"
         [class.show]="isDropdownVisible"
         (mouseenter)="showDropdown()"
         (mouseleave)="hideDropdown()"
@@ -44,14 +45,14 @@
 
         <button
           *ngIf="isAdmin"
-          class="sm:mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
+          class="transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105 sm:mt-4"
           routerLink="/user-list"
         >
           Liste d'utilisateurs
         </button>
         <button
           *ngIf="isUser"
-          class="sm:mt-4 transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105"
+          class="transform rounded-full border-2 border-white px-4 py-2 text-current transition-transform duration-200 hover:scale-105 sm:mt-4"
           (click)="user && editUser(user.id)"
         >
           Profil
@@ -61,7 +62,9 @@
   </div>
 
   <div class="flex flex-col gap-9">
-    <div class="font-koulen  text-4xl sm:text-5xl uppercase ">Testez vos connaissances !</div>
+    <div class="font-koulen text-4xl uppercase sm:text-5xl">
+      Testez vos connaissances !
+    </div>
     <div class="flex flex-col gap-2 place-self-start">
       <div
         class="relative"
@@ -70,7 +73,7 @@
       >
         <div class="font-lilita text-2xl sm:text-3xl">Quiz Solo</div>
         <div
-          class="absolute left-0 top-full pl-3 pt-2"
+          class="absolute left-0 top-full z-50 pl-3 pt-2"
           [class.hidden]="!isMenuHovered"
         >
           <div
@@ -88,11 +91,33 @@
         </div>
       </div>
       <div
-        class="font-lilita text-2xl sm:text-3xl transition-transform cursor-pointer"
-        [ngClass]="{ 'translate-y-14': isMenuHovered }"
-        [routerLink]="'/multijoueur/room'"
+        class="relative"
+        (mouseenter)="isMultiplayerHovered = true"
+        (mouseleave)="isMultiplayerHovered = false"
       >
-        Multijoueur
+        <div
+          [ngClass]="{ 'translate-y-14': isMenuHovered }"
+          class="font-lilita text-2xl transition-transform sm:text-3xl"
+        >
+          Multijoueur
+        </div>
+        <div
+          class="absolute left-0 top-full pl-3 pt-2"
+          [class.hidden]="!isMultiplayerHovered"
+        >
+          <div
+            class="cursor-pointer whitespace-nowrap font-lexend"
+            [routerLink]="'/multijoueur/room-list'"
+          >
+            Rejoindre une partie
+          </div>
+          <div
+            class="cursor-pointer font-lexend"
+            [routerLink]="'/multijoueur/create'"
+          >
+            Créer une partie
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,9 +125,11 @@
   <div class="flex justify-between">
     <div class="text-xs sm:text-sm">&#169; 2023 Quiz4All - DEVADORE</div>
     <div>
-      <ul class="flex gap-12 font-bold text-xs">
+      <ul class="flex gap-12 text-xs font-bold">
         <li class="text-xs sm:text-sm"><a routerLink="/contact">Crédit</a></li>
-        <li class="text-xs sm:text-sm"><a routerLink="/mention-legal">Mention légale</a></li>
+        <li class="text-xs sm:text-sm">
+          <a routerLink="/mention-legal">Mention légale</a>
+        </li>
       </ul>
     </div>
   </div>

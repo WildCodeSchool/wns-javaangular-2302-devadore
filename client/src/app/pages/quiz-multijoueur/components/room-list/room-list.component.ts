@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { RoomWebsocketService } from 'src/app/services/room-websocket.service';
 
 @Component({
-  selector: 'app-room',
-  templateUrl: './room.component.html',
-  styleUrls: ['./room.component.scss']
+  selector: 'app-room-list',
+  templateUrl: './room-list.component.html',
+  styleUrls: ['./room-list.component.scss']
 })
-export class RoomComponent implements OnInit {
+export class RoomListComponent implements OnInit {
 
   rooms: any[] = [];
   creator: string;
