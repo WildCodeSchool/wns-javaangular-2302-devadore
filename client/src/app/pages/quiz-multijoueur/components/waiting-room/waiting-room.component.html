@@ -1,1 +1,28 @@
-<p>waiting-room works!</p>
+<div class="m-auto flex h-screen flex-col place-items-center justify-center gap-3">
+    <div class="flex flex-col items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-12 text-white shadow-lg">
+      <h2 class="mb-4">Salle d'attente</h2>
+      <div>
+        <h3>Joueurs Connectés:</h3>
+        <ul>
+          <li > Joueur 1 </li>
+          <li > Joueur 2 </li>
+          <li > Joueur 3 </li>
+          <li > Joueur 4 </li>
+          <li > Joueur 5 </li>
+        </ul>
+      </div>
+      <div class="my-4">
+        <label for="category">Choisir une catégorie:</label>
+        <select id="category">
+          <option [value]=""></option>
+        </select>
+      </div>
+      <button class="btn btn-primary" >Lancer la Partie</button>
+    </div>
+    <div class="flex content-start">
+      <button class="rounded-lg border-b-4 border-gray-500 bg-white px-5 py-1 font-lexend" [routerLink]="['/']">
+        Retour
+      </button>
+    </div>
+  </div>
+  

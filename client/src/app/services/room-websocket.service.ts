@@ -48,6 +48,14 @@ export class RoomWebsocketService {
     });
   }  
 
+  getRoomInfos(){
+    
+    this.connectWebSocket().then(() => {
+      const message = { messageType: 'GET_ROOM_INFOS'};
+      this.webSocket.send(JSON.stringify(message));
+    })
+  }
+
   fetchRoom() {
     const message = { messageType: 'FETCH_ROOM'};
     this.webSocket.send(JSON.stringify(message));

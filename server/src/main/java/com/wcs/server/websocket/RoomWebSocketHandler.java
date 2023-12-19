@@ -39,6 +39,7 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
 
         JSONObject jsonMessage = new JSONObject(message);
         String messageType = jsonMessage.get("messageType").toString();
+        System.out.println("jsonMessage"+ jsonMessage);
 
         if ("CREATE_ROOM".equals(messageType)) {
             String roomName = jsonMessage.get("roomName").toString();
@@ -51,6 +52,11 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         if("FETCH_ROOM".equals(messageType)) {
             fetchingRoomList(webSocket);
             System.out.println("FETCHING ROOM");
+        }
+
+        if("GET_ROOM_INFOS".equals(messageType)) {
+            getRoomInfos(webSocket);
+            System.out.println("GET_ROOM_INFOS");
         }
     }
 
@@ -98,5 +104,9 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         } else {
             System.out.println("Room déjà existante: " + roomName);
         }
+    }
+
+    private void getRoomInfos(WebSocket webSocket){
+
     }
 }
