@@ -5,20 +5,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Room {
     private int roomId;
-    private String roomName;
+    private String name;
     private Set<String> participants;
     private String creator;
     private String categorie;
 
-    public Room(int roomId, String roomName) {
+    public Room(int roomId, String name) {
         this.roomId = roomId;
-        this.roomName = roomName;
+        this.name = name;
         this.participants = ConcurrentHashMap.newKeySet();
     }
 
-    public Room(String roomName, String creator, String categorie) {
+    public Room(String name, String creator, String categorie) {
         this.creator = creator;
-        this.roomName = roomName;
+        this.name = name;
         this.categorie = categorie;
     }
 
@@ -42,12 +42,12 @@ public class Room {
         this.roomId = roomId;
     }
 
-    public String getRoomName() {
-        return roomName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoomName(String roomName) {
-        this.roomName = roomName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Set<String> getParticipants() {

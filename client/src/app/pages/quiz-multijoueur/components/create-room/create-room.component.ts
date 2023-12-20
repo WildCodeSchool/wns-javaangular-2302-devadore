@@ -31,7 +31,6 @@ export class CreateRoomComponent implements OnInit {
   ngOnInit(): void {
     this.categoryService.getAllCategories().subscribe((res) => {
       this.categorieList = res;
-      console.log(this.categorieList);
     });
     
     this.initForm();

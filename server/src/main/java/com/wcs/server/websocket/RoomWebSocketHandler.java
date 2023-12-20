@@ -5,7 +5,9 @@ import org.atmosphere.websocket.WebSocket;
 import org.atmosphere.websocket.WebSocketHandlerAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wcs.server.model.Room;
 
 import java.io.IOException;
@@ -17,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @WebSocketHandlerService(path = "/websocket/room")
 public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
     private final Map<String, Set<WebSocket>> roomConnections = new ConcurrentHashMap<>();
@@ -44,9 +48,11 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         System.out.println("jsonMessage"+ jsonMessage);
 
         if ("CREATE_ROOM".equals(messageType)) {
-            String roomName = jsonMessage.get("roomName").toString();
-            String creator = jsonMessage.get("creator").toString();
-            String categorie = jsonMessage.get("categorie").toString();
+            Room newRoom = objectMapper.readValue(jsonMessage.get("room").toString(), Room.class);
+            System.out.println("NEWROOM" + newRoom);
+            String roomName = newRoom.getName();
+            String creator = newRoom.getCreator();
+            String categorie = newRoom.getCategorie();
             userWebSocketMap.put(creator, webSocket);
             roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(creator);
             System.out.println("CREATE_ROOM");
@@ -90,7 +96,7 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         for (Map.Entry<String, Room> entry : rooms.entrySet()) {
             JSONObject roomDetails = new JSONObject();
             roomDetails.put("creator", entry.getValue().getCreator());
-            roomDetails.put("name", entry.getValue().getRoomName());
+            roomDetails.put("name", entry.getValue().getName());
             roomDetails.put("categorie", entry.getValue().getCategorie());
             roomsList.put(roomDetails);
         }

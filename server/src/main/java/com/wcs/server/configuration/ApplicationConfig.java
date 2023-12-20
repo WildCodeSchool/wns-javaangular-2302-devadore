@@ -1,5 +1,6 @@
 package com.wcs.server.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wcs.server.dto.CreateQuizDTO;
 import com.wcs.server.dto.RoleDTO;
 import com.wcs.server.entity.Quiz;

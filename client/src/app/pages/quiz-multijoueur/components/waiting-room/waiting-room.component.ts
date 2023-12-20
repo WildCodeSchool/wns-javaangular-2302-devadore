@@ -15,7 +15,6 @@ export class WaitingRoomComponent implements OnInit {
   ngOnInit(): void {
     this.roomWebsocketService.newPlayer$.subscribe(data => {
       this.usernames.push(data.username);
-      console.log(this.usernames);
     });
   }
 

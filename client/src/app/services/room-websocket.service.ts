@@ -75,9 +75,12 @@ export class RoomWebsocketService {
 
   createRoom(newRoom: Room): void {
     this.connectWebSocket().then(() => {
-      const message = { messageType: 'CREATE_ROOM', roomName: newRoom.name, creator: newRoom.creator, categorie: newRoom.categorie };
-      console.log(message);
-      this.webSocket.send(JSON.stringify(message));
+      const message = JSON.stringify({
+        messageType: 'CREATE_ROOM',
+        room: newRoom
+      });
+      console.log(message)
+      this.webSocket.send(message);
       this.router.navigate(['/multijoueur/waiting-room']);
     });
   }
