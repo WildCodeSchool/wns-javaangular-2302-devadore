@@ -26,7 +26,6 @@ export class CreateRoomComponent implements OnInit {
     private fb: FormBuilder,
     private roomWebsocketService: RoomWebsocketService,
     private authService: AuthService,
-    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +58,6 @@ export class CreateRoomComponent implements OnInit {
 
     if(this.creator){
       this.roomWebsocketService.createRoom(this.newRoom);
-      this.router.navigate(['/multijoueur/waiting-room']);
     } else {
       throw new Error('Créateur de la room inconnu');
     }

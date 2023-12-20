@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RoomWebsocketService } from 'src/app/services/room-websocket.service';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-room-list',
@@ -10,11 +11,13 @@ import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 export class RoomListComponent implements OnInit {
 
   rooms: any[] = [];
-  creator: string;
+  username: string;
   roomName: string;
   faExclamationCircle = faExclamationCircle;
 
-  constructor(private roomWebsocketService: RoomWebsocketService) {}
+  constructor(
+    private roomWebsocketService: RoomWebsocketService,
+    private authService: AuthService) {}
 
   ngOnInit(): void {
     this.roomWebsocketService.connectWebSocket().then(() => {
@@ -27,5 +30,18 @@ export class RoomListComponent implements OnInit {
       this.rooms = rooms;
       console.log("Rooms updated:", this.rooms);
     });
+  }
+
+  joinRoom(roomName: String): void {
+
+    const token = this.authService.getToken();
+    if(token){
+      const decodedToken = this.authService.decodeToken(token);
+      this.username = decodedToken.sub;
+    } else {
+      console.log("Pas de token");
+    }
+
+    this.roomWebsocketService.joinRoom(roomName, this.username);
   }
 }

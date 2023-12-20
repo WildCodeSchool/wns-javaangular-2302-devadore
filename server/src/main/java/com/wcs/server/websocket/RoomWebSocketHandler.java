@@ -21,6 +21,8 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
     private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
     private final Map<String, Set<WebSocket>> roomConnections = new ConcurrentHashMap<>();
     private final Set<WebSocket> allConnectedClients = Collections.newSetFromMap(new ConcurrentHashMap<WebSocket, Boolean>());
+    private final ConcurrentHashMap<String, WebSocket> userWebSocketMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Set<String>> roomUserMap = new ConcurrentHashMap<>();
 
     @Override
     public void onOpen(WebSocket webSocket) throws IOException {
@@ -45,7 +47,9 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
             String roomName = jsonMessage.get("roomName").toString();
             String creator = jsonMessage.get("creator").toString();
             String categorie = jsonMessage.get("categorie").toString();
-
+            userWebSocketMap.put(creator, webSocket);
+            roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(creator);
+            System.out.println("CREATE_ROOM");
             createRoom(roomName, creator, categorie, webSocket);
         }
 
@@ -54,9 +58,17 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
             System.out.println("FETCHING ROOM");
         }
 
-        if("GET_ROOM_INFOS".equals(messageType)) {
-            getRoomInfos(webSocket);
-            System.out.println("GET_ROOM_INFOS");
+        // if("GET_ROOM_INFOS".equals(messageType)) {
+        //     getRoomInfos(webSocket);
+        //     System.out.println("GET_ROOM_INFOS");
+        // }
+
+        if ("JOIN_ROOM".equals(messageType)) {
+            String roomName = jsonMessage.get("roomName").toString();
+            String username = jsonMessage.get("username").toString();
+            userWebSocketMap.put(username, webSocket);
+            roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(username);
+            joinRoom(roomName, webSocket, username);
         }
     }
 
@@ -99,14 +111,46 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
 
             System.out.println("TOUTES LES ROOMS" + rooms);
 
-            fetchingRoomList(creatorWebSocket);
+            joinRoom(roomName, creatorWebSocket, creator);
             System.out.println("Nouvelle room créée: " + roomName);
         } else {
             System.out.println("Room déjà existante: " + roomName);
         }
     }
 
-    private void getRoomInfos(WebSocket webSocket){
+    private void joinRoom(String roomName, WebSocket webSocket, String username) throws IOException {
+        if (rooms.containsKey(roomName)) {
+            Set<WebSocket> roomMembers = roomConnections.computeIfAbsent(roomName, k -> new HashSet<>());
+            
+            // Ajouter le nouveau joueur
+            roomMembers.add(webSocket);
+    
+            // Préparer la liste des joueurs pour la notification
+            JSONArray players = new JSONArray();
+            for (WebSocket member : roomMembers) {
+                String memberUsername = findUsernameByWebSocket(member);
+                players.put(memberUsername);
+            }
+    
+            // Envoyer la liste mise à jour des joueurs à tous les membres
+            for (WebSocket member : roomMembers) {
+                JSONObject notification = new JSONObject();
+                notification.put("type", "UPDATED_PLAYER_LIST");
+                notification.put("username", players);
+                member.write(notification.toString());
+            }
+            System.out.println(username + " a rejoint la room: " + roomName);
+        } else {
+            System.out.println("La room " + roomName + " n'existe pas");
+        }
+    }    
 
+    private String findUsernameByWebSocket(WebSocket webSocket) {
+        return userWebSocketMap.entrySet().stream()
+            .filter(entry -> entry.getValue().equals(webSocket))
+            .map(Map.Entry::getKey)
+            .findFirst()
+            .orElse(null);
     }
+    
 }

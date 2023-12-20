@@ -4,11 +4,7 @@
       <div>
         <h3>Joueurs Connectés:</h3>
         <ul>
-          <li > Joueur 1 </li>
-          <li > Joueur 2 </li>
-          <li > Joueur 3 </li>
-          <li > Joueur 4 </li>
-          <li > Joueur 5 </li>
+          <li *ngFor="let username of usernames"> {{ username }} </li>
         </ul>
       </div>
       <div class="my-4">

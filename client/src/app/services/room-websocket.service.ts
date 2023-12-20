@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Room } from '../models/room.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +11,10 @@ export class RoomWebsocketService {
   private webSocket: WebSocket;
   private roomsSubject = new Subject<string[]>();
   rooms$ = this.roomsSubject.asObservable();
+  private newPlayerSubject = new Subject<any>();
+  newPlayer$ = this.newPlayerSubject.asObservable();
 
-
-  constructor() { }
+  constructor(private router: Router) { }
 
   connectWebSocket(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -36,12 +38,22 @@ export class RoomWebsocketService {
         console.log(event);
         // console.log(this.webSocket.readyState);
 
-        if (event.data != "X") {
+        if (event.data !== "X") {
           const data = JSON.parse(event.data);
     
-          if (data.type === 'FETCHING_ROOM_LIST') {
-            this.roomsSubject.next(data.rooms); 
-            console.log("Received FETCHING_ROOM_LIST:", data.rooms);
+          switch (data.type) {
+            case 'FETCHING_ROOM_LIST':
+              this.roomsSubject.next(data.rooms);
+              break;
+            case 'NEW_PLAYER_JOINED':
+              this.newPlayerSubject.next(data);
+              break;
+            case 'CURRENT_PLAYERS':
+              this.newPlayerSubject.next(data);
+              break;
+            case 'UPDATED_PLAYER_LIST':
+              this.newPlayerSubject.next(data);
+              break;
           }
         }
       };
@@ -50,7 +62,7 @@ export class RoomWebsocketService {
 
   getRoomInfos(){
     
-    this.connectWebSocket().then(() => {
+    this.connectWebSocket().then((): void => {
       const message = { messageType: 'GET_ROOM_INFOS'};
       this.webSocket.send(JSON.stringify(message));
     })
@@ -61,12 +73,20 @@ export class RoomWebsocketService {
     this.webSocket.send(JSON.stringify(message));
   }
 
-  createRoom(newRoom: Room) {
+  createRoom(newRoom: Room): void {
     this.connectWebSocket().then(() => {
       const message = { messageType: 'CREATE_ROOM', roomName: newRoom.name, creator: newRoom.creator, categorie: newRoom.categorie };
       console.log(message);
       this.webSocket.send(JSON.stringify(message));
+      this.router.navigate(['/multijoueur/waiting-room']);
     });
+  }
+
+  joinRoom(roomName: String, username: String): void {
+    const message = { messageType: 'JOIN_ROOM', roomName: roomName, username: username };
+    console.log(message);
+    this.webSocket.send(JSON.stringify(message));
+    this.router.navigate(['/multijoueur/waiting-room']);
   }
 
 }

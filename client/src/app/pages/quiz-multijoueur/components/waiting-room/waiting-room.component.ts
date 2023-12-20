@@ -8,10 +8,15 @@ import { RoomWebsocketService } from 'src/app/services/room-websocket.service';
 })
 export class WaitingRoomComponent implements OnInit {
 
+  usernames: String[] = [];
+
   constructor(private roomWebsocketService: RoomWebsocketService){}
 
   ngOnInit(): void {
-      this.roomWebsocketService.getRoomInfos();
+    this.roomWebsocketService.newPlayer$.subscribe(data => {
+      this.usernames.push(data.username);
+      console.log(this.usernames);
+    });
   }
 
 }
