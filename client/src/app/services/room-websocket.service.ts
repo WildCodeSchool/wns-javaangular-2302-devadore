@@ -44,6 +44,7 @@ export class RoomWebsocketService {
           switch (data.type) {
             case 'FETCHING_ROOM_LIST':
               this.roomsSubject.next(data.rooms);
+              console.log(data.rooms);
               break;
             case 'NEW_PLAYER_JOINED':
               this.newPlayerSubject.next(data);

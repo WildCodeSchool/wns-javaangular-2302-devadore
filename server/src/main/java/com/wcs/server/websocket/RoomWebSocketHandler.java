@@ -25,6 +25,7 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
     private final ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
     private final Map<String, Set<WebSocket>> roomConnections = new ConcurrentHashMap<>();
     private final Set<WebSocket> allConnectedClients = Collections.newSetFromMap(new ConcurrentHashMap<WebSocket, Boolean>());
+    private final Set<WebSocket> allClientOnRoomListComponent = Collections.newSetFromMap(new ConcurrentHashMap<WebSocket, Boolean>());
     private final ConcurrentHashMap<String, WebSocket> userWebSocketMap = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Set<String>> roomUserMap = new ConcurrentHashMap<>();
 
@@ -75,27 +76,20 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
     }
 
     private void fetchingRoomList(WebSocket requesterWebSocket) throws IOException {
-        String message = createRoomListUpdateMessage();
-    
-        requesterWebSocket.write(message);
-    }
-
-    private String createRoomListUpdateMessage() {
+        
         JSONObject message = new JSONObject();
-        message.put("type", "FETCHING_ROOM_LIST");
+        message.put("type", "FETCHING_ROOM_LIST");        
+        String roomsList = objectMapper.writeValueAsString(rooms.values());    
+        message.put("rooms", new JSONArray(roomsList));
+    
+        requesterWebSocket.write(message.toString());
 
-        JSONArray roomsList = new JSONArray();
-        for (Map.Entry<String, Room> entry : rooms.entrySet()) {
-            JSONObject roomDetails = new JSONObject();
-            roomDetails.put("creator", entry.getValue().getCreator());
-            roomDetails.put("name", entry.getValue().getName());
-            roomDetails.put("categorie", entry.getValue().getCategorie());
-            roomsList.put(roomDetails);
+        // On envoie les données uniquement à ceux qui sont dans le composant room-list
+        allClientOnRoomListComponent.add(requesterWebSocket);
+    
+        for (WebSocket clientWebSocket : allClientOnRoomListComponent) {
+            clientWebSocket.write(message.toString());
         }
-
-        message.put("rooms", roomsList);
-
-        return message.toString();
     }
 
     private void createRoom(Room newRoom, WebSocket creatorWebSocket) throws IOException {
@@ -125,6 +119,10 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
 
     private void joinRoom(String roomName, WebSocket webSocket, String username) throws IOException {
         if (rooms.containsKey(roomName)) {
+
+            // Le client n'est plus dans le composant room-list donc on le retire
+            allClientOnRoomListComponent.remove(webSocket);
+            
             Set<WebSocket> roomMembers = roomConnections.computeIfAbsent(roomName, k -> new HashSet<>());
             
             // Ajouter le nouveau joueur

@@ -1,50 +1,15 @@
 package com.wcs.server.model;
 
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Room {
-    private int roomId;
     private String name;
     private Set<String> participants;
     private String creator;
     private String categorie;
+    private Boolean status;
 
-    public Room(int roomId, String name) {
-        this.roomId = roomId;
-        this.name = name;
-        this.participants = ConcurrentHashMap.newKeySet();
-    }
-
-    public Room(String name, String creator, String categorie) {
-        this.creator = creator;
-        this.name = name;
-        this.categorie = categorie;
-    }
-
-    public Room(){
-        
-    }
-
-    public void addParticipant(String participantId) {
-        participants.add(participantId);
-    }
-
-    public void removeParticipant(String participantId) {
-        participants.remove(participantId);
-    }
-
-    public boolean isParticipantInRoom(String participantId) {
-        return participants.contains(participantId);
-    }
-
-    public int getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(int roomId) {
-        this.roomId = roomId;
-    }
+    public Room(){}
 
     public String getName() {
         return name;
@@ -56,6 +21,10 @@ public class Room {
 
     public Set<String> getParticipants() {
         return participants;
+    }
+
+    public void setParticipants(Set<String> participants) {
+        this.participants = participants;
     }
 
     public String getCreator() {
@@ -74,6 +43,11 @@ public class Room {
         this.categorie = categorie;
     }
 
-    
-    
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 }
