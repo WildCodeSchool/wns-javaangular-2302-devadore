@@ -42,39 +42,35 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
 
     @Override
     public void onTextMessage(WebSocket webSocket, String message) throws IOException {
-
         JSONObject jsonMessage = new JSONObject(message);
         String messageType = jsonMessage.get("messageType").toString();
-        System.out.println("jsonMessage"+ jsonMessage);
+        System.out.println("jsonMessage: " + jsonMessage);
 
-        if ("CREATE_ROOM".equals(messageType)) {
-            Room newRoom = objectMapper.readValue(jsonMessage.get("room").toString(), Room.class);
-            System.out.println("NEWROOM" + newRoom);
-            String roomName = newRoom.getName();
-            String creator = newRoom.getCreator();
-            String categorie = newRoom.getCategorie();
-            userWebSocketMap.put(creator, webSocket);
-            roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(creator);
-            System.out.println("CREATE_ROOM");
-            createRoom(roomName, creator, categorie, webSocket);
-        }
+        switch (messageType) {
+            case "CREATE_ROOM":
+                System.out.println("-------------------- CREATE_ROOM --------------------");
+                Room newRoom = objectMapper.readValue(jsonMessage.get("room").toString(), Room.class);
+                String creator = newRoom.getCreator();
+                userWebSocketMap.put(creator, webSocket);
+                createRoom(newRoom, webSocket);
+                break;
 
-        if("FETCH_ROOM".equals(messageType)) {
-            fetchingRoomList(webSocket);
-            System.out.println("FETCHING ROOM");
-        }
+            case "FETCH_ROOM":
+                System.out.println("-------------------- FETCH_ROOM --------------------");
+                fetchingRoomList(webSocket);
+                break;
 
-        // if("GET_ROOM_INFOS".equals(messageType)) {
-        //     getRoomInfos(webSocket);
-        //     System.out.println("GET_ROOM_INFOS");
-        // }
+            case "JOIN_ROOM":
+                System.out.println("-------------------- JOIN_ROOM --------------------");
+                String roomName = jsonMessage.get("roomName").toString();
+                String username = jsonMessage.get("username").toString();
+                userWebSocketMap.put(username, webSocket);
+                roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(username);
+                joinRoom(roomName, webSocket, username);
+                break;
 
-        if ("JOIN_ROOM".equals(messageType)) {
-            String roomName = jsonMessage.get("roomName").toString();
-            String username = jsonMessage.get("username").toString();
-            userWebSocketMap.put(username, webSocket);
-            roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(username);
-            joinRoom(roomName, webSocket, username);
+            default:
+                System.out.println("Type de message non reconnu :" + messageType);
         }
     }
 
@@ -82,10 +78,6 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         String message = createRoomListUpdateMessage();
     
         requesterWebSocket.write(message);
-    
-        for (WebSocket clientWebSocket : allConnectedClients) {
-            clientWebSocket.write(message);
-        }
     }
 
     private String createRoomListUpdateMessage() {
@@ -106,21 +98,28 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         return message.toString();
     }
 
-    private void createRoom(String roomName, String creator, String categorie, WebSocket creatorWebSocket) throws IOException {
+    private void createRoom(Room newRoom, WebSocket creatorWebSocket) throws IOException {
+        String roomName = newRoom.getName();
         if (!rooms.containsKey(roomName)) {
-            Room newRoom = new Room(roomName, creator, categorie);
-            rooms.put(roomName, newRoom);
 
+            String creator = newRoom.getCreator();
+
+            rooms.put(roomName, newRoom); // Permet un lien nom de room <-> room
+            roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(creator); // Permet un lien nom de room <-> 
+
+            // On ajoute la connexion du createur à sa room 
             Set<WebSocket> connections = Collections.synchronizedSet(new HashSet<>());
             connections.add(creatorWebSocket);
             roomConnections.put(roomName, connections);
-
+            
             System.out.println("TOUTES LES ROOMS" + rooms);
+            System.out.println("RoomUserMap" + roomUserMap);
+            System.out.println("roomConnections" + roomConnections);
 
-            joinRoom(roomName, creatorWebSocket, creator);
-            System.out.println("Nouvelle room créée: " + roomName);
+            joinRoom(newRoom.getName(), creatorWebSocket, newRoom.getCreator());
+            System.out.println("Nouvelle room créée: " + newRoom.getName());
         } else {
-            System.out.println("Room déjà existante: " + roomName);
+            System.out.println("Room déjà existante: " + newRoom.getName());
         }
     }
 
@@ -130,6 +129,7 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
             
             // Ajouter le nouveau joueur
             roomMembers.add(webSocket);
+            System.out.println(roomConnections);
     
             // Préparer la liste des joueurs pour la notification
             JSONArray players = new JSONArray();

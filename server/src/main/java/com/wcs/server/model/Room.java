@@ -22,6 +22,10 @@ public class Room {
         this.categorie = categorie;
     }
 
+    public Room(){
+        
+    }
+
     public void addParticipant(String participantId) {
         participants.add(participantId);
     }

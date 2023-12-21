@@ -1,24 +1,27 @@
-<div class="m-auto flex h-screen flex-col place-items-center justify-center gap-3">
-    <div class="flex flex-col items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-12 text-white shadow-lg">
-      <h2 class="mb-4">Salle d'attente</h2>
-      <div>
-        <h3>Joueurs Connectés:</h3>
-        <ul>
-          <li *ngFor="let username of usernames"> {{ username }} </li>
-        </ul>
-      </div>
-      <div class="my-4">
-        <label for="category">Choisir une catégorie:</label>
-        <select id="category">
-          <option [value]=""></option>
-        </select>
-      </div>
-      <button class="btn btn-primary" >Lancer la Partie</button>
+<div
+  class="m-auto flex h-screen flex-col place-items-center justify-center gap-3"
+>
+  <div
+    class="flex flex-col items-center overflow-hidden rounded-lg border border-white bg-gray-900 p-12 text-white shadow-lg"
+  >
+    <div class="flex flex-col mb-4 items-center">
+      <h2 class="font-koulen text-2xl">Salle d'attente</h2>
+      <span class="text-sm italic text-gray-400">En attente de lancement</span>
     </div>
-    <div class="flex content-start">
-      <button class="rounded-lg border-b-4 border-gray-500 bg-white px-5 py-1 font-lexend" [routerLink]="['/']">
-        Retour
-      </button>
+    <div class="mb-4">
+      <h3>Joueurs connectés :</h3>
+      <ul>
+        <li *ngFor="let username of usernames">{{ username }}</li>
+      </ul>
     </div>
+    <button class="rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-2 font-lexend font-bold text-white hover:from-purple-600 hover:to-pink-600 focus:border-blue-300 focus:outline-none focus:ring">Lancer la Partie</button>
   </div>
-  
+  <div class="flex content-start">
+    <button
+      class="rounded-lg border-b-4 border-gray-500 bg-white px-5 py-1 font-lexend"
+      [routerLink]="['/']"
+    >
+      Retour
+    </button>
+  </div>
+</div>
