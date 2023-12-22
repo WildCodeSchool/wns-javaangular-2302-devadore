@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Injectable, OnInit } from '@angular/core';
+import { Subject, filter } from 'rxjs';
 import { Room } from '../models/room.model';
-import { Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,15 @@ export class RoomWebsocketService {
   private newPlayerSubject = new Subject<any>();
   newPlayer$ = this.newPlayerSubject.asObservable();
 
-  constructor(private router: Router) { }
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      if (!event.url.startsWith('/multijoueur')) {
+        this.webSocket.close();
+      }
+    });
+  }
 
   connectWebSocket(): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -69,8 +77,8 @@ export class RoomWebsocketService {
     })
   }
 
-  fetchRoom() {
-    const message = { messageType: 'FETCH_ROOM'};
+  fetchRoom(username: String) {
+    const message = { messageType: 'FETCH_ROOM', username: username};
     this.webSocket.send(JSON.stringify(message));
   }
 

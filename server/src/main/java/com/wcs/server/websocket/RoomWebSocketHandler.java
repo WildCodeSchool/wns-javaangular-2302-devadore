@@ -5,7 +5,6 @@ import org.atmosphere.websocket.WebSocket;
 import org.atmosphere.websocket.WebSocketHandlerAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wcs.server.model.Room;
@@ -38,7 +37,9 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
     @Override
     public void onClose(WebSocket webSocket) {
         allConnectedClients.remove(webSocket);
-        System.out.println("Connexion fermée");
+        allClientOnRoomListComponent.remove(webSocket);
+
+        System.out.println("Utilisateur : " + findUsernameByWebSocket(webSocket) + " déconnecté");
     }
 
     @Override
@@ -46,6 +47,11 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
         JSONObject jsonMessage = new JSONObject(message);
         String messageType = jsonMessage.get("messageType").toString();
         System.out.println("jsonMessage: " + jsonMessage);
+
+        String username = jsonMessage.get("username").toString();
+        if(username != "") {
+            userWebSocketMap.put(username, webSocket);
+        }
 
         switch (messageType) {
             case "CREATE_ROOM":
@@ -64,8 +70,6 @@ public class RoomWebSocketHandler extends WebSocketHandlerAdapter {
             case "JOIN_ROOM":
                 System.out.println("-------------------- JOIN_ROOM --------------------");
                 String roomName = jsonMessage.get("roomName").toString();
-                String username = jsonMessage.get("username").toString();
-                userWebSocketMap.put(username, webSocket);
                 roomUserMap.computeIfAbsent(roomName, k -> new HashSet<>()).add(username);
                 joinRoom(roomName, webSocket, username);
                 break;
