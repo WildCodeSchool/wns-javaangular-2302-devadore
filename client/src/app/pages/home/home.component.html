@@ -1,9 +1,3 @@
-<app-toast
-  *ngIf="showToast"
-  [message]="toastMessage"
-  [type]="toastType"
-  (close)="showToast = false"
-></app-toast>
 <div class="flex h-screen flex-col justify-between p-5 text-white sm:p-20">
   <div class="flex flex-row items-start justify-between">
     <img
@@ -19,7 +13,7 @@
           [src]="userImage"
           alt="User Image"
           class="h-full w-full rounded-full border-4 border-amber-500"
-          (mouseover)="showDropdown()"
+          (mouseenter)="showDropdown()"
           (mouseleave)="hideDropdown()"
         />
       </div>
@@ -28,7 +22,7 @@
         *ngIf="!isLoggedIn"
         class="fa-4x"
         [icon]="faCircleUser"
-        (mouseover)="showDropdown()"
+        (mouseenter)="showDropdown()"
         (mouseleave)="hideDropdown()"
       >
       </fa-icon>
@@ -37,7 +31,7 @@
         #dropdownMenu
         class="dropdown-menu flex-col sm:flex-row sm:gap-1 sm:pr-2"
         [class.show]="isDropdownVisible"
-        (mouseover)="showDropdown()"
+        (mouseenter)="showDropdown()"
         (mouseleave)="hideDropdown()"
       >
         <button
@@ -74,12 +68,12 @@
     <div class="flex flex-col gap-2 place-self-start">
       <div
         class="relative"
-        (mouseover)="showSubMenu()"
+        (mouseenter)="showSubMenu()"
         (mouseleave)="hideSubMenu()"
       >
         <div class="font-lilita text-2xl sm:text-3xl">Quiz Solo</div>
         <div
-          class="absolute left-0 top-full pl-3 pt-2"
+          class="absolute left-0 top-full z-50 pl-3 pt-2"
           [class.hidden]="!isMenuHovered"
         >
           <div
@@ -97,10 +91,33 @@
         </div>
       </div>
       <div
-        class="font-lilita text-2xl transition-transform sm:text-3xl"
-        [ngClass]="{ 'translate-y-14': isMenuHovered }"
+        class="relative"
+        (mouseenter)="isMultiplayerHovered = true"
+        (mouseleave)="isMultiplayerHovered = false"
       >
-        Multijoueur <span class="text-sm">(à venir)</span>
+        <div
+          [ngClass]="{ 'translate-y-14': isMenuHovered }"
+          class="font-lilita text-2xl transition-transform sm:text-3xl"
+        >
+          Multijoueur
+        </div>
+        <div
+          class="absolute left-0 top-full pl-3 pt-2"
+          [class.hidden]="!isMultiplayerHovered"
+        >
+          <div
+            class="cursor-pointer whitespace-nowrap font-lexend"
+            [routerLink]="'/multijoueur/room-list'"
+          >
+            Rejoindre une partie
+          </div>
+          <div
+            class="cursor-pointer font-lexend"
+            [routerLink]="'/multijoueur/create'"
+          >
+            Créer une partie
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -111,7 +128,7 @@
       <ul class="flex gap-12 text-xs font-bold">
         <li class="text-xs sm:text-sm"><a routerLink="/contact">Crédit</a></li>
         <li class="text-xs sm:text-sm">
-          <a routerLink="/mention-legal">Mentions légales</a>
+          <a routerLink="/mention-legal">Mention légale</a>
         </li>
       </ul>
     </div>
