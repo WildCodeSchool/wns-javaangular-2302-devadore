@@ -17,13 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @Import(ApplicationTestConfig.class)
-public class UserEntityTest {
+class UserEntityTest {
 
     @Autowired
     private UserRepository userRepository;
 
     @Test
-    public void testSaveNewUser() {
+    void testSaveNewUser() {
         User user = new User();
         user.setUsername("testUser");
         user.setEmail("testUser@example.com");
@@ -38,7 +38,7 @@ public class UserEntityTest {
     }
 
     @Test
-    public void testUserNameShouldBeUnique() {
+    void testUserNameShouldBeUnique() {
         User user1 = new User();
         user1.setUsername("uniqueUser");
         user1.setEmail("user1@example.com");
@@ -57,7 +57,7 @@ public class UserEntityTest {
     }
 
     @Test
-    public void testEmailShouldBeUnique() {
+    void testEmailShouldBeUnique() {
         User user1 = new User();
         user1.setUsername("user1");
         user1.setEmail("sameEmail@example.com");
@@ -76,7 +76,7 @@ public class UserEntityTest {
     }
 
     @Test
-    public void testFindByUsername() {
+    void testFindByUsername() {
         String username = "testFindByUsername";
         User user = new User();
         user.setUsername(username);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   AbstractControl,
   FormArray,
@@ -6,13 +6,13 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { QuizService } from '../../../../services/quiz.service';
-import { CategoryModel } from '../../../../models/category.model';
-import { CategoryService } from '../../../../services/category.service';
-import { UserProfileService } from '../../../../services/user-profile-service';
-import { User } from '../../../../models/user.model';
-import { Router } from '@angular/router';
-import { hasCorrectAnswerValidator } from '../../../../validators/question.validator';
+import {QuizService} from '../../../../services/quiz.service';
+import {CategoryModel} from '../../../../models/category.model';
+import {CategoryService} from '../../../../services/category.service';
+import {UserProfileService} from '../../../../services/user-profile-service';
+import {User} from '../../../../models/user.model';
+import {Router} from '@angular/router';
+import {hasCorrectAnswerValidator} from '../../../../validators/question.validator';
 
 @Component({
   selector: 'app-quiz-create',
@@ -83,7 +83,7 @@ export class QuizCreateComponent implements OnInit {
         answers: this.fb.array([this.createAnswer()]),
         // Attach the custom validator to the question FormGroup
       },
-      { validators: [hasCorrectAnswerValidator()] }
+      {validators: [hasCorrectAnswerValidator()]}
     );
   }
 
@@ -197,9 +197,6 @@ export class QuizCreateComponent implements OnInit {
       this.formData.append('questions', JSON.stringify(questions));
     }
 
-    for (let [key, value] of (this.formData as any).entries()) {
-    }
-
     this.toastMessage = 'Voulez-vous vraiment enregistrer ce quiz?';
     this.toastType = 'confirm';
     this.canShowButton = true;
@@ -210,7 +207,7 @@ export class QuizCreateComponent implements OnInit {
     this.canShowButton = false;
     // Une fois que l'utilisateur a confirmé
     this.quizService.createQuiz(this.formData).subscribe(
-      (data) => {
+      () => {
         this.toastMessage =
           "L'enregistrement de ton quiz est réalisé avec succès";
         this.toastType = 'success';
@@ -222,7 +219,6 @@ export class QuizCreateComponent implements OnInit {
             this.showToast = false;
           }
         }, 2000);
-
       },
       (error) => {
         if (error) {

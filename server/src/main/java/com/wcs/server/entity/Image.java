@@ -29,6 +29,7 @@ public class Image {
     private String mimeType;
 
     public Image() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public Long getId() {

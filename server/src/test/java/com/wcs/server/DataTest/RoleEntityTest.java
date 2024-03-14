@@ -1,8 +1,5 @@
 package com.wcs.server.DataTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -14,15 +11,17 @@ import com.wcs.server.configuration.ApplicationTestConfig;
 import com.wcs.server.entity.Role;
 import com.wcs.server.repository.RoleRepository;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @DataJpaTest
 @Import(ApplicationTestConfig.class)
-public class RoleEntityTest {
+class RoleEntityTest {
 
     @Autowired
     RoleRepository RoleRepository;
 
     @Test
-    public void testCreateRole() {
+    void testCreateRole() {
         String name = "ROLE_ADMIN";
         var role = new Role(name);
 
@@ -32,11 +31,11 @@ public class RoleEntityTest {
 
         assertTrue(fromDB.isPresent());
         assertEquals(role.getId(), fromDB.get().getId());
-        assertEquals(role.getName(), fromDB.get().getName()); 
+        assertEquals(role.getName(), fromDB.get().getName());
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         String name = "ROLE_ADMIN";
         var role = new Role(name);
 
@@ -44,7 +43,7 @@ public class RoleEntityTest {
     }
 
     @Test
-    public void testSetName() {
+    void testSetName() {
         String name = "ROLE_ADMIN";
         var role = new Role(name);
 
@@ -55,19 +54,19 @@ public class RoleEntityTest {
     }
 
     @Test
-    public void testGetId() {
+    void testGetId() {
         String name = "ROLE_ADMIN";
         var role = new Role(name);
 
-        assertEquals(role.getId(), null);
+        assertNull(role.getId());
     }
 
     @Test
-    public void testSetId() {
+    void testSetId() {
         String name = "ROLE_ADMIN";
         var role = new Role(name);
 
-       Long id = (long) 1;
+        Long id = (long) 1;
         role.setId(id);
 
         assertEquals(role.getId(), id);

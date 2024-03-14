@@ -35,9 +35,11 @@ public class Quiz {
     private LocalDate updatedAt;
 
     public Quiz() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public Quiz(String title) {
+        this.title = title;
     }
 
     public Long getId() {

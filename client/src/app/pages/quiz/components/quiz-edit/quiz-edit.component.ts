@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 import {
   FormGroup,
@@ -7,15 +7,14 @@ import {
   FormArray,
   AbstractControl,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { QuizService } from '../../../../services/quiz.service';
-import { CategoryService } from '../../../../services/category.service';
-import { UserProfileService } from '../../../../services/user-profile-service';
-import { CategoryModel } from '../../../../models/category.model';
-import { User } from '../../../../models/user.model';
-import { hasCorrectAnswerValidator } from '../../../../validators/question.validator';
-import { tap } from 'rxjs/operators';
-import { DomSanitizer } from '@angular/platform-browser';
+import {ActivatedRoute, Router} from '@angular/router';
+import {QuizService} from '../../../../services/quiz.service';
+import {CategoryService} from '../../../../services/category.service';
+import {UserProfileService} from '../../../../services/user-profile-service';
+import {CategoryModel} from '../../../../models/category.model';
+import {User} from '../../../../models/user.model';
+import {hasCorrectAnswerValidator} from '../../../../validators/question.validator';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-quiz-edit',
@@ -47,7 +46,8 @@ export class QuizEditComponent implements OnInit {
     private categoryService: CategoryService,
     private userProfileService: UserProfileService,
     private sanitizer: DomSanitizer
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.quizForm = this.fb.group({
@@ -81,7 +81,6 @@ export class QuizEditComponent implements OnInit {
   loadQuizDetails(id: number): void {
     this.quizService
       .getQuizById(id)
-      .pipe(tap())
       .subscribe((quizData) => {
         this.categoryService.getAllCategories().subscribe((categories) => {
           this.categories = categories;
@@ -159,7 +158,7 @@ export class QuizEditComponent implements OnInit {
             text: [questionData.text, Validators.required],
             answers: this.fb.array(answerFGs),
           },
-          { validators: [hasCorrectAnswerValidator()] }
+          {validators: [hasCorrectAnswerValidator()]}
         );
       }
     );
@@ -201,7 +200,7 @@ export class QuizEditComponent implements OnInit {
         text: [''],
         answers: this.fb.array([this.createAnswer()]),
       },
-      { validators: [hasCorrectAnswerValidator()] }
+      {validators: [hasCorrectAnswerValidator()]}
     );
   }
 
@@ -326,7 +325,7 @@ export class QuizEditComponent implements OnInit {
   onToastConfirmed() {
     this.canShowButton = false;
     this.quizService.updateQuiz(this.quizId, this.formData).subscribe(
-      (response) => {
+      () => {
         this.toastMessage =
           "L'enregistrement de ton quiz est réalisé avec succès";
         this.toastType = 'success';

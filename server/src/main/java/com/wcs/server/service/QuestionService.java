@@ -6,7 +6,6 @@ import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wcs.server.dto.QuestionDTO;
@@ -16,11 +15,14 @@ import com.wcs.server.repository.QuestionRepository;
 @Service
 public class QuestionService {
 
-    @Autowired
-    private QuestionRepository questionRepository;
+    private final QuestionRepository questionRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
+
+    public QuestionService(QuestionRepository questionRepository, ModelMapper modelMapper) {
+        this.questionRepository = questionRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public List<QuestionDTO> getAll() {
         List<Question> questions = questionRepository.findAll();

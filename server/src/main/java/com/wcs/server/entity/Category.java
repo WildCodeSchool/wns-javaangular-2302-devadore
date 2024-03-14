@@ -3,7 +3,6 @@ package com.wcs.server.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "category")
@@ -12,19 +11,18 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true)
     private String name;
-
     private String description;
-
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-    public Category(String name2) {
+    public Category(String name) {
+        this.name = name;
     }
 
     public Category() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public Long getId() {

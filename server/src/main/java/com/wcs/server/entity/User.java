@@ -48,6 +48,7 @@ public class User {
 
 
     public User() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public Long getId() {

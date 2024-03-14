@@ -2,6 +2,7 @@ package com.wcs.server.service;
 
 
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.wcs.server.dto.CreateQuizDTO;
@@ -11,7 +12,6 @@ import com.wcs.server.errormessage.ResourceNotFoundException;
 import com.wcs.server.errormessage.UnauthorizedException;
 import com.wcs.server.repository.*;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,17 +20,24 @@ import com.wcs.server.dto.QuizDTO;
 
 @Service
 public class QuizService {
+    Logger logger = Logger.getLogger(getClass().getName());
+    private final QuizRepository quizRepository;
 
-    @Autowired
-    private QuizRepository quizRepository;
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+    private final CategoryRepository categoryRepository;
+
+    private final QuestionRepository questionRepository;
+
+    private final UserRepository userRepository;
+
+    private final ModelMapper modelMapper;
+
+    public QuizService(QuizRepository quizRepository, CategoryRepository categoryRepository, QuestionRepository questionRepository, UserRepository userRepository, ModelMapper modelMapper) {
+        this.quizRepository = quizRepository;
+        this.categoryRepository = categoryRepository;
+        this.questionRepository = questionRepository;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     public List<QuizDTO> getAll() {
         List<Quiz> quizs = quizRepository.findAll();
@@ -46,13 +53,14 @@ public class QuizService {
         // Ce qui permet de récupérer un index aléatoire de la liste et retourner son id
 
         Random random = new Random();
-        long  randomId = ids.get(random.nextInt(ids.size()));
+        long randomId = ids.get(random.nextInt(ids.size()));
 
         Quiz quiz = quizRepository.findById(randomId)
                 .orElseThrow(() -> new NoSuchElementException("Le quiz avec l'id " + randomId + " n'existe pas ou n'est pas trouvé"));
 
         return convertQuizToDTO(quiz);
     }
+
 
      public QuizDTO getRandomQuizByCat(Long categoryId) {
         List<Long> ids = quizRepository.findAllIdsByCategory(categoryId);
@@ -65,6 +73,7 @@ public class QuizService {
         return convertQuizToDTO(quiz);
     } 
  
+
     public List<QuizDTO> getQuizzesByUser(User userId) {
         List<Quiz> quizzes = quizRepository.findQuizzesByCreatedBy(userId);
         return quizzes.stream()
@@ -158,7 +167,7 @@ public class QuizService {
     }
 
     private QuizDTO convertQuizToDTO(Quiz quiz) {
-        System.out.println("request quiz random at DTO");
+        logger.info("request quiz random at DTO");
         return modelMapper.map(quiz, QuizDTO.class);
     }
 
@@ -208,7 +217,7 @@ public class QuizService {
             Question question = existingQuestions.stream()
                     .filter(q -> q.getId().equals(questionDTO.getId()))
                     .findFirst()
-                    .orElseGet(() -> new Question());
+                    .orElseGet(Question::new);
 
             question.setText(questionDTO.getText());
             question.setQuiz(quiz);
@@ -254,7 +263,7 @@ public class QuizService {
                 .orElseThrow(() -> new ResourceNotFoundException("Quiz avec id " + quizId + " non trouvé"));
 
         return quiz.getCreatedBy().equals(currentUser);
-    }   
+    }
 }
 
 

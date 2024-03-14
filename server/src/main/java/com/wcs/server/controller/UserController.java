@@ -10,7 +10,6 @@ import com.wcs.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,14 +28,17 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("/api/users")
 public class UserController {
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private ModelMapper modelMapper;
-    @Autowired
-    private UserRepository userRepository;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final ModelMapper modelMapper;
+    private final UserRepository userRepository;
+
+    public UserController(UserService userService, RoleService roleService, UserRepository userRepository, ModelMapper modelMapper) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Operation(summary = "Retourne la liste de tous les utilisateurs")
     @GetMapping("/list")

@@ -7,6 +7,7 @@ public class RoleDTO {
     private String name;
 
     public RoleDTO() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
 

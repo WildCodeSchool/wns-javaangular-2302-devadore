@@ -20,6 +20,7 @@ public class UserRegistrationRequest {
     private String mimeType;
 
     public UserRegistrationRequest() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public String getUsername() {

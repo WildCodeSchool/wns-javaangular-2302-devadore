@@ -3,6 +3,7 @@
     "concurrently": "^8.2.0"
   },
   "scripts": {
+    "install-client": "cd client && npm install",
     "start-frontend": "cd client && ng serve -o",
     "start-backend": "cd server && mvnw spring-boot:run",
     "start": "concurrently \"npm run start-frontend\" \"npm run start-backend\""

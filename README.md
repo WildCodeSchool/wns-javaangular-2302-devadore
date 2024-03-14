@@ -25,17 +25,17 @@
 ## Technologies
 
 ###  Langages de Programmation et Frameworks Principaux 
-    - Java: Version 17
+    - Java: Version 21
     - Apache Maven: Version 3.9.2
 ##### Spring Boot: Version 3.0.6
     - spring-boot-starter-data-jpa : Pour la couche de persistance des données en utilisant JPA (Java Persistence API).
-    - spring-boot-starter-web : Pour construire l'application web,
+    - spring-boot-starter-web : Pour construire l'application web.
     - spring-boot-devtools : Pour le rechargement automatique du code...
 
 ...
 
-##### Angular: Version ^15.2.0
-    - TypeScript : Version ~4.9.4
+##### Angular: Version ^16.2.10
+    - TypeScript : Version ~5.1.0
     - @angular/compiler : Pour compiler des templates Angular en code JavaScript exécutable.
     - @angular/core: Pour les fonctionnalités essentielles d'Angular telles que la détection de changements, la dépendance injection, et la communication entre composants.
     - @angular/material: ^15.2.9 (Angular Material) : Pour pour une interface utilisateur.
@@ -43,7 +43,7 @@
     - rxjs: ~7.8.0 : Pour faciliter la gestion des événements asynchrones et des flux de données.
 ##### Tailwind CSS 
     - Version : ^3.3.2
-    - Pour le style du Frontend
+    - Pour le style du Frontend.
 
 ### Bases de Données et Connecteurs
     - H2 : Pour les tests
@@ -56,30 +56,31 @@
     - jjwt-api: 0.11.2 : Pour la création et la vérification des JSON Web Tokens (JWT).
     - jjwt-impl: 0.11.2 : Pour la manipulation des JWT dans l'application.
     - jjwt-jackson: 0.11.2 : pour le traitement (sérialisation/désérialisation) des données JSON dans les JWT.
-    - jwt-decode: ^3.1.2 :Pour décoder les JWT côté client.
+    - jwt-decode: ^3.1.2 : Pour décoder les JWT côté client.
 
 ### Validation et Mappage de Données
     - ModelMapper: 3.1.1 : Pour le mappage entre les modèles de données.
     - Hibernate Validator: 8.0.0.Final : Pour que les données de l'application respectent les contraintes définies.
 
 ### Gestion des Migrations de Base de Données
-    - Flyway MySQL : Pour gérer et appliquer les changements de schéma
+    - Flyway MySQL : Pour gérer et appliquer les changements de schéma.
 
 ### Documentation API et UI
-    - SpringDoc OpenAPI Starter WebMvc UI: 2.1.0 : Pour la documentation interactive de API REST,  le test et l'intégration
+    - SpringDoc OpenAPI Starter WebMvc UI: 2.1.0 : Pour la documentation interactive de API REST,  le test et l'intégration.
 
 ### Testing et Assurance Qualité
     - JUnit Jupiter : Utilisé pour le moteur de test JUnit 5, permettant l'écriture et l'exécution de tests automatisés.
     - JaCoCo : Intégré pour la mesure de la couverture de code, assurant une couverture de test (complète et de qualité).
+    - Cypress : ^2.5.1 : Utilisé comme framework de test JavaScript de bout en bout (e2e).
 
 ### Utilitaires et Outils Divers
-    - spring-boot-starter-mail : Pour les fonctionnalités de messagerie électronique
+    - spring-boot-starter-mail : Pour les fonctionnalités de messagerie électronique.
 
 ### Intégration et Déploiement Continus
-    - Docker et Docker Compose : Pour la conteneurisation et l'orchestration des services
-    - Docker Hub : Pour le stockage et la gestion des images Docker
-    - GitHub : Pour le contrôle de version et la gestion du code source
-    - GitHub Actions : Pour l'automatisation des pipelines CI/CD (Intégration et Déploiement Continus)
+    - Docker et Docker Compose : Pour la conteneurisation et l'orchestration des services.
+    - Docker Hub : Pour le stockage et la gestion des images Docker.
+    - GitHub : Pour le contrôle de version et la gestion du code source.
+    - GitHub Actions : Pour l'automatisation des pipelines CI/CD (Intégration et Déploiement Continus).
 
 ---
 ## Configuration
@@ -119,10 +120,18 @@ Avant de commencer à utiliser ou à contribuer à ce projet, assurez-vous que v
 ### Vérification de l'Installation
 
 - Ouvrez un terminal ou une fenêtre de commande et tapez les commandes suivantes pour vérifier que les installations ont été réussies :
-  - `java -version`
-  - `mvn -version`
-  - `node -v`
-  - `npm -v`
+
+  `mvn --version`
+    ```bash 
+    java --version
+    ```
+    ```bash 
+    node -v
+    ```
+    ```bash 
+    npm -v
+    ```
+
 
 Suivez ces étapes pour assurer une configuration sans problème et commencer à travailler sur le projet.
 
@@ -131,12 +140,9 @@ Suivez ces étapes pour assurer une configuration sans problème et commencer à
 
 ### Backend (Spring Boot)
 
-1. Naviguez vers le dossier du backend :  
-    ```bash 
-   cd ..
-    ```
-    ```bash 
-    cd .\server
+1. Naviguez vers le dossier du backend.
+    ```bash
+   cd .\server
     ```
 2. Construisez le projet : `mvn clean install`
 3. Exécutez le projet : 
@@ -249,8 +255,19 @@ Pour exécuter les tests du backend, suivez ces étapes :
     ```
 2. **Naviguer dans le répertoire du Frontend** :
    ###### Ouvrez un terminal et accédez au répertoire où se trouve le code du frontend.
-        cd client
+    ```bash
+    cd .\client
+    ```
+   exécuter dans le navigateur (Choisir un navigateur + START E2E Testing in...)
+    ```bash
+    npx cypress open
+    ```
+   ou dans le terminale
+    ```bash
+    npx cypress run
+    ```
 ---
+
 ## Contribution
 
 Nous accueillons chaleureusement les contributions à ce projet ! Si vous souhaitez contribuer, voici quelques lignes directrices à suivre :

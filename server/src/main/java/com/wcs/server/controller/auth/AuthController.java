@@ -10,7 +10,6 @@ import com.wcs.server.security.TokenRefreshRequest;
 import com.wcs.server.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,19 +27,14 @@ import java.util.stream.Collectors;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
     private final UserService userService;
 
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
     public AuthController(

@@ -68,9 +68,10 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
     this.getPageInfos();
     this.quizMusicService.playMusic();
   }
+
   playSound() {
     this.sound = !this.sound;
-    if (this.sound == true) {
+    if (this.sound) {
       this.quizMusicService.playMusic();
     } else {
       this.quizMusicService.stopMusic();
@@ -165,7 +166,6 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
       0,
       this.maxScorePerQuestion - 10 * (this.maxTime - timeLeft - 2)
     );
-
     // Compte du nombre total de réponses sélectionnées par l'utilisateur.
     const totalSelectedCount = this.answers.filter((a) => a.isSelected).length;
 
@@ -178,8 +178,6 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
         // Sinon, le score de base (avec pénalités de temps).
         this.score += baseScore;
       }
-    } else {
-      
       // Logique pour le calcul du score si toutes les réponses sélectionnées ne sont pas correctes.
       if (correctSelectedCount && totalCorrectCount && totalCorrectCount >= 1) {
         let scorePercentage = 0;
@@ -215,7 +213,6 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
   /**
    * Bascule l'état de sélection d'une réponse donnée.
    * Si la question n'est pas à choix multiple, arrête également le chronomètre et marque la question comme répondue.
-   *
    * @param answer - La réponse dont l'état de sélection doit être basculé.
    */
 
@@ -228,7 +225,7 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
   }
 
   private showScoreBriefly(): void {
-    // Affiche le score pendant 3 secondes
+    // Affiche le score pendant 2 secondes
     if (this.excludeIds.length < this.totalQuestions) {
       setTimeout(() => {
         this.getNextQuestion();
@@ -308,7 +305,7 @@ export class QuizPlayComponent implements OnInit, OnDestroy {
 
   onSubmitAnswers(): void {
     if (!this.isAnswered && this.question) {
-      const { selected, correct } = this.getSelectedAndCorrectAnswers();
+      const {selected, correct} = this.getSelectedAndCorrectAnswers();
       if (this.checkAnswers(selected, correct)) {
 
         this.totalCorrectAnswer = this.totalCorrectAnswer +1;

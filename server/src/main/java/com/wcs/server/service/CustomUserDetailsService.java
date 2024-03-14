@@ -5,7 +5,6 @@ import com.wcs.server.entity.Role;
 import com.wcs.server.entity.User;
 import com.wcs.server.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,8 +19,12 @@ import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /***
      * Charger les informations d'un utilisateur à partir d'une source de données et les présenter dans un format que Spring Security peut utiliser pour l'authentification et l'autorisation.
@@ -41,7 +44,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for(Role role : user.getRoles()) {
+        for (Role role : user.getRoles()) {
             authorities.add(new SimpleGrantedAuthority(role.getName()));
         }
 

@@ -6,7 +6,6 @@ import com.wcs.server.errormessage.EmailAlreadyTakenException;
 import com.wcs.server.errormessage.UsernameAlreadyTakenException;
 import com.wcs.server.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,11 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RequestMapping("/auth")
 public class RegistrationController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Operation(summary = "permet de vérifier que username est unique")
     @GetMapping("/checkUsername")

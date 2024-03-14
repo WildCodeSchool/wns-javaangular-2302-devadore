@@ -4,6 +4,7 @@ import { CategoryService } from 'src/app/services/category.service';
 import { QuizService } from 'src/app/services/quiz.service';
 import { Router } from '@angular/router';
 
+
 @Component({
   selector: 'app-quiz-choose-cat',
   templateUrl: './quiz-choose-cat.component.html',
@@ -11,11 +12,13 @@ import { Router } from '@angular/router';
 })
 export class QuizChooseCatComponent implements OnInit {
   availableCategories: CategoryModel[] = [];
+
   constructor(
     private categoryService: CategoryService,
     private quizService: QuizService,
     private router: Router
   ) {}
+
 
   ngOnInit(): void {
     this.categoryService.getAllCategoriesNotEmpty().subscribe((data) => {
