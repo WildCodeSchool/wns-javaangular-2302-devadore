@@ -20,7 +20,7 @@ export class RoomWebsocketService {
 
   connectWebSocket(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.webSocket = new WebSocket('wss://'+ environment.URL+'/websocket/room');
+      this.webSocket = new WebSocket(environment.webSocketConnection+'/websocket/room');
 
       this.webSocket.onopen = () => {
         console.log("Connexion websocket réussi");
