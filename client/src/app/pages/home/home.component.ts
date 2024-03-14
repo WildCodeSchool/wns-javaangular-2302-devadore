@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   @ViewChild('dropdownMenu') dropdownMenu!: ElementRef;
   user: User | null;
   isMenuHovered: boolean = false;
+  isMultiplayerHovered: boolean;
 
   constructor(
     private authService: AuthService,

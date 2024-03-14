@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { catchError, Observable, of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
+import {catchError, Observable, of} from 'rxjs';
 
-import { User } from '../models/user.model';
-import { AuthService } from './auth.service';
-import { Role } from '../models/role.model';
-import { HeaderUtilService } from './header-util.service';
-import { environment } from 'src/environments/environment';
+import {User} from '../models/user.model';
+import {AuthService} from './auth.service';
+import {Role} from '../models/role.model';
+import {HeaderUtilService} from './header-util.service';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +19,8 @@ export class UserService {
     private http: HttpClient,
     private authService: AuthService,
     private headerUtil: HeaderUtilService
-  ) {}
+  ) {
+  }
 
   getUsers(): Observable<User[]> {
     const jwtToken = localStorage.getItem('jwtToken');
@@ -28,7 +29,7 @@ export class UserService {
         'Authorization',
         `Bearer ${jwtToken}`
       );
-      return this.http.get<User[]>(`${this.baseUrl}/list`, { headers }).pipe(
+      return this.http.get<User[]>(`${this.baseUrl}/list`, {headers}).pipe(
         catchError((error) => {
           console.error(error);
           return of([]);
@@ -41,7 +42,7 @@ export class UserService {
 
   getUserById(userId: number | null): Observable<User> {
     const url = `${this.baseUrl}/${userId}`;
-    return this.http.get<User>(url, { headers: this.headerUtil.getHeaders() });
+    return this.http.get<User>(url, {headers: this.headerUtil.getHeaders()});
   }
 
   getUserIdByUsername(username: string): Observable<number> {
@@ -68,7 +69,7 @@ export class UserService {
 
   deleteUser(userId: number): Observable<any> {
     const url = `${this.baseUrl}/${userId}`;
-    return this.http.delete(url, { headers: this.headerUtil.getHeaders() });
+    return this.http.delete(url, {headers: this.headerUtil.getHeaders()});
   }
 
   getAllRoles(): Observable<Role[]> {
@@ -81,13 +82,13 @@ export class UserService {
 
   checkUsernameExistence(username: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.regUrl}/checkUsername`, {
-      params: { username },
+      params: {username},
     });
   }
 
   checkMailExistence(email: string): Observable<boolean> {
     return this.http.get<boolean>(`${this.regUrl}/checkMailExist`, {
-      params: { email },
+      params: {email},
     });
   }
 
@@ -117,8 +118,8 @@ export class UserService {
     const jwtToken = this.authService.getToken();
     const headers = jwtToken
       ? new HttpHeaders()
-          .set('Authorization', `Bearer ${jwtToken}`)
-          .set('Content-Type', 'application/json')
+        .set('Authorization', `Bearer ${jwtToken}`)
+        .set('Content-Type', 'application/json')
       : new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.get<any>(`${this.baseUrl}/${userId}/image`, {
       headers,
@@ -129,6 +130,6 @@ export class UserService {
   deleteUserImage(userId: number): Observable<any> {
     const url = `${this.baseUrl}/${userId}/image`;
 
-    return this.http.delete(url, { headers: this.headerUtil.getHeaders() });
+    return this.http.delete(url, {headers: this.headerUtil.getHeaders()});
   }
 }

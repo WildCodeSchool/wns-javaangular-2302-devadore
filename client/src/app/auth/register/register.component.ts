@@ -1,16 +1,9 @@
-import { Component } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  Validators,
-} from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
-import { emailValidator } from '../../validators/email.validator';
-import { passwordValidator } from '../../validators/password.validator';
-import { debounceTime, map, Observable } from 'rxjs';
+import {Component} from '@angular/core';
+import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators,} from '@angular/forms';
+import {UserService} from '../../services/user.service';
+import {Router} from '@angular/router';
+import {passwordValidator} from '../../validators/password.validator';
+import {debounceTime, map, Observable} from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -18,13 +11,7 @@ import { debounceTime, map, Observable } from 'rxjs';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
-  registerForm: FormGroup = this.formBuilder.group({
-    username: ['', Validators.required],
-    password: ['', [Validators.required, passwordValidator]],
-    confirmPassword: ['', [Validators.required, passwordValidator]],
-    email: ['', [Validators.required, emailValidator]],
-    image: [null, Validators.required],
-  }, {validator: this.matchPasswords});
+  registerForm: FormGroup;
   image: File | null = null;
   previewUrl: any = null;
   showToast = false;
@@ -36,6 +23,21 @@ export class RegisterComponent {
     private userService: UserService,
     private router: Router,
   ) {
+    this.initForm();
+    this.setAsyncValidators();
+  }
+
+  private initForm(): void {
+    this.registerForm = this.formBuilder.group({
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, passwordValidator]],
+      confirmPassword: ['', [Validators.required, passwordValidator]],
+      email: ['', [Validators.required]],
+      image: [null, Validators.required],
+    }, {validator: this.matchPasswords.bind(this)});
+  }
+
+  private setAsyncValidators(): void {
     this.registerForm.get('username')!.setAsyncValidators(this.usernameValidator.bind(this));
     this.registerForm.get('email')!.setAsyncValidators(this.emailValidator.bind(this));
   }
@@ -55,8 +57,7 @@ export class RegisterComponent {
     return this.userService.checkUsernameExistence(control.value).pipe(
       debounceTime(300),
       map(res => {
-        const error = res ? {usernameExists: true} : null;
-        return error;
+        return res ? {usernameExists: true} : null;
       })
     );
   }
@@ -65,24 +66,20 @@ export class RegisterComponent {
     return this.userService.checkMailExistence(control.value).pipe(
       debounceTime(300),
       map(res => {
-        const error = res ? {emailExists: true} : null;
-        return error;
+        return res ? {emailExists: true} : null;
       })
     );
   }
 
-  matchPasswords(formGroup: FormGroup) {
+  matchPasswords(control: AbstractControl): null | object {
+    const formGroup = control as FormGroup;
     const passwordControl = formGroup.get('password');
     const confirmPasswordControl = formGroup.get('confirmPassword');
 
-    if (
-      passwordControl && confirmPasswordControl &&
-      passwordControl.value !== confirmPasswordControl.value
-    ) {
-      confirmPasswordControl.setErrors({matchPasswords: true});
-    } else {
-      confirmPasswordControl!.setErrors(null);
+    if (passwordControl && confirmPasswordControl && passwordControl.value !== confirmPasswordControl.value) {
+      return {passwordsDoNotMatch: true};
     }
+    return null;
   }
 
   onImageSelected(event: Event) {
@@ -128,7 +125,7 @@ export class RegisterComponent {
       return;
     }
     this.userService.register(formData).subscribe(
-      response => {
+      () => {
         this.toastMessage = 'L\'enregistrement est réalisé avec succès';
         this.toastType = 'success';
         this.showToast = true;
@@ -137,7 +134,6 @@ export class RegisterComponent {
           this.router.navigate(['/home']);
           this.showToast = false;
         }, 2000);
-
       },
       error => {
         if (error) {

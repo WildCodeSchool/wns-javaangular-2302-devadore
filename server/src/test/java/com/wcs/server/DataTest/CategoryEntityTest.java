@@ -16,13 +16,13 @@ import com.wcs.server.repository.CategoryRepository;
 
 @DataJpaTest
 @Import(ApplicationTestConfig.class)
-public class CategoryEntityTest {
+class CategoryEntityTest {
 
     @Autowired
     CategoryRepository CategoryRepository;
 
     @Test
-    public void testCreateCategory() {
+    void testCreateCategory() {
         String name = "Culture";
         var category = new Category(name);
 
@@ -32,9 +32,8 @@ public class CategoryEntityTest {
 
         assertTrue(fromDB.isPresent());
         assertEquals(category.getId(), fromDB.get().getId());
-        assertEquals(category.getName(), fromDB.get().getName()); 
+        assertEquals(category.getName(), fromDB.get().getName());
     }
-
 
 
 }

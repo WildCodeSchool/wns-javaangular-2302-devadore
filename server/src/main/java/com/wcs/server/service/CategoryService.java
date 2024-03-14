@@ -4,7 +4,6 @@ import com.wcs.server.dto.CategoryDTO;
 import com.wcs.server.entity.Category;
 import com.wcs.server.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,10 +12,16 @@ import java.util.Optional;
 
 @Service
 public class CategoryService {
-    @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
-    private ModelMapper modelMapper;
+
+    private final CategoryRepository categoryRepository;
+
+    private final ModelMapper modelMapper;
+
+    public CategoryService(CategoryRepository categoryRepository, ModelMapper modelMapper) {
+        this.categoryRepository = categoryRepository;
+        this.modelMapper = modelMapper;
+
+    }
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();

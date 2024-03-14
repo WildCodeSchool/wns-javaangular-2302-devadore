@@ -11,7 +11,6 @@ import com.wcs.server.repository.RoleRepository;
 import com.wcs.server.security.JwtTokenProvider;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,31 +30,35 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private QuizRepository quizRepository;
+    private final QuizRepository quizRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    private SpringTemplateEngine templateEngine;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final SpringTemplateEngine templateEngine;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, ImageRepository imageRepository, PasswordEncoder passwordEncoder, QuizRepository quizRepository, ModelMapper modelMapper, EmailService emailService, JwtTokenProvider jwtTokenProvider, SpringTemplateEngine templateEngine) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.imageRepository = imageRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.quizRepository = quizRepository;
+        this.modelMapper = modelMapper;
+        this.emailService = emailService;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.templateEngine = templateEngine;
+    }
+
     private static final String IMAGE_SUFFIX = "_image";
 
     public List<UserDTO> getAllUsers() {

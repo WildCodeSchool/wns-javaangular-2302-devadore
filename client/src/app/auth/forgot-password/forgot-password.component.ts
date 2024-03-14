@@ -34,19 +34,10 @@ export class ForgotPasswordComponent implements OnInit {
 
   onSubmit(): void {
     if (this.forgotPasswordForm.invalid) {
-      if (this.forgotPasswordForm.hasError('emailNotExists', 'email')) {
-        // Le gestionnaire spécifique lorsque l'email n'existe pas.
-        this.toastMessage = "L'adresse e-mail saisie n'existe pas.";
-        this.toastType = 'error';
-        this.showToast = true;
-      } else {
-        // Pour toutes les autres erreurs de validation.
-        this.toastMessage = 'Veuillez remplir le formulaire correctement.';
-        this.toastType = 'error';
-        this.showToast = true;
-      }
+      this.toastMessage = 'Veuillez remplir le formulaire correctement.';
+      this.toastType = 'error';
+      this.showToast = true;
       return;
-
     }
 
     const email = this.forgotPasswordForm.get('email')?.value ?? '';
@@ -81,8 +72,6 @@ export class ForgotPasswordComponent implements OnInit {
     return this.userService.checkMailExistence(control.value).pipe(
       debounceTime(300),
       map(res => {
-        // L'e-mail doit exister pour la réinitialisation du mot de passe, donc si `res` est true, il n'y a pas d'erreur.
-        // Si `res` est false, alors l'e-mail n'existe pas et vous retournez l'erreur correspondante.
         return res ? null : {emailNotExists: true};
       })
     );

@@ -19,7 +19,7 @@ public class UserDTO {
 
 
     public UserDTO() {
-
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public Long getId() {
@@ -46,14 +46,6 @@ public class UserDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
-/*    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }*/
 
     public byte[] getImage() {
         return image;

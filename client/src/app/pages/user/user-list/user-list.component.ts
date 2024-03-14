@@ -1,15 +1,14 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { User } from '../../../models/user.model';
-import { UserService } from '../../../services/user.service';
-import { AuthService } from '../../../services/auth.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { tap } from 'rxjs/operators';
-import { catchError, of } from 'rxjs';
-import { ToastService } from '../../../services/toastService';
-import { MatSort } from '@angular/material/sort';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatPaginator } from '@angular/material/paginator';
+import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {User} from '../../../models/user.model';
+import {UserService} from '../../../services/user.service';
+import {AuthService} from '../../../services/auth.service';
+import {MatTableDataSource} from '@angular/material/table';
+import {tap} from 'rxjs/operators';
+import {catchError, of} from 'rxjs';
+import {ToastService} from '../../../services/toastService';
+import {MatSort} from '@angular/material/sort';
+import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
   selector: 'app-user-list',
@@ -41,7 +40,8 @@ export class UserListComponent implements AfterViewInit {
     private router: Router,
     private authService: AuthService,
     public toastService: ToastService
-  ) {}
+  ) {
+  }
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;

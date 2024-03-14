@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { Role } from '../models/role.model';
-import { HeaderUtilService } from './header-util.service';
-import { environment } from 'src/environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {Role} from '../models/role.model';
+import {HeaderUtilService} from './header-util.service';
+import {environment} from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +14,8 @@ export class RoleService {
   constructor(
     private http: HttpClient,
     private headerUtil: HeaderUtilService
-  ) {}
+  ) {
+  }
 
   getRoles(): Observable<Role[]> {
     const jwtToken = localStorage.getItem('jwtToken');
@@ -23,7 +24,7 @@ export class RoleService {
         'Authorization',
         `Bearer ${jwtToken}`
       );
-      return this.http.get<Role[]>(`${this.baseUrl}`, { headers });
+      return this.http.get<Role[]>(`${this.baseUrl}`, {headers});
     } else {
       return throwError('Pas de jeton JWT trouvé');
     }
@@ -32,7 +33,7 @@ export class RoleService {
   getRoleById(roleId: number): Observable<Role> {
     const url = `${this.baseUrl}/${roleId}`;
 
-    return this.http.get<Role>(url, { headers: this.headerUtil.getHeaders() });
+    return this.http.get<Role>(url, {headers: this.headerUtil.getHeaders()});
   }
 
   createRole(roles: Role): Observable<Role> {
@@ -50,6 +51,6 @@ export class RoleService {
 
   deleteRole(roleId: number): Observable<any> {
     const url = `${this.baseUrl}/${roleId}`;
-    return this.http.delete(url, { headers: this.headerUtil.getHeaders() });
+    return this.http.delete(url, {headers: this.headerUtil.getHeaders()});
   }
 }

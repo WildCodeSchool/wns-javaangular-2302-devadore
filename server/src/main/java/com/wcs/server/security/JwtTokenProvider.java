@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
 public class JwtTokenProvider {
 
+    Logger logger = Logger.getLogger(getClass().getName());
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -107,7 +109,7 @@ public class JwtTokenProvider {
                     .parseClaimsJws(authToken);
 
             if (isInvalidated(authToken)) {
-                System.err.println("Token is invalidated: " + authToken);
+                logger.info("Token is invalidated: " + authToken);
                 return false;
             }
             return true;
@@ -116,7 +118,7 @@ public class JwtTokenProvider {
                  io.jsonwebtoken.ExpiredJwtException | io.jsonwebtoken.UnsupportedJwtException |
                  io.jsonwebtoken.MissingClaimException | io.jsonwebtoken.IncorrectClaimException ex) {
 
-            System.err.println("Token validation failed: " + ex.getMessage());
+            logger.info("Token validation failed: " + ex.getMessage());
         }
         return false;
     }
@@ -129,7 +131,7 @@ public class JwtTokenProvider {
      */
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
-        System.out.println("Received Authorization header: " + bearerToken);
+        logger.info("Received Authorization header: " + bearerToken);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }

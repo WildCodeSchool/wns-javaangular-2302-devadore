@@ -3,7 +3,7 @@ package com.wcs.server.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 import java.util.List;
 
 @Entity
@@ -27,6 +27,7 @@ public class Question {
     private LocalDate updatedAt;
 
     public Question() {
+        // pour des raisons de compatibilité avec JPA, qui nécessitent un constructeur par défaut.
     }
 
     public Long getId() {

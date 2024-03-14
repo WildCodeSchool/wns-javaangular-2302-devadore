@@ -118,7 +118,7 @@ export class QuizListUserComponent implements OnInit, AfterViewInit {
   onToastConfirmed() {
     if (this.selectedQuizId !== null) {
       this.quizService.deleteQuiz(this.selectedQuizId).subscribe(
-        response => {
+        () => {
           this.quizzes = this.quizzes.filter(quiz => quiz.id !== this.selectedQuizId);
           this.dataSource.data = this.quizzes;
           if (this.paginator && this.quizzes.length <= this.paginator.pageSize) {

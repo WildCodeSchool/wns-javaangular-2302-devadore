@@ -5,14 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan(
-        {
+@ComponentScan({
         "com.wcs.server.controller",
         "com.wcs.server.security",
         "com.wcs.server.service",
-        "com.wcs.server.repository"
-        }
-)
+        "com.wcs.server.repository",
+        "com.wcs.server.configuration"
+})
 public class ServerApplication {
 
     public static void main(String[] args) {

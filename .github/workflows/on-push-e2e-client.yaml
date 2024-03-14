@@ -1,0 +1,27 @@
+name: client-e2e-workflow
+
+on: pull_request
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: cd client && npm install
+
+      - name: Build client for production
+        run: cd client && npm run build-production
+
+      - name: Run Cypress e2e tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          wait-on: "https://dev.quizz4all.paris-1.wilders.dev"
+          wait-on-timeout: 60000
+          record: false
+          working-directory: ./client
+          spec: "cypress/e2e/quizplay.cy.ts"
