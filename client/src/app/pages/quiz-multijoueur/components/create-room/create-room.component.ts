@@ -32,7 +32,7 @@ export class CreateRoomComponent implements OnInit {
     this.categoryService.getAllCategories().subscribe((res) => {
       this.categorieList = res;
     });
-    
+
     this.initForm();
 
     const token = this.authService.getToken();
