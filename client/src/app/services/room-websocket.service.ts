@@ -23,7 +23,7 @@ export class RoomWebsocketService {
       this.webSocket = new WebSocket(environment.webSocketConnection+'/websocket/room');
 
       this.webSocket.onopen = () => {
-        console.log("Connexion websocket réussi");
+        console.log("Connexion websocket réussie");
         resolve();
       };
 
